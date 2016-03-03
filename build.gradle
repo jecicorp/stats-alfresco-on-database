@@ -1,0 +1,66 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+archivesBaseName = 'jeci-saod'
+//applicationName = "stats-alfresco-on-database"
+group = 'fr.jeci.alfresco'
+version = '0.1.0'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'JECI Stats Alfresco On Database', 'Implementation-Version': version
+    }
+}
+
+bootRun {
+    addResources = true
+}
+
+bootRepackage {
+    mainClass = 'fr.jeci.alfresco.saod.SaodApplication'
+}
+
+
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    providedRuntime
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile("org.springframework.boot:spring-boot-starter-freemarker")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile 'org.springframework.boot:spring-boot-starter-logging'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+        
+    compile 'org.springframework:spring-jdbc'
+    compile 'org.springframework:spring-context'
+    compile 'ch.qos.logback:logback-classic:1.1.+'
+
+    compile 'com.zaxxer:HikariCP:2.4.3'
+    runtime 'org.hsqldb:hsqldb:2.3.+'
+	runtime 'mysql:mysql-connector-java:5.1.+'
+}
+
+
+buildscript {
+  ext {
+    springBootVersion = '1.3.3.RELEASE'
+    springLoadedVersion = '1.2.5.RELEASE'
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    classpath "org.springframework:springloaded:${springLoadedVersion}"
+  }
+}
