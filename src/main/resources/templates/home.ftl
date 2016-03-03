@@ -30,10 +30,10 @@
     </div><!-- header -->
   
   </div>
-    
-        
-   
 
+<#if error??>
+<div><h3>ERROR</h3> <p><${error}</p></div>
+</#if>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

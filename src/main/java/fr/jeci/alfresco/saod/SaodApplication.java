@@ -5,7 +5,9 @@ import javax.sql.DataSource;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,11 +15,14 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+		DataSourceTransactionManagerAutoConfiguration.class })
 @ComponentScan
 public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
@@ -39,7 +44,20 @@ public class SaodApplication extends SpringBootServletInitializer {
 
 	@Bean
 	@ConfigurationProperties(prefix = "alfresco.datasource")
-	public DataSource mercureDataSource() {
+	public DataSource alfrescoDataSource() {
 		return DataSourceBuilder.create().type(HikariDataSource.class).build();
+	}
+
+//	@Value("${sql.local.query_path_folder}")
+	private String queryFolderPath = "sql/hsqldb/localdb";
+
+	@Bean
+	@ConfigurationProperties(prefix = "local.datasource")
+	public DataSource localDataSource() {
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+		builder.setType(EmbeddedDatabaseType.HSQL);
+		builder.addScript(queryFolderPath + "/schema.sql");
+		// builder.addScript(queryFolderPath + "/my-test-data.sql");
+		return builder.build();
 	}
 }
