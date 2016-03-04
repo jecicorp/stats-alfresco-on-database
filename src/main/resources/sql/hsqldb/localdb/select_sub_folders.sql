@@ -1,3 +1,3 @@
-select sdls.node_id
-from stats_dir_local_size sdls
-where sdls.parent_node_id = ?
+select NODE_ID
+from STATS_DIR_LOCAL_SIZE
+where PARENT_NODE_ID = ?

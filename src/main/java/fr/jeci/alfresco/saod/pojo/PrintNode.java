@@ -15,7 +15,7 @@ public class PrintNode implements Serializable {
 	private Long nodeid;
 	private String label;
 	private Long localSize;
-	private Long fullSize;
+	private Long dirSize;
 	private Long parent;
 
 	public PrintNode(Long id) {
@@ -37,8 +37,8 @@ public class PrintNode implements Serializable {
 	public Long getLocalSize() {
 		return localSize;
 	}
-	
-	public String getLocalSizeReadable(){
+
+	public String getLocalSizeReadable() {
 		return StringUtil.readableFileSize(getLocalSize());
 	}
 
@@ -47,15 +47,23 @@ public class PrintNode implements Serializable {
 	}
 
 	public Long getFullSize() {
-		return fullSize;
+		return Long.sum(localSize, dirSize);
 	}
-	
-	public String getFullSizeReadable(){
+
+	public String getFullSizeReadable() {
 		return StringUtil.readableFileSize(getFullSize());
 	}
 
-	public void setFullSize(Long fullSize) {
-		this.fullSize = fullSize;
+	public Long getDirSize() {
+		return dirSize;
+	}
+
+	public String getDirSizeReadable() {
+		return StringUtil.readableFileSize(getDirSize());
+	}
+
+	public void setDirSize(Long fullSize) {
+		this.dirSize = fullSize;
 	}
 
 	public Long getParent() {

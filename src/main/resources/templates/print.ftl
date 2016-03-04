@@ -26,31 +26,63 @@
 
   <div class="container">
     <div class="header">
-      <h3 class="text-muted">${title}</h3>
+      <h3 class="text-muted"><#if dir??>-= Directory : ${dir.label} =-<#else>${title}</#if></h3>
     </div><!-- header -->
   
   </div>
   
   <#if dir??>
-  <h3 class="text-muted">Name Directory : ${dir.label}</h3>
-  <h4 class="text-muted">Node Id : ${dir.nodeid}</h4>
-  <h4>Size : <#if dir.localSize??>${dir.localSize}</#if></h4>
-  <h4>Parent Id : <#if dir.localSize??><a href="print?nodeid=${dir.parent?c}">Parent<#else>Racine</#if></a></h4>
-  <h4>Path : <#if path??>${path}</#if></h4>
-  
+  <h4>Links : 
+  	<#if dir.localSize??><a href="print?nodeid=${dir.parent?c}">Go to Parent<#else>Racine</#if></a>
+  	- <a href="/">Go to Home</a>
+  </h4>
+  <table>
+	<tr>
+		<td><b>Full Path</b> :</td>
+		<td><#if path??>${path}</#if></td>
+	</tr>
+	<tr>
+		<td><b>Node DB Id</b> :</td>
+		<td>${dir.nodeid}</td>
+	</tr>
+	
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><b>Local Size</b> :</td>
+		<td><#if dir.localSizeReadable??>${dir.localSizeReadable}</#if></td>
+	</tr>
+	<tr>
+		<td><b>Aggregate Size</b> :</td>
+		<td><#if dir.dirSizeReadable??>${dir.dirSizeReadable}</#if></td>
+	</tr>
+	<tr>
+		<td><b>Full Size</b> :</td>
+		<td><#if dir.fullSizeReadable??>${dir.fullSizeReadable}</#if></td>
+	</tr>
+  </table>
+  <hr />
   </#if>
   
-  
-  
-  <ul>
+  <table>
+  <tr>
+  	<th>Folder Name</th>
+  	<th>Local Size</th>
+  	<th>Aggregate Size</th>
+  	<th>Full Size</th>
+  </tr>
   <#list nodes as node>
-  <li><a href="print?nodeid=${node.nodeid?c}">${node.label}</a>  ${node.localSizeReadable}</li>
+  <tr>
+  	<td><a href="print?nodeid=${node.nodeid?c}">${node.label}</a></td>
+  	<td>${node.localSizeReadable}</td>
+  	<td>${node.dirSizeReadable}</td>
+  	<td>${node.fullSizeReadable}</td>
+  </tr>
   </#list>
-  </ul>
+  </table>
   
-  <#list nodes as node>
-  ${node.localSize?c} + </li>
-  </#list>
 
   <#if error??>
   <div><h3>ERROR</h3> <p><${error}</p></div>

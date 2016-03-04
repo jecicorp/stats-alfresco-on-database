@@ -33,9 +33,13 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	@Autowired
 	private SqlQueries sqlQueries;
 
+	private String getQuery(String id) throws SaodException {
+		return sqlQueries.getQuery(id, false);
+	}
+
 	@Override
 	public Map<Long, Long> selectDirLocalSize() throws SaodException {
-		String query = sqlQueries.getQuery("select_dir_local_size.sql", false);
+		String query = getQuery("select_dir_local_size.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
 
 		final Map<Long, Long> libelle = new HashMap<>();
@@ -53,7 +57,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("ids", child_id);
 
-		String query = sqlQueries.getQuery("select_parent_node_id.sql", false);
+		String query = getQuery("select_parent_node_id.sql");
 		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
 
 		final Map<Long, Long> libelle = new HashMap<>();
@@ -66,7 +70,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 
 	@Override
 	public String selectNodeLabel(Long id) throws SaodException {
-		String query = sqlQueries.getQuery("select_node_label.sql", false);
+		String query = getQuery("select_node_label.sql");
 		try {
 			return this.jdbcTemplate.queryForObject(query, new Object[] { id }, String.class);
 		} catch (EmptyResultDataAccessException e) {

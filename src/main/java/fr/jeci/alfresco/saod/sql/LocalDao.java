@@ -30,7 +30,7 @@ public interface LocalDao {
 	 * Insert dir with no locale size (dir without file but with subdirectory)
 	 * 
 	 * @param dirLocalSize
-	 * @throws SaodException 
+	 * @throws SaodException
 	 */
 	void insertStatsDirNoSize(List<Long> parentsid) throws SaodException;
 
@@ -58,14 +58,54 @@ public interface LocalDao {
 	 * @return
 	 */
 	List<Long> selectSubFolders(Long nodeid) throws SaodException;
+	
+
+	/**
+	 * Select parent folder of this childs
+	 * 
+	 * @param nodeid
+	 * @return
+	 */
+	List<Long> selectparentFolders(List<Long> nodesid) throws SaodException;
 
 	/**
 	 * Load PrintNode from data in row
+	 * 
 	 * @param id
 	 * @return
 	 * @throws SaodException
 	 */
 	PrintNode loadRow(Long id) throws SaodException;
+
+	/**
+	 * Set dir_num_size to zero (means no has child)
+	 * 
+	 * @param parentsid
+	 * @throws SaodException
 	 */
+	void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException;
+
+	/**
+	 * Set All non-null sum_size to zero
+	 * 
+	 * @throws SaodException
+	 */
+	void resetDirSumSize() throws SaodException;
+
+	/**
+	 * Select all node with sum_size to NULL
+	 * 
+	 * @return
+	 * @throws SaodException
+	 */
+	List<Long> selectLeafNode() throws SaodException;
+
+	/**
+	 * Append to parent.sum_size the local_size his child
+	 * 
+	 * @param nodes
+	 * @throws SaodException
+	 */
+	void upadteDirSumSize(List<Long> nodes) throws SaodException;
 
 }

@@ -41,7 +41,18 @@ public class SaodServiceImpl implements SaodService {
 		loadParentId(selectDirLocalSize);
 
 		// Aggregate size from leaf to root
+		resetFullSumSize();
+	}
 
+	@Override
+	public void resetFullSumSize() throws SaodException {
+		this.localDao.resetDirSumSize();
+
+		List<Long> nodes = this.localDao.selectparentFolders(this.localDao.selectLeafNode());
+		while (nodes.size() > 0) {
+			this.localDao.upadteDirSumSize(nodes);
+			nodes = this.localDao.selectparentFolders(nodes);
+		}
 	}
 
 	/**
@@ -74,6 +85,11 @@ public class SaodServiceImpl implements SaodService {
 			start = System.currentTimeMillis();
 			this.localDao.updateParentNodeId(selectParentNodeId);
 			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+
+			start = System.currentTimeMillis();
+			this.localDao.upadteDirSumSizeZero(parentsid);
+			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+
 			start = System.currentTimeMillis();
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
 			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));

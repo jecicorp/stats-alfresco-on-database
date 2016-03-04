@@ -1,3 +1,3 @@
 update STATS_DIR_LOCAL_SIZE
-set PARENT_NODE_ID = :parent_node_id
+set DIR_SUM_SIZE = :sum_size
 where NODE_ID = :node_id

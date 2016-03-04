@@ -46,4 +46,10 @@ public interface SaodService {
 	 */
 	String computePath(String nodeid) throws SaodException;
 
+	/**
+	 * Compute full size of all directory starting from leaf to root
+	 * @throws SaodException
+	 */
+	void resetFullSumSize() throws SaodException;
+
 }
