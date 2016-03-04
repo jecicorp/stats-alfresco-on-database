@@ -23,4 +23,12 @@ public interface AlfrescoDao {
 	 */
 	Map<Long, Long> selectParentNodeId(List<Long> child_id) throws SaodException;
 
+	/**
+	 * Look for label of this node
+	 * @param id
+	 * @return
+	 * @throws SaodException 
+	 */
+	String selectNodeLabel(Long id) throws SaodException;
+
 }

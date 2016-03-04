@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,18 +33,10 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	@Autowired
 	private SqlQueries sqlQueries;
 
-	private String selectDirLocalSize;
-	private String selectParentNodeId;
-
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		selectDirLocalSize = sqlQueries.getQuery("select_dir_local_size.sql", false);
-		selectParentNodeId = sqlQueries.getQuery("select_parent_node_id.sql", false);
-	}
-
 	@Override
 	public Map<Long, Long> selectDirLocalSize() throws SaodException {
-		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(selectDirLocalSize);
+		String query = sqlQueries.getQuery("select_dir_local_size.sql", false);
+		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
 
 		final Map<Long, Long> libelle = new HashMap<>();
 		while (queryForRowSet.next()) {
@@ -57,11 +49,12 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	@Override
 	public Map<Long, Long> selectParentNodeId(List<Long> child_id) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
-				
+
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("ids", child_id);
 
-		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(selectParentNodeId, parameters);
+		String query = sqlQueries.getQuery("select_parent_node_id.sql", false);
+		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
 
 		final Map<Long, Long> libelle = new HashMap<>();
 		while (queryForRowSet.next()) {
@@ -69,5 +62,15 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 		}
 
 		return libelle;
+	}
+
+	@Override
+	public String selectNodeLabel(Long id) throws SaodException {
+		String query = sqlQueries.getQuery("select_node_label.sql", false);
+		try {
+			return this.jdbcTemplate.queryForObject(query, new Object[] { id }, String.class);
+		} catch (EmptyResultDataAccessException e) {
+			return "dbid=" + id;
+		}
 	}
 }

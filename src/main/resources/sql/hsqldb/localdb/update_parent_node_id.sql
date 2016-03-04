@@ -1,3 +1,3 @@
 update stats_dir_local_size sdls
-set sdls.parent_node_id = ?
-where sdls.node_id = ?
+set sdls.parent_node_id = :parent_node_id
+where sdls.node_id = :node_id

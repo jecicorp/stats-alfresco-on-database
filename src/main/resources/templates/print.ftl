@@ -30,15 +30,31 @@
     </div><!-- header -->
   
   </div>
-
+  
+  <#if dir??>
+  <h3 class="text-muted">Name Directory : ${dir.label}</h3>
+  <h4 class="text-muted">Node Id : ${dir.nodeid}</h4>
+  <h4>Size : <#if dir.localSize??>${dir.localSize}</#if></h4>
+  <h4>Parent Id : <#if dir.localSize??><a href="print?nodeid=${dir.parent?c}">Parent<#else>Racine</#if></a></h4>
+  <h4>Path : <#if path??>${path}</#if></h4>
+  
+  </#if>
+  
+  
+  
   <ul>
-  <li><a href="init">INIT</a></li>
-  <li><a href="print">PRINT</a></li>
+  <#list nodes as node>
+  <li><a href="print?nodeid=${node.nodeid?c}">${node.label}</a>  ${node.localSizeReadable}</li>
+  </#list>
   </ul>
+  
+  <#list nodes as node>
+  ${node.localSize?c} + </li>
+  </#list>
 
-<#if error??>
-<div><h3>ERROR</h3> <p><${error}</p></div>
-</#if>
+  <#if error??>
+  <div><h3>ERROR</h3> <p><${error}</p></div>
+  </#if>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

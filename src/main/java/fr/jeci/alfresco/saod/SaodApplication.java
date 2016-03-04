@@ -15,8 +15,6 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -48,16 +46,9 @@ public class SaodApplication extends SpringBootServletInitializer {
 		return DataSourceBuilder.create().type(HikariDataSource.class).build();
 	}
 
-//	@Value("${sql.local.query_path_folder}")
-	private String queryFolderPath = "sql/hsqldb/localdb";
-
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
 	public DataSource localDataSource() {
-		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		builder.setType(EmbeddedDatabaseType.HSQL);
-		builder.addScript(queryFolderPath + "/schema.sql");
-		// builder.addScript(queryFolderPath + "/my-test-data.sql");
-		return builder.build();
+		return DataSourceBuilder.create().type(HikariDataSource.class).build();
 	}
 }
