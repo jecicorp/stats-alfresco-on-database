@@ -45,6 +45,16 @@ public class HomeController {
 		return "home";
 	}
 
+	@RequestMapping("/login")
+	public String login(Map<String, Object> model) {
+		return "login";
+	}
+
+	@RequestMapping("/access")
+	public String access(Map<String, Object> model) {
+		return "access";
+	}
+
 	@RequestMapping("/init")
 	@Secured("ROLE_ADMIN")
 	public String init(Map<String, Object> model) {

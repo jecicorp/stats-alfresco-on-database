@@ -3,14 +3,15 @@ package fr.jeci.alfresco.saod;
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +23,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -32,7 +31,7 @@ import com.zaxxer.hikari.HikariDataSource;
 		DataSourceTransactionManagerAutoConfiguration.class })
 @ComponentScan
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class SaodApplication extends WebMvcConfigurerAdapter {
+public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -42,14 +41,13 @@ public class SaodApplication extends WebMvcConfigurerAdapter {
 	}
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(SaodApplication.class, args);
+		new SpringApplicationBuilder(SaodApplication.class).run(args);
 	}
 
-	// @Override
-	// protected SpringApplicationBuilder configure(SpringApplicationBuilder
-	// application) {
-	// return application.sources(SaodApplication.class);
-	// }
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(SaodApplication.class);
+	}
 
 	@Bean
 	@ConfigurationProperties(prefix = "alfresco.datasource")
@@ -61,12 +59,6 @@ public class SaodApplication extends WebMvcConfigurerAdapter {
 	@ConfigurationProperties(prefix = "local.datasource")
 	public DataSource localDataSource() {
 		return DataSourceBuilder.create().type(HikariDataSource.class).build();
-	}
-
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/login").setViewName("login");
-		registry.addViewController("/access").setViewName("access");
 	}
 
 	@Bean
