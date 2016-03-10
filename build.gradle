@@ -44,6 +44,8 @@ dependencies {
 	}
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
         
     compile 'org.springframework:spring-jdbc'
     compile 'org.springframework:spring-context'

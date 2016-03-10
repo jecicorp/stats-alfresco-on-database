@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/init")
+	@Secured("ROLE_ADMIN")
 	public String init(Map<String, Object> model) {
 		model.put("time", new Date());
 		model.put("title", this.title);
@@ -62,6 +64,7 @@ public class HomeController {
 	}
 
 	@RequestMapping("/print")
+	@Secured("ROLE_USER")
 	public String print(@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid,
 			Map<String, Object> model) {
 		model.put("time", new Date());
@@ -70,12 +73,11 @@ public class HomeController {
 		try {
 			long start = System.currentTimeMillis();
 
-			
 			if (StringUtils.hasText(nodeid)) {
 				model.put("dir", this.saodService.loadPrintNode(nodeid));
 				model.put("title", String.format("-= %s =-", nodeid));
 				model.put("nodes", this.saodService.getSubFolders(nodeid));
-				
+
 				String path = this.saodService.computePath(nodeid);
 				model.put("path", path);
 			} else {
