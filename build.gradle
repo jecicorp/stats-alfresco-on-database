@@ -32,12 +32,16 @@ repositories {
 
 configurations {
     providedRuntime
+    
+    compile.exclude module: 'spring-boot-starter-tomcat'
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile('org.springframework.boot:spring-boot-starter-web') 
     compile("org.springframework.boot:spring-boot-starter-freemarker")
-    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-jetty") {
+		exclude group: 'org.eclipse.jetty.websocket'
+	}
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
         
