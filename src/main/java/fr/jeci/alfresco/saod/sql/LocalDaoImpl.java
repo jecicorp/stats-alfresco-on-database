@@ -37,7 +37,9 @@ public class LocalDaoImpl implements LocalDao {
 
 	@Override
 	public void initDatabase() throws SaodException {
-		this.jdbcTemplate.execute(getQuery("schema.sql"));
+		this.jdbcTemplate.execute(getQuery("drop schema.sql"));
+		this.jdbcTemplate.execute(getQuery("create schema.sql"));
+		this.jdbcTemplate.execute(getQuery("create indexes.sql"));
 	}
 
 	private String getQuery(String id) throws SaodException {
