@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
 
@@ -38,6 +39,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
+    @Transactional
 	public Map<Long, Long> selectDirLocalSize() throws SaodException {
 		String query = getQuery("select_dir_local_size.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -51,6 +53,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
+    @Transactional
 	public Map<Long, Long> selectParentNodeId(List<Long> child_id) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -69,6 +72,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
+    @Transactional
 	public String selectNodeLabel(Long id) throws SaodException {
 		String query = getQuery("select_node_label.sql");
 		try {
@@ -77,7 +81,9 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 			return null;
 		}
 	}
+
 	@Override
+    @Transactional
 	public String selectNodeRef(Long id) throws SaodException {
 		String query = getQuery("select_node_noderef.sql");
 		try {

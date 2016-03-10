@@ -49,6 +49,7 @@ dependencies {
         
     compile 'org.springframework:spring-jdbc'
     compile 'org.springframework:spring-context'
+    compile 'org.springframework:spring-tx'
     compile 'ch.qos.logback:logback-classic:1.1.+'
 
     compile 'com.zaxxer:HikariCP:2.4.3'

@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
@@ -36,6 +37,7 @@ public class LocalDaoImpl implements LocalDao {
 	private SqlQueries sqlQueries;
 
 	@Override
+    @Transactional
 	public void initDatabase() throws SaodException {
 		this.jdbcTemplate.execute(getQuery("drop schema.sql"));
 		this.jdbcTemplate.execute(getQuery("create schema.sql"));
@@ -47,6 +49,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -64,6 +67,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public void insertStatsDirNoSize(List<Long> parentsid) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -82,6 +86,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public List<Long> selectLeafNode() throws SaodException {
 		String query = getQuery("select_leaf_node.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -95,6 +100,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -112,12 +118,14 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public void resetDirSumSize() throws SaodException {
 		String query = getQuery("update_reset_dir_sum_size.sql");
 		this.jdbcTemplate.update(query);
 	}
 
 	@Override
+    @Transactional
 	public void upadteDirSumSize(List<Long> nodes) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -129,6 +137,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -146,6 +155,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public List<Long> selectRootFolders() throws SaodException {
 		String query = getQuery("select_root_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -159,6 +169,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public List<Long> selectSubFolders(Long nodeid) throws SaodException {
 		String query = getQuery("select_sub_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
@@ -172,6 +183,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public List<Long> selectparentFolders(List<Long> nodesid) throws SaodException {
 		if (nodesid == null || nodesid.size() == 0) {
 			return Collections.emptyList();
@@ -194,6 +206,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
+    @Transactional
 	public PrintNode loadRow(Long nodeid) throws SaodException {
 		String query = getQuery("select_row_node_id.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
