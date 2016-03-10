@@ -25,10 +25,19 @@ public interface AlfrescoDao {
 
 	/**
 	 * Look for label of this node
+	 * 
 	 * @param id
 	 * @return
-	 * @throws SaodException 
+	 * @throws SaodException
 	 */
 	String selectNodeLabel(Long id) throws SaodException;
+
+	/**
+	 * Look For NodeRef
+	 * 
+	 * @param id
+	 * @return
+	 */
+	String selectNodeRef(Long id) throws SaodException;
 
 }

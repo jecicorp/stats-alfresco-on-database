@@ -118,7 +118,7 @@ public class SaodServiceImpl implements SaodService {
 				LOG.warn("node is null for id {}", id);
 				continue;
 			}
-			node.setLabel(this.alfrescoDao.selectNodeLabel(id));
+			node.setLabel(loadNodeLabel(id));
 			nodes.add(node);
 		}
 
@@ -131,7 +131,7 @@ public class SaodServiceImpl implements SaodService {
 
 		PrintNode node = this.localDao.loadRow(id);
 		if (node != null) {
-			node.setLabel(this.alfrescoDao.selectNodeLabel(id));
+			node.setLabel(loadNodeLabel(id));
 		} else {
 			node = new PrintNode(id);
 			node.setLabel("Node Not Fount, Need Refresh");
@@ -139,12 +139,20 @@ public class SaodServiceImpl implements SaodService {
 		return node;
 	}
 
+	private String loadNodeLabel(Long id) throws SaodException {
+		String nodeLabel = this.alfrescoDao.selectNodeLabel(id);
+		if (nodeLabel == null) {
+			nodeLabel = this.alfrescoDao.selectNodeRef(id);
+		}
+		return nodeLabel;
+	}
+
 	@Override
 	public String computePath(String nodeid) throws SaodException {
 		StringBuilder sb = new StringBuilder();
 		Long id = Long.valueOf(nodeid);
 
-		sb.append(this.alfrescoDao.selectNodeLabel(id));
+		sb.append(loadNodeLabel(id));
 		PrintNode node = null;
 		while ((node = this.localDao.loadRow(id)) != null) {
 			if (node.getParent() == null) {
@@ -152,7 +160,7 @@ public class SaodServiceImpl implements SaodService {
 				break;
 			} else {
 				id = node.getParent();
-				sb.insert(0, this.alfrescoDao.selectNodeLabel(id) + " > ");
+				sb.insert(0, loadNodeLabel(id) + " > ");
 			}
 		}
 

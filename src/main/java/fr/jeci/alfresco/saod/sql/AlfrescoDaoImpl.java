@@ -74,7 +74,18 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 		try {
 			return this.jdbcTemplate.queryForObject(query, new Object[] { id }, String.class);
 		} catch (EmptyResultDataAccessException e) {
-			return "dbid=" + id;
+			return null;
+		}
+	}
+	@Override
+	public String selectNodeRef(Long id) throws SaodException {
+		String query = getQuery("select_node_noderef.sql");
+		try {
+			// protocol, identifier, uuid
+			Map<String, Object> rMap = this.jdbcTemplate.queryForMap(query, id);
+			return String.format("%s://%s/%s", rMap.get("protocol"), rMap.get("identifier"), rMap.get("uuid"));
+		} catch (EmptyResultDataAccessException e) {
+			return "NNF";
 		}
 	}
 }
