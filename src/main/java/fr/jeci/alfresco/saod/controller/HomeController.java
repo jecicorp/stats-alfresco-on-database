@@ -83,7 +83,7 @@ public class HomeController {
 		try {
 			long start = System.currentTimeMillis();
 
-			if (StringUtils.hasText(nodeid)) {
+			if (StringUtils.hasText(nodeid) && Integer.decode(nodeid) > 0) {
 				model.put("dir", this.saodService.loadPrintNode(nodeid));
 				model.put("title", String.format("-= %s =-", nodeid));
 				model.put("nodes", this.saodService.getSubFolders(nodeid));
