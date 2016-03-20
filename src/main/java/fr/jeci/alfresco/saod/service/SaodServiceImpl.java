@@ -80,15 +80,15 @@ public class SaodServiceImpl implements SaodService {
 			parentsid.addAll(parents);
 			start = System.currentTimeMillis();
 			this.localDao.insertStatsDirNoSize(parentsid);
-			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+			LOG.info("insertStatsDirNoSize : {} ms ", (System.currentTimeMillis() - start));
 
 			start = System.currentTimeMillis();
 			this.localDao.updateParentNodeId(selectParentNodeId);
-			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+			LOG.info("updateParentNodeId : {} ms ", (System.currentTimeMillis() - start));
 
 			start = System.currentTimeMillis();
 			this.localDao.upadteDirSumSizeZero(parentsid);
-			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+			LOG.info("upadteDirSumSizeZero : {} ms ", (System.currentTimeMillis() - start));
 
 			start = System.currentTimeMillis();
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
