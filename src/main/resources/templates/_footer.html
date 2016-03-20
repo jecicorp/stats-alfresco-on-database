@@ -1,0 +1,40 @@
+<!DOCTYPE html >
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<div th:fragment="error">
+		<div th:if="${error}">
+			<h3>ERROR</h3>
+			<p th:text="${error}"></p>
+		</div>
+	</div>
+
+	<div th:fragment="footer">
+		<div class="footer">
+			<p>
+				Made by <a class="brand" th:href="@{http://jeci.fr}" th:text="Jeci">
+					Jeci</a> - Licence in GPL
+			</p>
+		</div>
+	</div>
+
+	<div th:fragment="scripts">
+		<!-- production -->
+		<script type="text/javascript" src="../../js/jquery-1.11.3.min.js"
+			th:href="@{/js/jquery-1.11.3.min.js}"></script>
+
+		<script type="text/javascript" src="../../js/bootstrap.min.js"
+			th:href="@{/js/bootstrap.min.js}"></script>
+
+	</div>
+
+
+
+
+
+</body>
+
+</html>

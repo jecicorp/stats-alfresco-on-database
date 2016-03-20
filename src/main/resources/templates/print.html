@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="author" content="http://jeci.fr, Jérémie Lesage" />
+<meta name="description" content="" />
+<link rel="shortcut icon" type="image/x-icon" href="ico/favicon.png" />
+
+<title th:text="|${title} - v.${version}|"></title>
+
+<link th:include="_header :: stylesheet"></link>
+</head>
+
+
+<body>
+	<div class="container">
+
+		<div th:include="_header :: menu"></div>
+
+		<div class="header">
+			<h2 class="sub-header" th:if="${dir}"
+				th:text="|Directory :	${dir.label}|">Dir Name</h2>
+			<h2 class="sub-header" th:if="not ${dir}" th:text="${title}">Titre
+				Standard</h2>
+			<p>
+				<b>Full Path</b> : <span th:text="${path}"></span>
+			</p>
+		</div>
+		<!-- header -->
+
+
+
+		<div class="row">
+			<div class="col-md-4" th:if="${dir}">
+				<h3 class="sub-header">Metadata</h3>
+				<table>
+					<tr>
+						<td><b>Node DB Id</b> :</td>
+						<td th:text="${dir.nodeid}"></td>
+					</tr>
+					<tr>
+						<td><b>NodeRef</b> :</td>
+						<!-- 				<td th:text="${dir.noderef}"></td> -->
+					</tr>
+
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><b>Local Size</b> :</td>
+						<td th:if="${dir.localSizeReadable}"
+							th:text="${dir.localSizeReadable}"></td>
+					</tr>
+					<tr>
+						<td><b>Aggregate Size</b> :</td>
+						<td th:text="${dir.dirSizeReadable}"></td>
+					</tr>
+					<tr>
+						<td><b>Full Size</b> :</td>
+						<td th:text="${dir.fullSizeReadable}"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-8">
+				<h3 class="sub-header">Childs Nodes</h3>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Folder Name</th>
+								<th>Local Size</th>
+								<th>Aggregate Size</th>
+								<th>Full Size</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="node,iterStat : ${nodes}"
+								th:class="${iterStat.odd}? 'odd'">
+								<td><a th:href="@{/print(nodeid=${node.nodeid})}"> <th:block
+											th:if="not ${dir}">
+											<th:block
+												th:if="${#strings.startsWith(node.label,'system://system')}">System Store</th:block>
+											<th:block
+												th:if="${#strings.startsWith(node.label,'workspace://version2Store')}">Version Store</th:block>
+											<th:block
+												th:if="${#strings.startsWith(node.label,'archive://SpacesStore')}">Archive Store</th:block>
+											<th:block
+												th:if="${#strings.startsWith(node.label,'workspace://SpacesStore')}">WorkSpace Store</th:block>
+										</th:block> <th:block th:if="${dir}">
+											<th:block th:text="${node.label}">Node Label</th:block>
+										</th:block>
+								</a></td>
+								<td th:text="${node.localSizeReadable}">Local Size</td>
+								<td th:text="${node.dirSizeReadable}">Dir Size</td>
+								<td th:text="${node.fullSizeReadable}">Ful Size</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+		<div th:include="_footer :: error"></div>
+		<div th:include="_footer :: footer"></div>
+	</div>
+
+
+	<div th:include="_footer :: scripts"></div>
+
+</body>
+</html>

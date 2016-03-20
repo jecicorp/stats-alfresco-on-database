@@ -1,0 +1,41 @@
+<!DOCTYPE html >
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="stylesheet">
+<link rel="stylesheet"
+	th:href="@{/css/bootstrap.min.css}"
+	href="../../css/bootstrap.min.css" />
+<link rel="stylesheet"
+	th:href="@{/css/bootstrap-theme.min.css}"
+	href="../../css/bootstrap-theme.min.css" />
+
+<link th:href="@{/css/signin.css}" rel="stylesheet" />
+<link th:href="@{/css/justified-nav.css}" rel="stylesheet" />
+</head>
+
+<body>
+
+	<div th:fragment="menu">
+		<div class="masthead">
+			<h3 class="text-muted" th:text="${title}">Project name</h3>
+
+			<ul class="nav nav-justified">
+				<li><a th:href="@{/}" href="home.html"> Home </a></li>
+				<li><a th:href="@{/print}" href="home.html"> Browse </a></li>
+				<li th:if="${dir}" class="active"><a
+					th:href="@{print(nodeid=${dir.parent})}" href="home.html"> Go
+						to Parent </a></li>
+
+
+				<li><a th:href="@{/logout}" href="logout.html"> Logout </a></li>
+			</ul>
+		</div>
+
+
+	</div>
+
+</body>
+
+</html>
