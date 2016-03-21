@@ -1,7 +1,6 @@
 package fr.jeci.alfresco.saod.controller;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,15 +30,15 @@ public class HomeController {
 	private SaodService saodService;
 
 	@RequestMapping("/")
-	public String home(Map<String, Object> model) {
-		model.put("time", new Date());
-		model.put("title", this.title);
-		model.put("version", this.version);
+	public String home(Model model) {
+		model.addAttribute("time", new Date());
+		model.addAttribute("title", this.title);
+		model.addAttribute("version", this.version);
 		//
 		// try {
-		// model.put("selectDirLocalSize", alfrescoDao.selectDirLocalSize());
+		// model.addAttribute("selectDirLocalSize", alfrescoDao.selectDirLocalSize());
 		// } catch (SaodException e) {
-		// model.put("error", e.getLocalizedMessage());
+		// model.addAttribute("error", e.getLocalizedMessage());
 		// LOG.error(e.getMessage(), e);
 		// }
 
@@ -46,28 +46,28 @@ public class HomeController {
 	}
 
 	@RequestMapping("/login")
-	public String login(Map<String, Object> model) {
+	public String login(Model model) {
 		return "login";
 	}
 
 	@RequestMapping("/access")
-	public String access(Map<String, Object> model) {
+	public String access(Model model) {
 		return "access";
 	}
 
 	@RequestMapping("/init")
 	@Secured("ROLE_ADMIN")
-	public String init(Map<String, Object> model) {
-		model.put("time", new Date());
-		model.put("title", this.title);
-		model.put("version", this.version);
+	public String init(Model model) {
+		model.addAttribute("time", new Date());
+		model.addAttribute("title", this.title);
+		model.addAttribute("version", this.version);
 
 		try {
 			long start = System.currentTimeMillis();
 			saodService.loadDataFromAlfrescoDB();
 			LOG.info("Duration : " + (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
-			model.put("error", e.getLocalizedMessage());
+			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
 		}
 		return "home";
@@ -76,27 +76,27 @@ public class HomeController {
 	@RequestMapping("/print")
 	@Secured("ROLE_USER")
 	public String print(@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid,
-			Map<String, Object> model) {
-		model.put("time", new Date());
-		model.put("version", this.version);
+			Model model) {
+		model.addAttribute("time", new Date());
+		model.addAttribute("version", this.version);
 
 		try {
 			long start = System.currentTimeMillis();
 
 			if (StringUtils.hasText(nodeid) && Integer.decode(nodeid) > 0) {
-				model.put("dir", this.saodService.loadPrintNode(nodeid));
-				model.put("title", String.format("-= %s =-", nodeid));
-				model.put("nodes", this.saodService.getSubFolders(nodeid));
+				model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
+				model.addAttribute("title", String.format("%s", nodeid));
+				model.addAttribute("nodes", this.saodService.getSubFolders(nodeid));
 
 				String path = this.saodService.computePath(nodeid);
-				model.put("path", path);
+				model.addAttribute("path", path);
 			} else {
-				model.put("title", String.format("-= Racines =-", nodeid));
-				model.put("nodes", this.saodService.getRoots());
+				model.addAttribute("title", String.format("Roots", nodeid));
+				model.addAttribute("nodes", this.saodService.getRoots());
 			}
 			LOG.info("Duration : " + (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
-			model.put("error", e.getLocalizedMessage());
+			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
 		}
 
