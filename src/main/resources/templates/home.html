@@ -2,15 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="author" content="http://jeci.fr, Jérémie Lesage" />
-<meta name="description" content="" />
-<link rel="shortcut icon" type="image/x-icon" href="ico/favicon.png" />
-
-<title th:text="|${title} - v.${version}|"></title>
-
+<meta th:include="_header :: meta" />
 <link th:include="_header :: stylesheet"></link>
 </head>
 

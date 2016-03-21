@@ -3,12 +3,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 
+<head th:fragment="meta">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="author" content="http://jeci.fr, Jérémie Lesage" />
+<meta name="description" content="" />
+
+<title th:text="#{application.name}">Application Name</title>
+</head>
+
 <head th:fragment="stylesheet">
-<link rel="stylesheet"
-	th:href="@{/css/bootstrap.min.css}"
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"
 	href="../../css/bootstrap.min.css" />
-<link rel="stylesheet"
-	th:href="@{/css/bootstrap-theme.min.css}"
+<link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"
 	href="../../css/bootstrap-theme.min.css" />
 
 <link th:href="@{/css/signin.css}" rel="stylesheet" />
@@ -19,7 +27,8 @@
 
 	<div th:fragment="menu">
 		<div class="masthead">
-			<h3 class="text-muted" th:text="${title}">Project name</h3>
+			<h3 class="text-muted" th:utext="#{application.name}">Jeci -
+				Stats Alfresco on Database</h3>
 
 			<ul class="nav nav-justified">
 				<li><a th:href="@{/}" href="home.html"> Home </a></li>
@@ -28,12 +37,9 @@
 					th:href="@{print(nodeid=${dir.parent})}" href="home.html"> Go
 						to Parent </a></li>
 
-
 				<li><a th:href="@{/logout}" href="logout.html"> Logout </a></li>
 			</ul>
 		</div>
-
-
 	</div>
 
 </body>
