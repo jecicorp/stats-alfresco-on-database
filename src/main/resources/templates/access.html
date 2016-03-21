@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta th:include="_header :: meta" />
+<link th:include="_header :: stylesheet"></link>
+</head>
+
+<body>
+
+	<div class="container">
+		<div th:include="_header :: menu"></div>
+
+		<p class="alert alert-error">Forbidden</p>
+
+		<div th:include="_footer :: footer"></div>
+	</div>
+
+	<div th:include="_footer :: scripts"></div>
+</body>
+</html>
