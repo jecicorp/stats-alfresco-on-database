@@ -39,7 +39,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public Map<Long, Long> selectDirLocalSize() throws SaodException {
 		String query = getQuery("select_dir_local_size.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -52,27 +52,35 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 		return libelle;
 	}
 
+	/*
+	 * ORA-01795: maximum number of expressions in a list is 1000
+	 */
+	private final static int MAX_NUM_EXP_LIST = 1000;
+
 	@Override
-    @Transactional
+	@Transactional
 	public Map<Long, Long> selectParentNodeId(List<Long> child_id) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
-		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("ids", child_id);
-
-		String query = getQuery("select_parent_node_id.sql");
-		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
-
+		final String query = getQuery("select_parent_node_id.sql");
 		final Map<Long, Long> libelle = new HashMap<>();
-		while (queryForRowSet.next()) {
-			libelle.put(queryForRowSet.getLong(1), queryForRowSet.getLong(2));
+
+		for (int i = 0; i < child_id.size(); i += MAX_NUM_EXP_LIST) {
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			parameters.addValue("ids", child_id.subList(i, Math.min(i + MAX_NUM_EXP_LIST, child_id.size())));
+
+			final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
+			while (queryForRowSet.next()) {
+				libelle.put(queryForRowSet.getLong(1), queryForRowSet.getLong(2));
+			}
+
 		}
 
 		return libelle;
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public String selectNodeLabel(Long id) throws SaodException {
 		String query = getQuery("select_node_label.sql");
 		try {
@@ -83,7 +91,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public String selectNodeRef(Long id) throws SaodException {
 		String query = getQuery("select_node_noderef.sql");
 		try {
