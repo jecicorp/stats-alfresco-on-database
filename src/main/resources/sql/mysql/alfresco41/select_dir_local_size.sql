@@ -1,4 +1,4 @@
-select aca.parent_node_id, sum(acu.content_size) as 'dir_local_size'
+select aca.parent_node_id, SUM(acu.content_size) AS dir_local_size
 from alf_child_assoc aca
 join alf_node_properties anp on anp.node_id = aca.child_node_id
 join alf_content_data acd on acd.id = anp.long_value
