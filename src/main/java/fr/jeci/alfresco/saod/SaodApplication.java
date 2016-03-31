@@ -3,6 +3,7 @@ package fr.jeci.alfresco.saod;
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
@@ -25,6 +26,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.jolbox.bonecp.BoneCPDataSource;
+
+import fr.jeci.alfresco.saod.sql.SqlQueries;
 
 @Configuration
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -55,11 +58,30 @@ public class SaodApplication extends SpringBootServletInitializer {
 		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
 	}
 
-	
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
 	public DataSource localDataSource() {
 		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
+	}
+
+	@Value("${sql.local.base_path}")
+	private String sqlLocalBasePath = "sql/hsqldb";
+
+	@Bean
+	public SqlQueries localSqlQueries() {
+		SqlQueries sqlQueries = new SqlQueries();
+		sqlQueries.setSqlBasePath(sqlLocalBasePath);
+		return sqlQueries;
+	}
+
+	@Value("${sql.alfresco.base_path}")
+	private String sqlAlfrescoBAsePath = "sql/hsqldb";
+
+	@Bean
+	public SqlQueries alfrescoSqlQueries() {
+		SqlQueries sqlQueries = new SqlQueries();
+		sqlQueries.setSqlBasePath(sqlAlfrescoBAsePath);
+		return sqlQueries;
 	}
 
 	@Bean

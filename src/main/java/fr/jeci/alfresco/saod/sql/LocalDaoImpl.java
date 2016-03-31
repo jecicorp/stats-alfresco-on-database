@@ -34,22 +34,21 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Autowired
+	@Qualifier("localSqlQueries")
 	private SqlQueries sqlQueries;
 
 	@Override
-    @Transactional
-	public void initDatabase() throws SaodException {
-		this.jdbcTemplate.execute(getQuery("drop schema.sql"));
-		this.jdbcTemplate.execute(getQuery("create schema.sql"));
-		this.jdbcTemplate.execute(getQuery("create indexes.sql"));
 	}
 
-	private String getQuery(String id) throws SaodException {
-		return sqlQueries.getQuery(id, true);
+	@Transactional
+	public void initDatabase() throws SaodException {
+		this.jdbcTemplate.execute(sqlQueries.getQuery("drop schema.sql"));
+		this.jdbcTemplate.execute(sqlQueries.getQuery("create schema.sql"));
+		this.jdbcTemplate.execute(sqlQueries.getQuery("create indexes.sql"));
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -62,16 +61,16 @@ public class LocalDaoImpl implements LocalDao {
 			batchArgs.add(parameters);
 		}
 
-		String query = getQuery("insert_stats_dir_local_size.sql");
+		String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
 		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[dirLocalSize.size()]));
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void insertStatsDirNoSize(List<Long> parentsid) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
-		String query = getQuery("insert_stats_dir_local_size.sql");
+		String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
 
 		for (Long id : parentsid) {
 			if (loadRow(id) != null) {
@@ -86,9 +85,9 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public List<Long> selectLeafNode() throws SaodException {
-		String query = getQuery("select_leaf_node.sql");
+		String query = sqlQueries.getQuery("select_leaf_node.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
 
 		final List<Long> ids = new ArrayList<>();
@@ -100,7 +99,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -113,31 +112,31 @@ public class LocalDaoImpl implements LocalDao {
 			batchArgs.add(parameters);
 		}
 
-		String query = getQuery("update_stats_dir_sum_size.sql");
+		String query = sqlQueries.getQuery("update_stats_dir_sum_size.sql");
 		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[parentsid.size()]));
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void resetDirSumSize() throws SaodException {
-		String query = getQuery("update_reset_dir_sum_size.sql");
+		String query = sqlQueries.getQuery("update_reset_dir_sum_size.sql");
 		this.jdbcTemplate.update(query);
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void upadteDirSumSize(List<Long> nodes) throws SaodException {
+		String query = sqlQueries.getQuery("update_dir_sum_size.sql");
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("ids", nodes);
 
-		String query = getQuery("update_dir_sum_size.sql");
 		jdbcNamesTpl.update(query, parameters);
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -150,14 +149,14 @@ public class LocalDaoImpl implements LocalDao {
 			batchArgs.add(parameters);
 		}
 
-		String query = getQuery("update_parent_node_id.sql");
+		String query = sqlQueries.getQuery("update_parent_node_id.sql");
 		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[nodeids.size()]));
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public List<Long> selectRootFolders() throws SaodException {
-		String query = getQuery("select_root_folders.sql");
+		String query = sqlQueries.getQuery("select_root_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
 
 		final List<Long> ids = new ArrayList<>();
@@ -169,9 +168,9 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public List<Long> selectSubFolders(Long nodeid) throws SaodException {
-		String query = getQuery("select_sub_folders.sql");
+		String query = sqlQueries.getQuery("select_sub_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
 
 		final List<Long> ids = new ArrayList<>();
@@ -183,7 +182,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public List<Long> selectparentFolders(List<Long> nodesid) throws SaodException {
 		if (nodesid == null || nodesid.size() == 0) {
 			return Collections.emptyList();
@@ -194,7 +193,7 @@ public class LocalDaoImpl implements LocalDao {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("ids", nodesid);
 
-		String query = getQuery("select_parents_folders.sql");
+		String query = sqlQueries.getQuery("select_parents_folders.sql");
 		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
 
 		final List<Long> ids = new ArrayList<>();
@@ -206,9 +205,9 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-    @Transactional
+	@Transactional
 	public PrintNode loadRow(Long nodeid) throws SaodException {
-		String query = getQuery("select_row_node_id.sql");
+		String query = sqlQueries.getQuery("select_row_node_id.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
 
 		while (queryForRowSet.next()) {
