@@ -26,10 +26,13 @@ Tried with :
 git clone https://github.com/jeci-sarl/stats-alfresco-on-database.git
 cd stats-alfresco-on-database
 gradle clean build
-cp src/test/resources/application-mysql.properties application.properties
+cp src/test/resources/application-mysql.properties build/libs/application.properties
+cd build/libs/
 vim application.properties
-java -jar build/libs/jeci-saod-0.?.?.war
+java -jar jeci-saod-0.?.?.war
 ```
+
+Then go to http://localhost:8080 user admin / admin
 
 ## Alfresco Disk Usage
 
