@@ -25,7 +25,7 @@ Tried with :
 ``` bash
 git clone https://github.com/jeci-sarl/stats-alfresco-on-database.git
 cd stats-alfresco-on-database
-gradle clean build
+./gradlew clean build
 cp src/test/resources/application-mysql.properties build/libs/application.properties
 cd build/libs/
 vim application.properties
