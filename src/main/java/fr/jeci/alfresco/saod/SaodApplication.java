@@ -24,7 +24,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.zaxxer.hikari.HikariDataSource;
+import com.jolbox.bonecp.BoneCPDataSource;
 
 @Configuration
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -52,13 +52,14 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	@ConfigurationProperties(prefix = "alfresco.datasource")
 	public DataSource alfrescoDataSource() {
-		return DataSourceBuilder.create().type(HikariDataSource.class).build();
+		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
 	}
 
+	
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
 	public DataSource localDataSource() {
-		return DataSourceBuilder.create().type(HikariDataSource.class).build();
+		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
 	}
 
 	@Bean

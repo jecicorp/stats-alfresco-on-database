@@ -32,32 +32,35 @@ repositories {
 
 configurations {
     providedRuntime
-    
+
     compile.exclude module: 'spring-boot-starter-tomcat'
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web') 
+    compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-freemarker")
     compile("org.springframework.boot:spring-boot-starter-jetty") {
-		exclude group: 'org.eclipse.jetty.websocket'
-	}
+      exclude group: 'org.eclipse.jetty.websocket'
+    }
     compile 'org.springframework.boot:spring-boot-starter-logging'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-        
+
     compile 'org.springframework:spring-jdbc'
     compile 'org.springframework:spring-context'
     compile 'org.springframework:spring-tx'
     compile 'ch.qos.logback:logback-classic:1.1.+'
 
-    compile 'com.zaxxer:HikariCP:2.4.3'
+    compile 'com.jolbox:bonecp:0.8.0.RELEASE'
     runtime 'org.hsqldb:hsqldb:2.3.+'
-	runtime 'mysql:mysql-connector-java:5.1.+'
-	
-	testCompile group: 'junit', name: 'junit', version: '4.+'
-	testCompile ("org.springframework.boot:spring-boot-starter-test")
+    runtime 'mysql:mysql-connector-java:5.1.+'
+
+    # To include private Driver like oracle ojdbc5.jar
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile ("org.springframework.boot:spring-boot-starter-test")
 }
 
 
