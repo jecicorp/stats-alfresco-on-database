@@ -16,15 +16,14 @@ jar {
     }
 }
 
-bootRun {
-    addResources = true
-}
-
 bootRepackage {
     mainClass = 'fr.jeci.alfresco.saod.SaodApplication'
 }
 
-
+bootRun {
+   jvmArgs = ["-Dspring.profiles.active=bootrun"]
+   addResources = true
+}
 
 repositories {
     mavenCentral()
