@@ -8,6 +8,13 @@ import fr.jeci.alfresco.saod.SaodException;
 public interface AlfrescoDao {
 
 	/**
+	 * try database connection
+	 * 
+	 * @throws SaodException
+	 */
+	void ping() throws SaodException;
+
+	/**
 	 * Map on node_id on size of all file is this folder (depth=1)
 	 * 
 	 * @return Map<node_id, size>

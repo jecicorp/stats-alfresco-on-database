@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -35,6 +36,15 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	@Qualifier("alfrescoSqlQueries")
 	private SqlQueries sqlQueries;
 
+	@PostConstruct
+	public void postConstruct() throws SaodException {
+		ping();
+	}
+
+	@Override
+	public void ping() throws SaodException {
+		String query = sqlQueries.getQuery("select_ping.sql");
+		this.jdbcTemplate.execute(query);
 	}
 
 	@Override

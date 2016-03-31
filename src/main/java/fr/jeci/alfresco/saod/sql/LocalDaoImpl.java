@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -37,9 +38,18 @@ public class LocalDaoImpl implements LocalDao {
 	@Qualifier("localSqlQueries")
 	private SqlQueries sqlQueries;
 
-	@Override
+	@PostConstruct
+	public void postConstruct() throws SaodException {
+		ping();
 	}
 
+	@Override
+	public void ping() throws SaodException {
+		String query = sqlQueries.getQuery("select_ping.sql");
+		this.jdbcTemplate.execute(query);
+	}
+
+	@Override
 	@Transactional
 	public void initDatabase() throws SaodException {
 		this.jdbcTemplate.execute(sqlQueries.getQuery("drop schema.sql"));
@@ -127,12 +137,12 @@ public class LocalDaoImpl implements LocalDao {
 	@Transactional
 	public void upadteDirSumSize(List<Long> nodes) throws SaodException {
 		String query = sqlQueries.getQuery("update_dir_sum_size.sql");
-		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
-
-		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("ids", nodes);
-
-		jdbcNamesTpl.update(query, parameters);
+		/**
+		 * TODO use prep stmt, we cant't use batchUpdate here
+		 */
+		for (Long id : nodes) {
+			this.jdbcTemplate.update(query, id);
+		}
 	}
 
 	@Override

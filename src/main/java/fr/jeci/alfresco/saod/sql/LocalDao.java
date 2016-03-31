@@ -15,6 +15,13 @@ import fr.jeci.alfresco.saod.pojo.PrintNode;
 public interface LocalDao {
 
 	/**
+	 * try database connection
+	 * 
+	 * @throws SaodException
+	 */
+	void ping() throws SaodException;
+
+	/**
 	 * Drop existing table and load schema
 	 */
 	void initDatabase() throws SaodException;
