@@ -24,7 +24,7 @@ public interface LocalDao {
 	/**
 	 * Drop existing table and load schema
 	 */
-	void initDatabase() throws SaodException;
+	void resetDatabase() throws SaodException;
 
 	/**
 	 * Insert localsize of each dir in local db

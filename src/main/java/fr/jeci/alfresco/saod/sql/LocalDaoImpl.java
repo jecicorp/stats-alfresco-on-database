@@ -51,10 +51,8 @@ public class LocalDaoImpl implements LocalDao {
 
 	@Override
 	@Transactional
-	public void initDatabase() throws SaodException {
-		this.jdbcTemplate.execute(sqlQueries.getQuery("drop schema.sql"));
-		this.jdbcTemplate.execute(sqlQueries.getQuery("create schema.sql"));
-		this.jdbcTemplate.execute(sqlQueries.getQuery("create indexes.sql"));
+	public void resetDatabase() throws SaodException {
+		this.jdbcTemplate.execute(sqlQueries.getQuery("delete_all_data.sql"));
 	}
 
 	@Override

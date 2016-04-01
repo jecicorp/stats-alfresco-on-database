@@ -27,7 +27,7 @@ public class SaodServiceImpl implements SaodService {
 
 	@Override
 	public void loadDataFromAlfrescoDB() throws SaodException {
-		this.localDao.initDatabase();
+		this.localDao.resetDatabase();
 
 		// node_id, size
 		long start = System.currentTimeMillis();
