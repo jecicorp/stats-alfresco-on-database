@@ -16,6 +16,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -60,6 +61,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
+	@Primary
 	public DataSource localDataSource() {
 		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
 	}
