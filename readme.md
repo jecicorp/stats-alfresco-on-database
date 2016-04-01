@@ -1,10 +1,16 @@
 # Jeci - Stats Alfresco on Database
 
+[![Build Status](https://travis-ci.org/jeci-sarl/stats-alfresco-on-database.svg?branch=master)](https://travis-ci.org/jeci-sarl/stats-alfresco-on-database)
+
 ## Description / Features
 
-This software is made to perform some statistics on [Alfresco](http://alfresco.com) Database.
+This software is made to perform some statistics on [Alfresco](http://alfresco.com)
+Database.
 
-This software uses queries to perform statistics on content stored in Alfresco. We directly access sql database for performance reason. In consequence, this tool can works with offline server or sql backup dump. We don't need to access to disk "content store" or Solr indexes.
+This software uses queries to perform statistics on content stored in Alfresco.
+We directly access sql database for performance reason. In consequence, this tool
+can works with offline server or sql backup dump. We don't need to access to disk
+"content store" or Solr indexes.
 
 Currently only one functionality was developed : "Alfresco Disk Usage"
 
@@ -17,8 +23,8 @@ Tried with :
 
 ### Dependencies
 
-* Java 8
-* oracle JDBCDriver
+*   Java 8
+*   oracle JDBCDriver
 
 ### Quick start
 
@@ -32,14 +38,14 @@ vim application.properties
 java -jar jeci-saod-0.?.?.war
 ```
 
-Then go to http://localhost:8080 user admin / admin
+Then go to http://localhost:8080 user `admin` / `admin`
 
 ## Alfresco Disk Usage
 
 This tool prints size of directories in Alfresco.
 
-* First we need to load data from the databases. (This may take a while.)
-* Then you would browse directories
+*   First we need to load data from the databases. (This may take a while.)
+*   Then you would browse directories
 
 #### Screen-shots
 
@@ -47,20 +53,22 @@ This tool prints size of directories in Alfresco.
 
 #### Problems
 
-* This version considers files with thumbnails are folders.
-* Problem loading sql file inside war application, for the moment we need sql files readable on disk
+*   This version considers files with thumbnails are folders.
+*   Problem loading sql file inside war application, for the moment we need sql files
+readable on disk
 
 ## Configuration
 
-*  SAOF use [externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) from Spring Boot Framework.
+*   SAOD use [externalized configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)
+from Spring Boot Framework.
 
 *   Use file from `src/test/resources/` as sample configuration
 
-*   We use a local [HSQLDB](http://hsqldb.org/) to store data localy. See `@VAR_DIR@/sqldb/local`
+*   We use a local [HSQLDB](http://hsqldb.org/) to store data localy. See `sqldb/local`
 
 *   You may occure probleme with jmx on jetty, add this parameters.
 
-``` properties
+```
 endpoints.jmx.unique-names=true
 endpoints.jmx.enabled=false
 ```
@@ -99,18 +107,30 @@ We tried computation script with big Alfresco Database (~500GB of office files) 
 
 ## Future Plans
 
-* Authentication based on Alfresco user local account
 * Add support to Postgresql
-* Add count of files
-* Add REST interfaces to make javascript UI
-
+* UI "Alfresco Disk Usage"
+    * Print "association name" instead of NodeRef when available
+    * Print date of last update on alfresco
+    * Add row ".." to go on parent folder
+    * Add number of file in folder and tree
+    * Link in "Add count of files"
+* New Component
+    * "Alfresco Disk Usage" report as PDF
+    * UI to create and manage local user
+    * Add REST interfaces to make javascript UI
+* Authentication based on Alfresco user local account
+* Translation in French and other languages (with your help)
+* Adding Unit Tests and Load Tests
 
 ## License
 
    Copyright 2016 [Jeci](http://jeci.fr) - Jérémie Lesage
 
-   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+   Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+   this file except in compliance with the License. You may obtain a copy of the
+   License at
 
       http://www.apache.org/licenses/LICENSE-2.0
 
-This work may reference software licensed under other open source licenses, please refer to these respective works for more information on license terms.
+This work may reference software licensed under other open source licenses, please
+refer to these respective works for more information on license terms.
