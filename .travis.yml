@@ -1,11 +1,18 @@
 language: java
-
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+deploy:
+  provider: releases
+  api_key:
+    secure: ${SECURE_KEY}
+  file: "build/libs/*war"
+  skip_cleanup: true
+  on:
+    repo: jeci-sarl/stats-alfresco-on-database
+    tags: true
