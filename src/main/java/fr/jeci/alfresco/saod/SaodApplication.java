@@ -3,6 +3,8 @@ package fr.jeci.alfresco.saod;
 import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -95,10 +97,13 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Configuration
 	protected static class AuthenticationSecurity extends GlobalAuthenticationConfigurerAdapter {
 
+		@Autowired
+		@Qualifier("localDataSource")
+		private DataSource dataSource;
+
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN", "USER").and()
-					.withUser("user").password("user").roles("USER");
+			auth.jdbcAuthentication().dataSource(dataSource);
 		}
 
 	}

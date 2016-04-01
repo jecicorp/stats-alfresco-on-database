@@ -67,12 +67,31 @@ endpoints.jmx.enabled=false
 
 ## Security
 
-For the moment, grant access is hard code in `fr.jeci.alfresco.saod.SaodApplication.ApplicationSecurity` and `fr.jeci.alfresco.saod.SaodApplication.ApplicationSecurity`
+Security is perform with [Spring Security](http://projects.spring.io/spring-security/).
+There is two roles `ROLE_ADMIN` and `ROLE_USER`.
+
+*   `ROLE_ADMIN` can load date from Alfresco database
+*   `ROLE_USER` can only read content.
 
 Default users are :
 
- * `admin / admin`
- * `user / user`
+ *   `admin / admin` with `ROLE_ADMIN`
+ *   `user / user` with `ROLE_USER`
+
+You can choose login and password for this default account with these parameters:
+
+```
+flyway.placeholders.admin.name=admin
+flyway.placeholders.admin.password=adm1n
+flyway.placeholders.user.name=user
+flyway.placeholders.user.password=us3r
+```
+
+These parameters must be define before the first boot, or change directly in the
+local HSQL database, for example using [DBeaver](http://dbeaver.jkiss.org/). Take
+care to first stop application before editing the local database and shutdown
+DBeaver before restart application.
+
 
 ## Performance
 
