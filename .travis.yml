@@ -9,8 +9,7 @@ cache:
   - $HOME/.gradle/wrapper/
 deploy:
   provider: releases
-  api_key:
-    secure: ${SECURE_KEY}
+  api_key: ${GH_TOKEN}
   file: "build/libs/*war"
   skip_cleanup: true
   on:
