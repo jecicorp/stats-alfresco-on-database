@@ -39,6 +39,7 @@ public class LocalDaoImpl implements LocalDao {
 
 	@Override
 	public void ping() throws SaodException {
+		LOG.info("Ping Local HSQL Database");
 		String query = sqlQueries.getQuery("select_ping.sql");
 		this.jdbcTemplate.execute(query);
 	}

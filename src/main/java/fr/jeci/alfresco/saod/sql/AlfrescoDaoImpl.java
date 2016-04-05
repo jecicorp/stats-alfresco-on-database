@@ -37,6 +37,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 
 	@Override
 	public void ping() throws SaodException {
+		LOG.info("Ping Alfresco Database");
 		String query = sqlQueries.getQuery("select_ping.sql");
 		this.jdbcTemplate.execute(query);
 	}
