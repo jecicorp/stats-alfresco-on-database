@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -37,11 +36,6 @@ public class LocalDaoImpl implements LocalDao {
 	@Autowired
 	@Qualifier("localSqlQueries")
 	private SqlQueries sqlQueries;
-
-	@PostConstruct
-	public void postConstruct() throws SaodException {
-		ping();
-	}
 
 	@Override
 	public void ping() throws SaodException {
