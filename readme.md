@@ -73,6 +73,14 @@ endpoints.jmx.unique-names=true
 endpoints.jmx.enabled=false
 ```
 
+*   You can define port or context path with these parameters:
+
+```
+server.port=8787
+server.contextPath=/saod
+```
+
+
 ## Security
 
 Security is perform with [Spring Security](http://projects.spring.io/spring-security/).
