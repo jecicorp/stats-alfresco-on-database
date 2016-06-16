@@ -1,6 +1,11 @@
 package fr.jeci.alfresco.saod.controller;
 
+import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
 
 @Controller
@@ -25,6 +31,12 @@ public class HomeController {
 
 	@Value("${version}")
 	private String version = "0.0.0";
+
+	@Value("${saod.sort.default}")
+	private String defaultSort = "none";
+
+	@Value("${saod.sort.lang}")
+	private String lang = "us";
 
 	@Autowired
 	private SaodService saodService;
@@ -76,9 +88,11 @@ public class HomeController {
 	@RequestMapping("/print")
 	@Secured("ROLE_USER")
 	public String print(@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid,
-			Model model) {
+			@RequestParam(value = "sort", required = false, defaultValue = "") String sort, Model model) {
 		model.addAttribute("time", new Date());
 		model.addAttribute("version", this.version);
+
+		Comparator<PrintNode> pnComparator = selectComparator(sort);
 
 		try {
 			long start = System.currentTimeMillis();
@@ -86,12 +100,16 @@ public class HomeController {
 			if (StringUtils.hasText(nodeid) && Integer.decode(nodeid) > 0) {
 				model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
 				model.addAttribute("title", String.format("%s", nodeid));
-				model.addAttribute("nodes", this.saodService.getSubFolders(nodeid));
+				List<PrintNode> subFolders = this.saodService.getSubFolders(nodeid);
+				if (pnComparator != null) {
+					Collections.sort(subFolders, pnComparator);
+				}
+				model.addAttribute("nodes", subFolders);
 
 				String path = this.saodService.computePath(nodeid);
 				model.addAttribute("path", path);
 			} else {
-				model.addAttribute("title", String.format("Roots", nodeid));
+				model.addAttribute("title", "Roots");
 				model.addAttribute("nodes", this.saodService.getRoots());
 			}
 			LOG.info("Duration : " + (System.currentTimeMillis() - start));
@@ -101,6 +119,48 @@ public class HomeController {
 		}
 
 		return "print";
+	}
+
+	private Collator collactor() {
+		Locale langTag = (lang == null) ? Locale.US : Locale.forLanguageTag(lang);
+		Collator collator = Collator.getInstance(langTag);
+		collator.setStrength(Collator.PRIMARY);
+		return collator;
+	}
+
+	private Comparator<PrintNode> selectComparator(final String psort) {
+		Comparator<PrintNode> pnComparator;
+
+		String sort;
+		if (psort == null || !StringUtils.hasText(psort)) {
+			sort = this.defaultSort;
+		} else {
+			sort = psort;
+		}
+
+		switch (sort) {
+		case "name":
+			pnComparator = (o1, o2) -> collactor().compare(o1.getLabel(), o2.getLabel());
+			break;
+
+		case "local":
+			pnComparator = (o1, o2) -> o1.getLocalSize().compareTo(o2.getLocalSize());
+			break;
+
+		case "aggregate":
+			pnComparator = (o1, o2) -> o1.getDirSize().compareTo(o2.getDirSize());
+			break;
+
+		case "full":
+			pnComparator = (o1, o2) -> o1.getFullSize().compareTo(o2.getFullSize());
+			break;
+
+		case "none":
+		default:
+			pnComparator = null;
+			break;
+		}
+		return pnComparator;
 	}
 
 }
