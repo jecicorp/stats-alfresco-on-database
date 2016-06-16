@@ -25,7 +25,7 @@
 
 
 		<div class="row">
-			<div class="col-md-4" th:if="${dir}">
+			<div class="col-md-3" th:if="${dir}">
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
@@ -56,13 +56,14 @@
 					</tr>
 				</table>
 			</div>
-			<div class="col-md-8">
+			<div class="col-md-9">
 				<h3 class="sub-header">Childs Nodes</h3>
 				<div class="table-responsive">
-					<table class="table table-striped" th:with="sort=${param.containsKey('sort')?param.sort[0]:'none'}">
+					<table class="table table-striped" style="table-layout: fixed; word-wrap: break-word;"
+						th:with="sort=${param.containsKey('sort')?param.sort[0]:'none'}">
 						<thead>
 							<tr th:with="nodeid=${dir}?${dir.nodeid}:0">
-								<th th:switch="${sort}">
+								<th th:switch="${sort}" style="width:65%">
 									<th:block th:case="'name'">
 										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name_r')}">Folder Name</a>
 								  		<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>
@@ -136,9 +137,9 @@
 											<th:block th:text="${node.label}">Node Label</th:block>
 										</th:block>
 								</a></td>
-								<td th:text="${node.localSizeReadable}">Local Size</td>
-								<td th:text="${node.dirSizeReadable}">Dir Size</td>
-								<td th:text="${node.fullSizeReadable}">Ful Size</td>
+								<td th:text="${node.localSizeReadable}" style="text-align: right;">cal Size</td>
+								<td th:text="${node.dirSizeReadable}" style="text-align: right;">Dir Size</td>
+								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Ful Size</td>
 							</tr>
 						</tbody>
 					</table>
