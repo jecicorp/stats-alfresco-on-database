@@ -61,11 +61,59 @@
 				<div class="table-responsive">
 					<table class="table table-striped">
 						<thead>
-							<tr>
-								<th>Folder Name</th>
-								<th>Local Size</th>
-								<th>Aggregate Size</th>
-								<th>Full Size</th>
+							<tr th:with="sort=${param.containsKey('sort')?param.sort[0]:'none'}">
+								<th th:switch="${sort}">
+									<th:block th:case="'name'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name_r')}">Folder Name</a>
+								  		<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="'name_r'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Folder Name</a>
+								  		<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="*">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name')}">Folder Name</a>
+								  	</th:block>
+								</th>
+								<th th:switch="${sort}">
+									<th:block th:case="'local'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='local_r')}">Local Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="'local_r'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Local Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="*">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='local')}">Local Size</a>
+								  	</th:block>
+								</th>
+								<th th:switch="${sort}">
+									<th:block th:case="'aggregate'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='aggregate_r')}">Aggregate Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="'aggregate_r'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Aggregate Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="*">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='aggregate')}">Aggregate Size</a>
+								  	</th:block>
+								</th>
+								<th th:switch="${sort}">
+									<th:block th:case="'full'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='full_r')}">Full Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="'full_r'">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Full Size</a>
+								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
+								  	</th:block>
+									<th:block th:case="*">
+										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='full')}">Full Size</a>
+								  	</th:block>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
