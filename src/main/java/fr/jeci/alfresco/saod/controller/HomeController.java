@@ -131,28 +131,41 @@ public class HomeController {
 	private Comparator<PrintNode> selectComparator(final String psort) {
 		Comparator<PrintNode> pnComparator;
 
-		String sort;
+		String[] sort;
 		if (psort == null || !StringUtils.hasText(psort)) {
-			sort = this.defaultSort;
+			sort = this.defaultSort.split("_");
 		} else {
-			sort = psort;
+			sort = psort.split("_");
 		}
+		boolean reverse = sort.length == 2 && "r".equals(sort[1]);
 
-		switch (sort) {
+		switch (sort[0]) {
 		case "name":
 			pnComparator = (o1, o2) -> collactor().compare(o1.getLabel(), o2.getLabel());
+			if (reverse) {
+				pnComparator = pnComparator.reversed();
+			}
 			break;
 
 		case "local":
-			pnComparator = (o1, o2) -> o1.getLocalSize().compareTo(o2.getLocalSize());
+			pnComparator = (o1, o2) -> o1.getLocalSize().compareTo(o2.getLocalSize()) * -1;
+			if (reverse) {
+				pnComparator = pnComparator.reversed();
+			}
 			break;
 
 		case "aggregate":
-			pnComparator = (o1, o2) -> o1.getDirSize().compareTo(o2.getDirSize());
+			pnComparator = (o1, o2) -> o1.getDirSize().compareTo(o2.getDirSize()) * -1;
+			if (reverse) {
+				pnComparator = pnComparator.reversed();
+			}
 			break;
 
 		case "full":
-			pnComparator = (o1, o2) -> o1.getFullSize().compareTo(o2.getFullSize());
+			pnComparator = (o1, o2) -> o1.getFullSize().compareTo(o2.getFullSize()) * -1;
+			if (reverse) {
+				pnComparator = pnComparator.reversed();
+			}
 			break;
 
 		case "none":
@@ -160,6 +173,7 @@ public class HomeController {
 			pnComparator = null;
 			break;
 		}
+
 		return pnComparator;
 	}
 
