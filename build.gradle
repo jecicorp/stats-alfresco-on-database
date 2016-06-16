@@ -1,16 +1,26 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
-apply plugin: 'war'
 
-archivesBaseName = 'jeci-saod'
-//applicationName = "stats-alfresco-on-database"
 group = 'fr.jeci.alfresco'
-version = '0.3.0'
+version = '0.3.3'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+
 jar {
+    baseName = 'jeci-saod'
+    version =  version
+    
     manifest {
         attributes 'Implementation-Title': 'JECI Stats Alfresco On Database', 'Implementation-Version': version
     }
@@ -36,7 +46,10 @@ configurations {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    
     compile("org.springframework.boot:spring-boot-starter-freemarker")
     compile("org.springframework.boot:spring-boot-starter-jetty") {
       exclude group: 'org.eclipse.jetty.websocket'
