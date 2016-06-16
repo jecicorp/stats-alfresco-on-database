@@ -16,7 +16,7 @@
 				th:text="|Directory :	${dir.label}|">Dir Name</h2>
 			<h2 class="sub-header" th:if="not ${dir}" th:text="${title}">Titre
 				Standard</h2>
-			<p>
+			<p th:unless="${dir == null}">
 				<b>Full Path</b> : <span th:text="${path}"></span>
 			</p>
 		</div>
@@ -59,9 +59,9 @@
 			<div class="col-md-8">
 				<h3 class="sub-header">Childs Nodes</h3>
 				<div class="table-responsive">
-					<table class="table table-striped">
+					<table class="table table-striped" th:with="sort=${param.containsKey('sort')?param.sort[0]:'none'}">
 						<thead>
-							<tr th:with="sort=${param.containsKey('sort')?param.sort[0]:'none'}">
+							<tr th:with="nodeid=${dir}?${dir.nodeid}:0">
 								<th th:switch="${sort}">
 									<th:block th:case="'name'">
 										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name_r')}">Folder Name</a>
@@ -72,54 +72,57 @@
 								  		<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name')}">Folder Name</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='name')}">Folder Name</a>
 								  	</th:block>
 								</th>
 								<th th:switch="${sort}">
 									<th:block th:case="'local'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='local_r')}">Local Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='local_r')}">Local Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="'local_r'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Local Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='none')}">Local Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='local')}">Local Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='local')}">Local Size</a>
 								  	</th:block>
 								</th>
 								<th th:switch="${sort}">
 									<th:block th:case="'aggregate'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='aggregate_r')}">Aggregate Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='aggregate_r')}">Aggregate Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="'aggregate_r'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Aggregate Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='none')}">Aggregate Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='aggregate')}">Aggregate Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='aggregate')}">Aggregate Size</a>
 								  	</th:block>
 								</th>
 								<th th:switch="${sort}">
 									<th:block th:case="'full'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='full_r')}">Full Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='full_r')}">Full Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="'full_r'">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Full Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='none')}">Full Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
 								  	</th:block>
 									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='full')}">Full Size</a>
+										<a th:href="@{/print(nodeid=${nodeid}, sort='full')}">Full Size</a>
 								  	</th:block>
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="node,iterStat : ${nodes}"
-								th:class="${iterStat.odd}? 'odd'">
-								<td><a th:href="@{/print(nodeid=${node.nodeid})}"> <th:block
+							<tr th:class="'odd'" th:unless="${dir == null}">
+							<td><a th:href="@{print(nodeid=${dir.parent}, sort=${sort})}"><span class="glyphicon glyphicon-level-up"></span> ..</a>
+							</td><td></td><td></td><td></td></tr>
+							<tr th:each="node,iterStat : ${nodes}" th:class="${iterStat.odd}? 'odd'">
+								<td >
+								<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
 											th:if="not ${dir}">
 											<th:block
 												th:if="${#strings.startsWith(node.label,'system://system')}">System Store</th:block>
