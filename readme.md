@@ -81,6 +81,18 @@ server.contextPath=/saod
 ```
 
 
+- You can define default sorting with this two parameters:
+
+```
+saod.sort.default=full
+saod.sort.lang=fr
+```
+
+You can sort on the four columns : "name", "local", "aggregate", "full". default
+is set to "none". For the sort "name" column, you can define the language to use
+with `saod.sort.lang` parameter.
+
+
 ## Security
 
 Security is perform with [Spring Security](http://projects.spring.io/spring-security/).
