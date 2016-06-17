@@ -12,7 +12,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 group = 'fr.jeci.alfresco'
-version = '0.3.3'
+version = '0.3.4'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
