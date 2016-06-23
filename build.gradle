@@ -64,10 +64,10 @@ dependencies {
     compile 'org.springframework:spring-tx'
     compile 'ch.qos.logback:logback-classic:1.1.+'
     
-    compile "org.flywaydb:flyway-core:4.0"
+    compile "org.flywaydb:flyway-core:4.0.3"
 
     compile 'com.jolbox:bonecp:0.8.0.RELEASE'
-    runtime 'org.hsqldb:hsqldb:2.3.+'
+    runtime 'org.hsqldb:hsqldb:2.3.3'
     runtime 'mysql:mysql-connector-java:5.1.+'
 
     // To include private Driver like oracle ojdbc5.jar
