@@ -12,7 +12,7 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 group = 'fr.jeci.alfresco'
-version = '0.4.0'
+version = '0.4.1'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -20,7 +20,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 jar {
     baseName = 'jeci-saod'
     version =  version
-    
+
     manifest {
         attributes 'Implementation-Title': 'JECI Stats Alfresco On Database', 'Implementation-Version': version
     }
