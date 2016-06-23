@@ -23,7 +23,7 @@ deploy-job:
   script:
     - "[ -z $ALF_HOST ] && exit 0"
     - gradle clean build
-    - export ARTIFACT=build/libs/*.jar
+    - export ARTIFACT=`ls -1 build/libs/*.jar`
     - curl -v -X POST -F filedata=@$ARTIFACT -F siteid=$ALF_SITE -F containerid=documentLibrary -F uploaddirectory=/SAOD http://$ALF_USER:$ALF_PWD@$ALF_HOST/alfresco/service/api/upload
   tags:
     - docker
