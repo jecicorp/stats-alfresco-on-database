@@ -4,6 +4,8 @@ stages:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
+  - curl -s http://$ALF_USER:$ALF_PWD@$ALF_HOST/alfresco/service/api/path/workspace/SpacesStore/company_home/sites/$ALF_SITE/documentLibrary/SAOD/ojdbc6.jar/content -o libs/ojdbc6.jar
+
 
 cache:
   paths:
