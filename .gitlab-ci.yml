@@ -21,7 +21,7 @@ deploy-job:
   stage: deploy
   image: jeci/centos_deployer_gradle
   script:
-    - "[ -z $IP_DEPLOY ] && exit 0"
+    - "[ -z $ALF_HOST ] && exit 0"
     - gradle clean build
     - export ARTIFACT=build/libs/*.jar
     - curl -v -X POST -F filedata=@$ARTIFACT -F siteid=$ALF_SITE -F containerid=documentLibrary -F uploaddirectory=/SAOD http://$ALF_USER:$ALF_PWD@$ALF_HOST/alfresco/service/api/upload
