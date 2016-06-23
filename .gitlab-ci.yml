@@ -28,4 +28,4 @@ deploy-job:
   tags:
     - docker
   only:
-    - triggers
+    - tags
