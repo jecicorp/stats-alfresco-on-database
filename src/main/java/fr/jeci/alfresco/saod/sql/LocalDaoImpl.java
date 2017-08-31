@@ -26,6 +26,12 @@ import fr.jeci.alfresco.saod.pojo.PrintNode;
 public class LocalDaoImpl implements LocalDao {
 	static final Logger LOG = LoggerFactory.getLogger(LocalDaoImpl.class);
 
+	/* SQL parameters */
+	private static final String SUM_SIZE = "sum_size";
+	private static final String PARENT_NODE_ID = "parent_node_id";
+	private static final String LOCAL_SIZE = "local_size";
+	private static final String NODE_ID = "node_id";
+
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
@@ -59,8 +65,8 @@ public class LocalDaoImpl implements LocalDao {
 
 		for (Entry<Long, Long> e : dirLocalSize.entrySet()) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("node_id", e.getKey());
-			parameters.addValue("local_size", e.getValue());
+			parameters.addValue(NODE_ID, e.getKey());
+			parameters.addValue(LOCAL_SIZE, e.getValue());
 			batchArgs.add(parameters);
 		}
 
@@ -81,8 +87,8 @@ public class LocalDaoImpl implements LocalDao {
 			}
 
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("node_id", id);
-			parameters.addValue("local_size", 0);
+			parameters.addValue(NODE_ID, id);
+			parameters.addValue(LOCAL_SIZE, 0);
 			jdbcNamesTpl.update(query, parameters);
 		}
 	}
@@ -110,8 +116,8 @@ public class LocalDaoImpl implements LocalDao {
 
 		for (Long id : parentsid) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("node_id", id);
-			parameters.addValue("sum_size", 0);
+			parameters.addValue(NODE_ID, id);
+			parameters.addValue(SUM_SIZE, 0);
 			batchArgs.add(parameters);
 		}
 
@@ -147,8 +153,8 @@ public class LocalDaoImpl implements LocalDao {
 
 		for (Entry<Long, Long> e : nodeids.entrySet()) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			parameters.addValue("node_id", e.getKey());
-			parameters.addValue("parent_node_id", e.getValue());
+			parameters.addValue(NODE_ID, e.getKey());
+			parameters.addValue(PARENT_NODE_ID, e.getValue());
 			batchArgs.add(parameters);
 		}
 
