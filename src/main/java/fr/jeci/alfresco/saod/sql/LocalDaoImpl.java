@@ -187,7 +187,7 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public List<Long> selectparentFolders(List<Long> nodesid) throws SaodException {
-		if (nodesid == null || nodesid.size() == 0) {
+		if (nodesid == null || nodesid.isEmpty()) {
 			return Collections.emptyList();
 		}
 

@@ -49,7 +49,7 @@ public class SaodServiceImpl implements SaodService {
 		this.localDao.resetDirSumSize();
 
 		List<Long> nodes = this.localDao.selectparentFolders(this.localDao.selectLeafNode());
-		while (nodes.size() > 0) {
+		while (!nodes.isEmpty()) {
 			this.localDao.upadteDirSumSize(nodes);
 			nodes = this.localDao.selectparentFolders(nodes);
 		}
@@ -153,7 +153,7 @@ public class SaodServiceImpl implements SaodService {
 		Long id = Long.valueOf(nodeid);
 
 		sb.append(loadNodeLabel(id));
-		PrintNode node = null;
+		PrintNode node;
 		while ((node = this.localDao.loadRow(id)) != null) {
 			if (node.getParent() == null) {
 				sb.insert(0, "|");
