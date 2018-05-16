@@ -115,4 +115,9 @@ public interface LocalDao {
 	 */
 	void upadteDirSumSize(List<Long> nodes) throws SaodException;
 
+	/**
+	 * Performing a checkpoint to the hsqldb
+	 */
+	void checkpoint();
+
 }
