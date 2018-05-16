@@ -44,6 +44,7 @@ public class SaodServiceImpl implements SaodService {
 		// Aggregate size from leaf to root
 		resetFullSumSize();
 		
+		this.localDao.checkpoint();
 	}
 
 	@Override

@@ -58,6 +58,12 @@ public class LocalDaoImpl implements LocalDao {
 
 	@Override
 	@Transactional
+	public void checkpoint() {
+		this.jdbcTemplate.execute("CHECKPOINT DEFRAG");		
+	}
+	
+	@Override
+	@Transactional
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
