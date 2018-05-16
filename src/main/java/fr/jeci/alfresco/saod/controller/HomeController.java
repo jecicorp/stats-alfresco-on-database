@@ -44,6 +44,7 @@ public class HomeController {
 	@RequestMapping("/")
 	public String home(Model model) {
 		model.addAttribute("time", new Date());
+		model.addAttribute("duration", "This may take a while.");
 		model.addAttribute("title", this.title);
 		model.addAttribute("version", this.version);
 
@@ -75,6 +76,8 @@ public class HomeController {
 			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
 		}
+
+		model.addAttribute("duration", String.format("Compute done in %s ms", (System.currentTimeMillis() - start)));
 		return "home";
 	}
 
