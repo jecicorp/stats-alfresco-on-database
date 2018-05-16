@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta th:include="_header :: meta" />
+<link th:include="_header :: stylesheet"></link>
+</head>
+
+<body>
+	<div class="container">
+
+		<div class="masthead">
+			<h3 class="text-muted">Error Page</h3>
+			<h4 th:utext="${error}">Error Page</h4>
+		</div>
+
+		<div class="row">
+			<p>
+				<b>Status</b> : <span th:text="${status}"></span>
+			</p>
+			<p>
+				<b>Source Path</b> : <span th:text="${path}"></span>
+			</p>
+			<p>
+				<b>Exception</b> : <span th:text="${exception}"></span>
+			</p>
+			<p>
+				<b>Message</b> : <pre th:text="${message}"></pre>
+			</p>
+		</div>
+		<div th:include="_footer :: error"></div>
+		<div th:include="_footer :: footer"></div>
+	</div>
+
+	<!-- 
+ timestamp=Thu Aug 31 17:18:26 CEST 2017, 
+username = alfresco. Terminating connection pool (set lazyInit to true if you expect to start your database after your app). Original Exception
+
+ -->
+
+
+
+	<div th:include="_footer :: scripts"></div>
+
+</body>
+</html>
