@@ -63,14 +63,14 @@ public class HomeController {
 	@RequestMapping("/init")
 	@Secured("ROLE_ADMIN")
 	public String init(Model model) {
+		long start = System.currentTimeMillis();
 		model.addAttribute("time", new Date());
 		model.addAttribute("title", this.title);
 		model.addAttribute("version", this.version);
 
 		try {
-			long start = System.currentTimeMillis();
 			saodService.loadDataFromAlfrescoDB();
-			LOG.info("Duration : {}", (System.currentTimeMillis() - start));
+			LOG.info("END - Load Data From Alfresco DB _ Duration : {}", (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
 			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
@@ -105,7 +105,7 @@ public class HomeController {
 				model.addAttribute("title", "Roots");
 				model.addAttribute("nodes", this.saodService.getRoots());
 			}
-			LOG.info("Duration : {}", (System.currentTimeMillis() - start));
+			LOG.info("Print duration : {}", (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
 			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
