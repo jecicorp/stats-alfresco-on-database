@@ -15,7 +15,7 @@ public interface AlfrescoDao {
 	void ping() throws SaodException;
 
 	/**
-	 * Map on node_id on size of all file is this folder (depth=1)
+	 * Map of node_id and size of all file is this folder (depth=1)
 	 * 
 	 * @return Map<node_id, size>
 	 * @throws SaodException
