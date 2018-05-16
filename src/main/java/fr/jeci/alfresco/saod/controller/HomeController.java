@@ -6,24 +6,32 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.ErrorAttributes;
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
 
 @Controller
-public class HomeController {
+public class HomeController implements ErrorController {
 	private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
 	@Value("${description}")
@@ -40,6 +48,9 @@ public class HomeController {
 
 	@Autowired
 	private SaodService saodService;
+
+	@Autowired
+	private ErrorAttributes errorAttributes;
 
 	@RequestMapping("/")
 	public String home(Model model) {
@@ -115,6 +126,22 @@ public class HomeController {
 		}
 
 		return "print";
+	}
+
+	@RequestMapping("/error")
+	public String error(HttpServletRequest request, HttpServletResponse response, Model model) {
+		RequestAttributes requestAttributes = new ServletRequestAttributes(request);
+		Map<String, Object> errorAttributes2 = errorAttributes.getErrorAttributes(requestAttributes, false);
+
+		model.addAllAttributes(errorAttributes2);
+		model.addAttribute("attr", errorAttributes2.entrySet());
+
+		return getErrorPath();
+	}
+
+	@Override
+	public String getErrorPath() {
+		return "error";
 	}
 
 	private Collator collactor() {
