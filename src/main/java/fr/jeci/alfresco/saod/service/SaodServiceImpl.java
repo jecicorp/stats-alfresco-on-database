@@ -32,27 +32,35 @@ public class SaodServiceImpl implements SaodService {
 		// node_id, size
 		long start = System.currentTimeMillis();
 		Map<Long, Long> selectDirLocalSize = this.alfrescoDao.selectDirLocalSize();
-		LOG.info("selectDirLocalSize : {} ms ", (System.currentTimeMillis() - start));
+		int nbNodes = selectDirLocalSize.size();
+		LOG.info("selectDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
 		start = System.currentTimeMillis();
 		this.localDao.insertStatsDirLocalSize(selectDirLocalSize);
-		LOG.info("insertStatsDirLocalSize : {} ms ", (System.currentTimeMillis() - start));
+		LOG.info("insertStatsDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
 		loadParentId(selectDirLocalSize);
 
 		// Aggregate size from leaf to root
 		resetFullSumSize();
+		
 	}
 
 	@Override
 	public void resetFullSumSize() throws SaodException {
+		long start = System.currentTimeMillis();
+
 		this.localDao.resetDirSumSize();
 
 		List<Long> nodes = this.localDao.selectparentFolders(this.localDao.selectLeafNode());
+		int size = nodes.size();
 		while (!nodes.isEmpty()) {
 			this.localDao.upadteDirSumSize(nodes);
 			nodes = this.localDao.selectparentFolders(nodes);
+			size += nodes.size();
 		}
+
+		LOG.info("resetFullSumSize : {} nodes - {} ms ", size, (System.currentTimeMillis() - start));
 	}
 
 	/**
@@ -70,7 +78,8 @@ public class SaodServiceImpl implements SaodService {
 		// child_node_id, parent_node_id
 		long start = System.currentTimeMillis();
 		Map<Long, Long> selectParentNodeId = this.alfrescoDao.selectParentNodeId(list);
-		LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
+		LOG.info("selectParentNodeId : {} nodes - {} ms ", selectDirLocalSize.size(),
+				(System.currentTimeMillis() - start));
 
 		while (selectParentNodeId.size() > 0) {
 
@@ -80,26 +89,23 @@ public class SaodServiceImpl implements SaodService {
 			parentsid.addAll(parents);
 			start = System.currentTimeMillis();
 			this.localDao.insertStatsDirNoSize(parentsid);
-			LOG.info("insertStatsDirNoSize : {} ms ", (System.currentTimeMillis() - start));
+			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(), (System.currentTimeMillis() - start));
 
-			start = System.currentTimeMillis();
 			this.localDao.updateParentNodeId(selectParentNodeId);
-			LOG.info("updateParentNodeId : {} ms ", (System.currentTimeMillis() - start));
-
-			start = System.currentTimeMillis();
 			this.localDao.upadteDirSumSizeZero(parentsid);
-			LOG.info("upadteDirSumSizeZero : {} ms ", (System.currentTimeMillis() - start));
-
-			start = System.currentTimeMillis();
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
-			LOG.info("selectParentNodeId : {} ms ", (System.currentTimeMillis() - start));
 		}
 	}
 
 	@Override
 	public List<PrintNode> getRoots() throws SaodException {
+		long start = System.currentTimeMillis();
 		List<Long> selectRootFolders = this.localDao.selectRootFolders();
-		return loadPrintNode(selectRootFolders);
+		LOG.info("selectRootFolders : {} nodes - {} ms ", selectRootFolders.size(),
+				(System.currentTimeMillis() - start));
+		List<PrintNode> loadPrintNode = loadPrintNode(selectRootFolders);
+		LOG.info("loadPrintNode : {} nodes - {} ms ", loadPrintNode.size(), (System.currentTimeMillis() - start));
+		return loadPrintNode;
 	}
 
 	@Override
