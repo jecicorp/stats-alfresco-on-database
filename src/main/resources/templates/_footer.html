@@ -15,7 +15,9 @@
 	<div th:fragment="footer">
 		<div class="footer">
 			<p>
-				Made by <a class="brand" th:href="@{http://jeci.fr}" th:text="Jeci">
+				<span th:utext="#{application.name}">Jeci - SAoD</span>
+				<span th:utext="${version}">V000</span>
+				- made by <a class="brand" th:href="@{http://jeci.fr}" th:text="Jeci">
 					Jeci</a> - Licensed under the Apache License, Version 2.0
 			</p>
 		</div>
