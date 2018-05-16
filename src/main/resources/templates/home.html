@@ -37,7 +37,7 @@
 						<a th:href="@{/init}" class="btn btn-primary" role="button">Compute
 							Disk Usage</a>
 					</p>
-					<p class="text-danger">This may take a while.</p>
+					<p class="text-danger" th:text="${duration}">This may take a while.</p>
 				</div>
 				<div class="col-md-6">
 
