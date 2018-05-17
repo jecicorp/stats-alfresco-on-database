@@ -82,7 +82,7 @@ public class HomeController implements ErrorController {
 
 		try {
 			saodService.loadDataFromAlfrescoDB();
-			LOG.info("END - Load Data From Alfresco DB _ Duration : {}", (System.currentTimeMillis() - start));
+			LOG.info("END - Load Data From Alfresco DB _ Duration : {} ms", (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
 			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
