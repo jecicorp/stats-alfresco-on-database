@@ -205,19 +205,26 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
-		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("update_parent_node_id.sql");
 
-		List<MapSqlParameterSource> batchArgs = new ArrayList<>();
+		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 
 		for (Entry<Long, Long> e : nodeids.entrySet()) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(PARENT_NODE_ID, e.getValue());
 			batchArgs.add(parameters);
+
+			if (batchArgs.size() >= FETCH_SIZE) {
+				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+				batchArgs.clear();
+			}
 		}
 
-		String query = sqlQueries.getQuery("update_parent_node_id.sql");
-		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[nodeids.size()]));
+		if (batchArgs.size() > 0) {
+			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+		}
 	}
 
 	@Override
