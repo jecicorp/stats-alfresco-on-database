@@ -161,19 +161,26 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException {
-		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("update_stats_dir_sum_size.sql");
 
-		List<MapSqlParameterSource> batchArgs = new ArrayList<>();
+		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 
 		for (Long id : parentsid) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(SUM_SIZE, 0);
 			batchArgs.add(parameters);
+
+			if (batchArgs.size() >= FETCH_SIZE) {
+				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+				batchArgs.clear();
+			}
 		}
 
-		String query = sqlQueries.getQuery("update_stats_dir_sum_size.sql");
-		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[parentsid.size()]));
+		if (batchArgs.size() > 0) {
+			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+		}
 	}
 
 	@Override
