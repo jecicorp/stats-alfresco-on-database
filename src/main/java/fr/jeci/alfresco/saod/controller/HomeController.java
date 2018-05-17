@@ -19,6 +19,9 @@ import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,19 +108,9 @@ public class HomeController implements ErrorController {
 			long start = System.currentTimeMillis();
 
 			if (StringUtils.hasText(nodeid) && Integer.decode(nodeid) > 0) {
-				model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
-				model.addAttribute("title", String.format("%s", nodeid));
-				List<PrintNode> subFolders = this.saodService.getSubFolders(nodeid);
-				if (pnComparator != null) {
-					Collections.sort(subFolders, pnComparator);
-				}
-				model.addAttribute("nodes", subFolders);
-
-				String path = this.saodService.computePath(nodeid);
-				model.addAttribute("path", path);
+				printFolder(nodeid, model, pnComparator);
 			} else {
-				model.addAttribute("title", "Roots");
-				model.addAttribute("nodes", this.saodService.getRoots());
+				printRoots(model);
 			}
 			LOG.info("Print duration : {}", (System.currentTimeMillis() - start));
 		} catch (SaodException e) {
@@ -126,6 +119,26 @@ public class HomeController implements ErrorController {
 		}
 
 		return "print";
+	}
+
+	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW, readOnly = true, timeout = 10)
+	private void printRoots(Model model) throws SaodException {
+		model.addAttribute("title", "Roots");
+		model.addAttribute("nodes", this.saodService.getRoots());
+	}
+
+	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW, readOnly = true, timeout = 10)
+	private void printFolder(String nodeid, Model model, Comparator<PrintNode> pnComparator) throws SaodException {
+		model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
+		model.addAttribute("title", String.format("%s", nodeid));
+		List<PrintNode> subFolders = this.saodService.getSubFolders(nodeid);
+		if (pnComparator != null) {
+			Collections.sort(subFolders, pnComparator);
+		}
+		model.addAttribute("nodes", subFolders);
+
+		String path = this.saodService.computePath(nodeid);
+		model.addAttribute("path", path);
 	}
 
 	@RequestMapping("/error")

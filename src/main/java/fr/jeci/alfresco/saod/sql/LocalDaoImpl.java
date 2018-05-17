@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
@@ -52,9 +53,14 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void resetDatabase() throws SaodException {
+		LOG.info("Purge Database");
 		this.jdbcTemplate.execute(sqlQueries.getQuery("delete_all_data.sql"));
+		if (LOG.isDebugEnabled()) {
+			Long count = this.jdbcTemplate.queryForObject("select count(*) from STATS_DIR_LOCAL_SIZE", Long.class);
+			LOG.debug("Row count = {}", count);
+		}
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
 
 		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
@@ -95,12 +101,14 @@ public class LocalDaoImpl implements LocalDao {
 		}
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	private void insertStatsDirLocalSize(List<MapSqlParameterSource> batchArgs) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
 		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	private void insertStatsDirLocalSizeNoBatch(List<MapSqlParameterSource> batchArgs) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
@@ -114,7 +122,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void insertStatsDirNoSize(List<Long> parentsid) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql").replace("insert into",
@@ -143,7 +151,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectLeafNode() throws SaodException {
 		String query = sqlQueries.getQuery("select_leaf_node.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -157,7 +165,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("update_stats_dir_sum_size.sql");
@@ -182,14 +190,14 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void resetDirSumSize() throws SaodException {
 		String query = sqlQueries.getQuery("update_reset_dir_sum_size.sql");
 		this.jdbcTemplate.update(query);
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void upadteDirSumSize(List<Long> nodes) throws SaodException {
 		String query = sqlQueries.getQuery("update_dir_sum_size.sql");
 		/**
@@ -201,7 +209,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("update_parent_node_id.sql");
@@ -226,7 +234,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectRootFolders() throws SaodException {
 		String query = sqlQueries.getQuery("select_root_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -240,7 +248,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectSubFolders(Long nodeid) throws SaodException {
 		String query = sqlQueries.getQuery("select_sub_folders.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
@@ -254,7 +262,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectparentFolders(List<Long> nodesid) throws SaodException {
 		if (nodesid == null || nodesid.isEmpty()) {
 			return Collections.emptyList();
@@ -277,7 +285,7 @@ public class LocalDaoImpl implements LocalDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public PrintNode loadRow(Long nodeid) throws SaodException {
 		final String query = sqlQueries.getQuery("select_row_node_id.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);

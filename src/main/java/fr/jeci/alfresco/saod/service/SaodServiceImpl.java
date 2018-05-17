@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
@@ -26,6 +29,7 @@ public class SaodServiceImpl implements SaodService {
 	private LocalDao localDao;
 
 	@Override
+	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
 	public void loadDataFromAlfrescoDB() throws SaodException {
 		this.localDao.resetDatabase();
 
@@ -43,7 +47,8 @@ public class SaodServiceImpl implements SaodService {
 
 		// Aggregate size from leaf to root
 		resetFullSumSize();
-		
+
+		this.localDao.checkpoint();
 	}
 
 	@Override
@@ -89,7 +94,8 @@ public class SaodServiceImpl implements SaodService {
 			parentsid.addAll(parents);
 			start = System.currentTimeMillis();
 			this.localDao.insertStatsDirNoSize(parentsid);
-			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(), (System.currentTimeMillis() - start));
+			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(),
+					(System.currentTimeMillis() - start));
 
 			this.localDao.updateParentNodeId(selectParentNodeId);
 			this.localDao.upadteDirSumSizeZero(parentsid);

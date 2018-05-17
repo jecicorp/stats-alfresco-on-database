@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
@@ -44,7 +45,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
 	public Map<Long, Long> selectDirLocalSize() throws SaodException {
 		String query = sqlQueries.getQuery("select_dir_local_size.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
@@ -63,7 +64,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	private final static int MAX_NUM_EXP_LIST = 1000;
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
 	public Map<Long, Long> selectParentNodeId(List<Long> child_id) throws SaodException {
 		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
@@ -85,7 +86,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
 	public String selectNodeLabel(Long id) throws SaodException {
 		String query = sqlQueries.getQuery("select_node_label.sql");
 		try {
@@ -96,7 +97,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
 	public String selectNodeRef(Long id) throws SaodException {
 		String query = sqlQueries.getQuery("select_node_noderef.sql");
 		try {
