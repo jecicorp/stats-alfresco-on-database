@@ -66,19 +66,51 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
-		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 
-		List<MapSqlParameterSource> batchArgs = new ArrayList<>();
-
+		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 		for (Entry<Long, Long> e : dirLocalSize.entrySet()) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
 			batchArgs.add(parameters);
+
+			if (batchArgs.size() >= FETCH_SIZE) {
+				try {
+					long start = System.currentTimeMillis();
+					insertStatsDirLocalSize(batchArgs);
+					LOG.debug("insertStatsDirLocalSize Batch : {} ms", (System.currentTimeMillis() - start));
+
+				} catch (org.springframework.dao.DuplicateKeyException edk) {
+					LOG.warn(edk.getMessage() + " retry without batch ");
+					long start = System.currentTimeMillis();
+					insertStatsDirLocalSizeNoBatch(batchArgs);
+					LOG.debug("insertStatsDirLocalSize NO-batch : {} ms", (System.currentTimeMillis() - start));
+				}
+				batchArgs.clear();
+			}
 		}
 
-		String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
-		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[dirLocalSize.size()]));
+		if (batchArgs.size() > 0) {
+			insertStatsDirLocalSize(batchArgs);
+		}
+	}
+
+	private void insertStatsDirLocalSize(List<MapSqlParameterSource> batchArgs) throws SaodException {
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
+		jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+	}
+
+	private void insertStatsDirLocalSizeNoBatch(List<MapSqlParameterSource> batchArgs) throws SaodException {
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
+		for (MapSqlParameterSource paramSource : batchArgs) {
+			try {
+				jdbcNamesTpl.update(query, paramSource);
+			} catch (org.springframework.dao.DuplicateKeyException edk) {
+				LOG.error("Duplicate Entry for nodeid=" + paramSource.getValue(NODE_ID) + " - skip", edk);
+			}
+		}
 	}
 
 	@Override
