@@ -120,8 +120,6 @@ public class LocalDaoImpl implements LocalDao {
 		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql").replace("insert into",
 				"INSERT IGNORE INTO");
 
-		System.err.println(query);
-
 		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 
 		for (Long id : parentsid) {
@@ -281,7 +279,7 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public PrintNode loadRow(Long nodeid) throws SaodException {
-		String query = sqlQueries.getQuery("select_row_node_id.sql");
+		final String query = sqlQueries.getQuery("select_row_node_id.sql");
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
 
 		while (queryForRowSet.next()) {
