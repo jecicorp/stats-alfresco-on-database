@@ -37,6 +37,7 @@ public class LocalDaoImpl implements LocalDao {
 	@Autowired
 	public void setDataSource(@Qualifier("localDataSource") DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcTemplate.setFetchSize(FETCH_SIZE);
 	}
 
 	@Autowired
@@ -59,9 +60,9 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public void checkpoint() {
-		this.jdbcTemplate.execute("CHECKPOINT DEFRAG");		
+		this.jdbcTemplate.execute("CHECKPOINT DEFRAG");
 	}
-	
+
 	@Override
 	@Transactional
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {

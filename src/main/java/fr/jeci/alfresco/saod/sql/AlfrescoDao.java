@@ -6,7 +6,9 @@ import java.util.Map;
 import fr.jeci.alfresco.saod.SaodException;
 
 public interface AlfrescoDao {
+	static final int FETCH_SIZE = 256;
 
+	
 	/**
 	 * try database connection
 	 * 

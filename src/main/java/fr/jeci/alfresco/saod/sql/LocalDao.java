@@ -13,6 +13,7 @@ import fr.jeci.alfresco.saod.pojo.PrintNode;
  *
  */
 public interface LocalDao {
+	static final int FETCH_SIZE = 128;
 
 	/**
 	 * try database connection
