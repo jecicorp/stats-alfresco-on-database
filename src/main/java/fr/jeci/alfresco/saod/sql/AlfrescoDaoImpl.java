@@ -29,6 +29,7 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 	@Autowired
 	public void setDataSource(@Qualifier("alfrescoDataSource") DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcTemplate.setFetchSize(FETCH_SIZE);
 	}
 
 	@Autowired
