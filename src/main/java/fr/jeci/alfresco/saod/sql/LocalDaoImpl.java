@@ -116,9 +116,13 @@ public class LocalDaoImpl implements LocalDao {
 	@Override
 	@Transactional
 	public void insertStatsDirNoSize(List<Long> parentsid) throws SaodException {
-		NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql").replace("insert into",
+				"INSERT IGNORE INTO");
 
-		String query = sqlQueries.getQuery("insert_stats_dir_local_size.sql");
+		System.err.println(query);
+
+		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 
 		for (Long id : parentsid) {
 			if (loadRow(id) != null) {
@@ -128,7 +132,15 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
-			jdbcNamesTpl.update(query, parameters);
+			batchArgs.add(parameters);
+			if (batchArgs.size() >= FETCH_SIZE) {
+				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+				batchArgs.clear();
+			}
+		}
+
+		if (batchArgs.size() > 0) {
+			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 		}
 	}
 
