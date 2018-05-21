@@ -1,5 +1,6 @@
 package fr.jeci.alfresco.saod.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,24 +32,50 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
 	public void loadDataFromAlfrescoDB() throws SaodException {
-		this.localDao.resetDatabase();
+		lockDB();
+		try {
+			this.localDao.resetDatabase();
 
-		// node_id, size
-		long start = System.currentTimeMillis();
-		Map<Long, Long> selectDirLocalSize = this.alfrescoDao.selectDirLocalSize();
-		int nbNodes = selectDirLocalSize.size();
-		LOG.info("selectDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
+			// node_id, size
+			long start = System.currentTimeMillis();
+			Map<Long, Long> selectDirLocalSize = this.alfrescoDao.selectDirLocalSize();
+			int nbNodes = selectDirLocalSize.size();
+			LOG.info("selectDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
-		start = System.currentTimeMillis();
-		this.localDao.insertStatsDirLocalSize(selectDirLocalSize);
-		LOG.info("insertStatsDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
+			start = System.currentTimeMillis();
+			this.localDao.insertStatsDirLocalSize(selectDirLocalSize);
+			LOG.info("insertStatsDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
-		loadParentId(selectDirLocalSize);
+			loadParentId(selectDirLocalSize);
 
-		// Aggregate size from leaf to root
-		resetFullSumSize();
+			// Aggregate size from leaf to root
+			resetFullSumSize();
 
-		this.localDao.checkpoint();
+			this.localDao.checkpoint();
+		} finally {
+			unlockDB();
+		}
+	}
+
+	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+	private void lockDB() throws SaodException {
+		Timestamp run = this.localDao.getRun();
+		if (run == null) {
+			this.localDao.startRun();
+		} else {
+			throw new SaodException("Compute already running since " + run);
+		}
+
+	}
+
+	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+	private void unlockDB() throws SaodException {
+		this.localDao.stopRun();
+	}
+
+	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, readOnly = true)
+	private void islockDB() throws SaodException {
+		this.localDao.getRun();
 	}
 
 	@Override
