@@ -1,5 +1,6 @@
 package fr.jeci.alfresco.saod.sql;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +67,6 @@ public interface LocalDao {
 	 * @return
 	 */
 	List<Long> selectSubFolders(Long nodeid) throws SaodException;
-	
 
 	/**
 	 * Select parent folder of this childs
@@ -115,5 +115,32 @@ public interface LocalDao {
 	 * @throws SaodException
 	 */
 	void upadteDirSumSize(List<Long> nodes) throws SaodException;
+
+	/**
+	 * Performing a checkpoint to the hsqldb
+	 */
+	void checkpoint();
+
+	/**
+	 * Insert row in RUN_LOG table with current timestamp at start_ts
+	 * 
+	 * @throws SaodException
+	 */
+	void startRun() throws SaodException;
+
+	/**
+	 * Update row in RUN_LOG table with has stop_ts NULL
+	 * 
+	 * @throws SaodException
+	 */
+	void stopRun() throws SaodException;
+
+	/**
+	 * Return start_ts timestamp of row with stop_ts NULL
+	 * 
+	 * @return timestamp or NULL
+	 * @throws SaodException
+	 */
+	Timestamp getRun() throws SaodException;
 
 }

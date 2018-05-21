@@ -1,5 +1,6 @@
 package fr.jeci.alfresco.saod.sql;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +51,29 @@ public class LocalDaoImpl implements LocalDao {
 		LOG.info("Ping Local HSQL Database");
 		String query = sqlQueries.getQuery("select_ping.sql");
 		this.jdbcTemplate.execute(query);
+	}
+
+	@Override
+	public void startRun() throws SaodException {
+		String query = sqlQueries.getQuery("start_run.sql");
+		this.jdbcTemplate.execute(query);
+	}
+
+	@Override
+	public void stopRun() throws SaodException {
+		String query = sqlQueries.getQuery("stop_run.sql");
+		this.jdbcTemplate.execute(query);
+	}
+
+	@Override
+	public Timestamp getRun() throws SaodException {
+		String query = sqlQueries.getQuery("has_run.sql");
+		SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
+		if (queryForRowSet.first()) {
+			return queryForRowSet.getTimestamp(1);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

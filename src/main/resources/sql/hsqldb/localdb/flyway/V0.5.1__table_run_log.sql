@@ -1,0 +1,5 @@
+CREATE TABLE RUN_LOG (
+  id IDENTITY,
+  start_ts TIMESTAMP,
+  end_ts TIMESTAMP
+);
