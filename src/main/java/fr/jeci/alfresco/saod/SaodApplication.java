@@ -28,8 +28,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.jolbox.bonecp.BoneCPDataSource;
-
 import fr.jeci.alfresco.saod.sql.SqlQueries;
 
 @Configuration
@@ -58,14 +56,14 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	@ConfigurationProperties(prefix = "alfresco.datasource")
 	public DataSource alfrescoDataSource() {
-		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
+		return DataSourceBuilder.create().build();
 	}
 
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
 	@Primary
 	public DataSource localDataSource() {
-		return DataSourceBuilder.create().type(BoneCPDataSource.class).build();
+		return DataSourceBuilder.create().build();
 	}
 
 	@Value("${sql.local.base_path}")
