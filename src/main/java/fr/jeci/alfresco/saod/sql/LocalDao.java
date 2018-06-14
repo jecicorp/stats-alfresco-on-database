@@ -136,11 +136,20 @@ public interface LocalDao {
 	void stopRun() throws SaodException;
 
 	/**
-	 * Return start_ts timestamp of row with stop_ts NULL
+	 * Return start_ts timestamp of last row with status=0
 	 * 
 	 * @return timestamp or NULL
 	 * @throws SaodException
 	 */
 	Timestamp getRun() throws SaodException;
+	
+
+	/**
+	 * Return start_ts timestamp of last row with status=1
+	 * 
+	 * @return timestamp or NULL
+	 * @throws SaodException
+	 */
+	Timestamp getLastSuccess() throws SaodException;
 
 }

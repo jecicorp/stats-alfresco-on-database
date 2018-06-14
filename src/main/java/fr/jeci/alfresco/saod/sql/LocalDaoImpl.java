@@ -75,6 +75,17 @@ public class LocalDaoImpl implements LocalDao {
 			return null;
 		}
 	}
+	
+	@Override
+	public Timestamp getLastSuccess() throws SaodException {
+		String query = sqlQueries.getQuery("last_success.sql");
+		SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
+		if (queryForRowSet.first()) {
+			return queryForRowSet.getTimestamp(1);
+		} else {
+			return null;
+		}
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
