@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
@@ -63,7 +64,7 @@ public class SaodServiceImpl implements SaodService {
 		if (run == null) {
 			this.localDao.startRun();
 		} else {
-			throw new SaodException("Compute already running since " + run);
+			throw new ConcurrentRunSaodException("Compute running since " + run);
 		}
 
 	}

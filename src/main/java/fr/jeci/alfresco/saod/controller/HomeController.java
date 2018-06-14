@@ -24,11 +24,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
@@ -86,12 +88,16 @@ public class HomeController implements ErrorController {
 		try {
 			saodService.loadDataFromAlfrescoDB();
 			LOG.info("END - Load Data From Alfresco DB _ Duration : {} ms", (System.currentTimeMillis() - start));
+			model.addAttribute("duration",
+					String.format("Compute done in %s ms", (System.currentTimeMillis() - start)));
+
+		} catch (ConcurrentRunSaodException e) {
+			model.addAttribute("duration", e.getMessage());
 		} catch (SaodException e) {
 			model.addAttribute("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);
 		}
 
-		model.addAttribute("duration", String.format("Compute done in %s ms", (System.currentTimeMillis() - start)));
 		return "home";
 	}
 
