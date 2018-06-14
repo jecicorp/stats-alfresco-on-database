@@ -32,13 +32,39 @@
 			th:href="@{/js/bootstrap.min.js}"></script>
 
 
-<script  type="text/javascript">
+<script th:inline="javascript">
 $(document).on('submit', '#formInit', function(e) {
     e.preventDefault();
 	$('#btnCumpute').attr('disabled','disabled');
-	action = $("#formInit").attr('action') ;
+	$('#btnPrint').attr('disabled','disabled');
+	
+	
+	action = $("#formInit").attr('action') + ".json" ;
 	$.post(action, $('#formInit').serialize(), function(data, textStatus, jqXHR) {
-		window.location.reload();
+		console.log(data);
+
+		if(data.duration) {
+			$("#p_msg")[0].innerText = "Compute end in " + Math.floor(data.duration/1000) + " seconds";
+			
+			$('#btnCumpute').removeAttr('disabled');
+			$('#btnPrint').removeAttr('disabled');
+		}
+		
+		if (data.since) {
+			duration = Date.now() - data.since;
+			$("#p_msg")[0].innerText = "Compute is currently running since " + Math.floor(duration/1000) + " seconds";
+			
+			setTimeout(function(){
+				window.location.reload();
+			}, 30000-duration);
+		}
+		
+		if (data.error) {
+			console.log(data.error);
+
+			$("#p_error")[0].innerText = data.error;
+		}
+	
 	})
 });
 </script>

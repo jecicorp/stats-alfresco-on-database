@@ -64,7 +64,7 @@ public class SaodServiceImpl implements SaodService {
 		if (run == null) {
 			this.localDao.startRun();
 		} else {
-			throw new ConcurrentRunSaodException("Compute running since " + run);
+			throw new ConcurrentRunSaodException(run);
 		}
 
 	}
@@ -209,18 +209,24 @@ public class SaodServiceImpl implements SaodService {
 
 	@Override
 	public String lastRunMessage() {
-		Timestamp run;
 		try {
+			Timestamp run = this.localDao.getRun();
+
+			if (run != null) {
+				return String.format("Compute is running since %Tc", run);
+			}
+
 			run = this.localDao.getLastSuccess();
+
+			if (run != null) {
+				return String.format("Last compute : %Tc", run);
+			}
+
 		} catch (SaodException e) {
 			LOG.error(e.getMessage(), e);
 			return e.getLocalizedMessage();
 		}
 
-		if (run == null) {
-			return "Empty database";
-		}
-
-		return String.format("Last compute : %s", run);
+		return "Empty database";
 	}
 }

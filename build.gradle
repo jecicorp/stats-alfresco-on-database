@@ -75,6 +75,9 @@ dependencies {
     compile 'com.zaxxer:HikariCP:3.2.0'
     runtime 'org.hsqldb:hsqldb:2.4.1'
     runtime 'mysql:mysql-connector-java:5.1.46'
+    
+	compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:2.9.6'
+	compile 'com.fasterxml.jackson:jackson-base:2.9.6'
 
     // To include private Driver like oracle ojdbc5.jar
     compile fileTree(dir: 'libs', include: ['*.jar'])

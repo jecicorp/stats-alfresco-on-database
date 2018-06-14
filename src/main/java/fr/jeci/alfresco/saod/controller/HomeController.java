@@ -1,9 +1,11 @@
 package fr.jeci.alfresco.saod.controller;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,9 +27,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -77,7 +82,29 @@ public class HomeController implements ErrorController {
 		return "access";
 	}
 
-	@PostMapping("/init")
+	// RESTful method
+	@RequestMapping(value = "/init", method = RequestMethod.POST, produces = { "application/xml", "application/json" })
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody Map<String, Serializable> compute() {
+		long start = System.currentTimeMillis();
+
+		Map<String, Serializable> output = new HashMap<>(1);
+		try {
+			saodService.loadDataFromAlfrescoDB();
+			LOG.info("END - Load Data From Alfresco DB _ Duration : {} ms", (System.currentTimeMillis() - start));
+			output.put("duration", System.currentTimeMillis() - start);
+
+		} catch (ConcurrentRunSaodException e) {
+			output.put("since", e.getSince());
+		} catch (SaodException e) {
+			output.put("error", e.getLocalizedMessage());
+			LOG.error(e.getMessage(), e);
+		}
+
+		return output;
+	}
+
+	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String init(Model model) {
 		long start = System.currentTimeMillis();
