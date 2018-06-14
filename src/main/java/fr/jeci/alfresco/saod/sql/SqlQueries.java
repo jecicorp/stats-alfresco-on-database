@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import fr.jeci.alfresco.saod.SaodException;
@@ -27,11 +29,13 @@ public class SqlQueries {
 	public final static String SEPARATOR = ";";
 
 	private HashMap<String, String> cacheQeries;
+	private PathMatchingResourcePatternResolver resolver;
 
 	private String sqlBasePath = "sql/hsqldb";
 
 	public SqlQueries() {
 		this.cacheQeries = new HashMap<>();
+		this.resolver = new PathMatchingResourcePatternResolver();
 	}
 
 	public void setSqlBasePath(String sqlBasePath) {
@@ -52,7 +56,8 @@ public class SqlQueries {
 		String ressourcePath = this.sqlBasePath + "/" + id;
 		LOG.info("Loading sql file : {}", ressourcePath);
 		try {
-			InputStream resourceAsStream = ClassLoader.getSystemResourceAsStream(ressourcePath);
+			Resource[] ressources = resolver.getResources("classpath*:" + ressourcePath);
+			InputStream resourceAsStream = ressources[0].getInputStream();
 			if (resourceAsStream == null) {
 				File file = new File(ressourcePath);
 				if (!file.exists()) {
