@@ -31,6 +31,18 @@
 		<script type="text/javascript" src="../../js/bootstrap.min.js"
 			th:href="@{/js/bootstrap.min.js}"></script>
 
+
+<script  type="text/javascript">
+$(document).on('submit', '#formInit', function(e) {
+    e.preventDefault();
+	$('#btnCumpute').attr('disabled','disabled');
+	action = $("#formInit").attr('action') ;
+	$.post(action, $('#formInit').serialize(), function(data, textStatus, jqXHR) {
+		window.location.reload();
+	})
+});
+</script>
+
 	</div>
 
 </body>

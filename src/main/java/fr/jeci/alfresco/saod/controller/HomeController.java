@@ -55,7 +55,7 @@ public class HomeController implements ErrorController {
 	@Autowired
 	private ErrorAttributes errorAttributes;
 
-	@RequestMapping("/")
+	@RequestMapping(value = { "", "/", "/init" })
 	public String home(Model model) {
 		model.addAttribute("time", new Date());
 		model.addAttribute("duration", "This may take a while.");
@@ -75,7 +75,7 @@ public class HomeController implements ErrorController {
 		return "access";
 	}
 
-	@RequestMapping("/init")
+	@PostMapping("/init")
 	@Secured("ROLE_ADMIN")
 	public String init(Model model) {
 		long start = System.currentTimeMillis();

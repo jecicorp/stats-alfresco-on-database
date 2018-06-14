@@ -34,8 +34,10 @@
 						<b>First</b> we need to load data from the databases.
 					</p>
 					<p>
-						<a th:href="@{/init}" class="btn btn-primary" role="button">Compute
-							Disk Usage</a>
+					<form id="formInit" action="#" th:action="@{/init}" method="post">
+					    <input type="submit" id="btnCumpute" class="btn btn-primary" value="Compute Disk Usage" />
+					</form>
+
 					</p>
 					<p class="text-danger" th:text="${duration}">This may take a while.</p>
 				</div>
