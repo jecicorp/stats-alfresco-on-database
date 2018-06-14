@@ -60,7 +60,7 @@ public class HomeController implements ErrorController {
 	@RequestMapping(value = { "", "/", "/init" })
 	public String home(Model model) {
 		model.addAttribute("time", new Date());
-		model.addAttribute("duration", "This may take a while.");
+		model.addAttribute("duration", this.saodService.lastRunMessage());
 		model.addAttribute("title", this.title);
 		model.addAttribute("version", this.version);
 

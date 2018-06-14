@@ -52,4 +52,10 @@ public interface SaodService {
 	 */
 	void resetFullSumSize() throws SaodException;
 
+	/**
+	 * Return a string with date of last run and duration.
+	 * @return compute string or "Empty database"
+	 */
+	String lastRunMessage();
+
 }

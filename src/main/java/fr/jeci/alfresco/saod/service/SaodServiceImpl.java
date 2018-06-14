@@ -206,4 +206,21 @@ public class SaodServiceImpl implements SaodService {
 
 		return sb.toString();
 	}
+
+	@Override
+	public String lastRunMessage() {
+		Timestamp run;
+		try {
+			run = this.localDao.getLastSuccess();
+		} catch (SaodException e) {
+			LOG.error(e.getMessage(), e);
+			return e.getLocalizedMessage();
+		}
+
+		if (run == null) {
+			return "Empty database";
+		}
+
+		return String.format("Last compute : %s", run);
+	}
 }
