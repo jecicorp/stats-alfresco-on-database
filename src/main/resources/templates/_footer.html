@@ -35,6 +35,8 @@
 <script th:inline="javascript">
 $(document).on('submit', '#formInit', function(e) {
     e.preventDefault();
+	$("#p_msg")[0].innerText = "Compute is running.";
+
 	$('#btnCumpute').attr('disabled','disabled');
 	$('#btnPrint').attr('disabled','disabled');
 	
