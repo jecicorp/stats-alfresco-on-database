@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
 import fr.jeci.alfresco.saod.sql.LocalDao;
@@ -29,6 +31,9 @@ public class SaodServiceImpl implements SaodService {
 
 	@Autowired
 	private LocalDao localDao;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
@@ -213,13 +218,13 @@ public class SaodServiceImpl implements SaodService {
 			Timestamp run = this.localDao.getRun();
 
 			if (run != null) {
-				return String.format("Compute is running since %Tc", run);
+				return StringUtil.format(this.messageSource, "saod.service.last-run-message.running", run);
 			}
 
 			run = this.localDao.getLastSuccess();
 
 			if (run != null) {
-				return String.format("Last compute : %Tc", run);
+				return StringUtil.format(this.messageSource, "saod.service.last-run-message.last", run);
 			}
 
 		} catch (SaodException e) {
@@ -229,4 +234,5 @@ public class SaodServiceImpl implements SaodService {
 
 		return "Empty database";
 	}
+
 }
