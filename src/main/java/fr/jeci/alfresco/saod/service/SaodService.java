@@ -32,30 +32,41 @@ public interface SaodService {
 
 	/**
 	 * Load printable node
+	 * 
 	 * @param nodeid
 	 * @return
 	 * @throws SaodException
 	 */
 	PrintNode loadPrintNode(String nodeid) throws SaodException;
 
-	/** 
+	/**
 	 * Compute path of this node
+	 * 
 	 * @param nodeid
 	 * @return
-	 * @throws SaodException 
+	 * @throws SaodException
 	 */
 	String computePath(String nodeid) throws SaodException;
 
 	/**
 	 * Compute full size of all directory starting from leaf to root
+	 * 
 	 * @throws SaodException
 	 */
 	void resetFullSumSize() throws SaodException;
 
 	/**
 	 * Return a string with date of last run and duration.
+	 * 
 	 * @return compute string or "Empty database"
 	 */
 	String lastRunMessage();
+
+	/**
+	 * Return is compute is currently running
+	 * 
+	 * @return true if compute is running.
+	 */
+	boolean isRunning();
 
 }

@@ -68,6 +68,7 @@ public class HomeController implements ErrorController {
 		model.addAttribute("duration", this.saodService.lastRunMessage());
 		model.addAttribute("title", this.title);
 		model.addAttribute("version", this.version);
+		model.addAttribute("running", this.saodService.isRunning());
 
 		return "home";
 	}

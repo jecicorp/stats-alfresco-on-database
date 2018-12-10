@@ -235,4 +235,15 @@ public class SaodServiceImpl implements SaodService {
 		return "Empty database";
 	}
 
+	@Override
+	public boolean isRunning() {
+		try {
+			Timestamp run = this.localDao.getRun();
+			return run != null;
+		} catch (SaodException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return false;
+	}
+
 }

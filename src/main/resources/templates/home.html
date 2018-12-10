@@ -35,8 +35,8 @@
 					</p>
 					<form id="formInit" action="#" th:action="@{/init}" method="post">
 						<input type="submit" id="btnCumpute" class="btn btn-primary"
-							value="Compute Disk Usage" /> <input type="hidden"
-							name="mediaType" value="application/json" />
+							value="Compute Disk Usage" th:disabled="${running}" /> <input
+							type="hidden" name="mediaType" value="application/json" />
 					</form>
 
 					<p id="p_msg" th:text="${duration}">This may take a while.</p>
@@ -46,8 +46,10 @@
 
 					<p>Then you would browse directories</p>
 					<p>
-						<a id="btnPrint" th:href="@{/print}" class="btn btn-primary"
-							role="button">Browse..</a>
+						<a th:unless="${running}" id="btnPrint" th:href="@{/print}"
+							class="btn btn-primary" role="button">Browse..</a> <a
+							th:if="${running}" id="btnPrint" class="btn btn-primary"
+							th:disabled="${running}" role="button">Browse..</a>
 					</p>
 				</div>
 			</div>
