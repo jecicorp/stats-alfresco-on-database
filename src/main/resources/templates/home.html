@@ -33,21 +33,21 @@
 					<p>
 						<b>First</b> we need to load data from the databases.
 					</p>
-					<p>
 					<form id="formInit" action="#" th:action="@{/init}" method="post">
-					    <input type="submit" id="btnCumpute" class="btn btn-primary" value="Compute Disk Usage" />
-					    <input type="hidden" name="mediaType" value="application/json" />
+						<input type="submit" id="btnCumpute" class="btn btn-primary"
+							value="Compute Disk Usage" /> <input type="hidden"
+							name="mediaType" value="application/json" />
 					</form>
 
-					</p>
 					<p id="p_msg" th:text="${duration}">This may take a while.</p>
-					<p id="p_error"  class="text-danger" th:text="${error}"></p>
+					<p id="p_error" class="text-danger" th:text="${error}"></p>
 				</div>
 				<div class="col-md-6">
 
 					<p>Then you would browse directories</p>
 					<p>
-						<a id="btnPrint" th:href="@{/print}" class="btn btn-primary" role="button">Browse..</a>
+						<a id="btnPrint" th:href="@{/print}" class="btn btn-primary"
+							role="button">Browse..</a>
 					</p>
 				</div>
 			</div>
