@@ -1,0 +1,39 @@
+debug = false
+
+logLevel = "DEBUG"
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[respondingTimeouts]
+# readTimeout is the maximum duration for reading the entire request, including the body.
+# Default: "0s"
+readTimeout = "5s"
+
+# writeTimeout is the maximum duration before timing out writes of the response.
+# Default: "0s"
+writeTimeout = "5s"
+
+# idleTimeout is the maximum duration an idle (keep-alive) connection will remain idle before closing itself.
+# Default: "180s"
+idleTimeout = "30s"
+
+[forwardingTimeouts]
+
+# dialTimeout is the amount of time to wait until a connection to a backend server can be established.
+# Default: "30s"
+dialTimeout = "10s"
+
+# responseHeaderTimeout is the amount of time to wait for a server's response headers after fully writing the request (including its body, if any).
+# Default: "0s"
+responseHeaderTimeout = "10s"
+
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+#domain = "my-awesome-app.org"
+watch = true
+exposedByDefault = false

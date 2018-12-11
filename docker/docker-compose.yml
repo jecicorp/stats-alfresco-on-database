@@ -1,0 +1,27 @@
+version: "3.2"
+
+services:
+  traefik:
+    image: traefik
+    command: --api --docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+
+  saod:
+    image: jeci/saod
+    volumes:
+     - "./application-mysql.properties:/opt/saod/application.properties"
+     - "./sqldb:/opt/saod/sqldb"
+    ports:
+     - "8081:8080"
+    labels:
+     - "traefik.frontend.rule=Host:saod.docker.localhost"
+
+  whoami:
+    image: containous/whoami
+    labels:
+      - "traefik.frontend.rule=Host:whoami.docker.localhost"
