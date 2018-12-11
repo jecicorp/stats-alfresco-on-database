@@ -32,6 +32,14 @@
 			th:href="@{/js/bootstrap.min.js}"></script>
 
 
+<script th:if="${running}" th:inline="javascript">
+$( document ).ready(function() {
+	setTimeout(function(){
+		window.location.reload();
+	}, 15000);
+});
+</script>
+
 <script th:inline="javascript">
 $(document).on('submit', '#formInit', function(e) {
     e.preventDefault();
@@ -39,35 +47,44 @@ $(document).on('submit', '#formInit', function(e) {
 
 	$('#btnCumpute').attr('disabled','disabled');
 	$('#btnPrint').attr('disabled','disabled');
-	
-	
-	action = $("#formInit").attr('action') + ".json" ;
-	$.post(action, $('#formInit').serialize(), function(data, textStatus, jqXHR) {
-		console.log(data);
 
-		if(data.duration) {
-			$("#p_msg")[0].innerText = "Compute end in " + Math.floor(data.duration/1000) + " seconds";
-			
-			$('#btnCumpute').removeAttr('disabled');
-			$('#btnPrint').removeAttr('disabled');
-		}
-		
-		if (data.since) {
-			duration = Date.now() - data.since;
-			$("#p_msg")[0].innerText = "Compute is currently running since " + Math.floor(duration/1000) + " seconds";
-			
-			setTimeout(function(){
-				window.location.reload();
-			}, 30000-duration);
-		}
-		
-		if (data.error) {
-			console.log(data.error);
+	$.ajax({
+		  type: "POST",
+		  url: $("#formInit").attr('action') + ".json",
+		  data: $('#formInit').serialize(),
+		  success: function(data, textStatus, jqXHR) {
+				console.log(data);
 
-			$("#p_error")[0].innerText = data.error;
-		}
-	
-	})
+				if(data.duration) {
+					$("#p_msg")[0].innerText = "Compute end in " + Math.floor(data.duration/1000) + " seconds";
+
+					$('#btnCumpute').removeAttr('disabled');
+					$('#btnPrint').removeAttr('disabled');
+				}
+
+				if (data.since) {
+					duration = Date.now() - data.since;
+					$("#p_msg")[0].innerText = "Compute is currently running since " + Math.floor(duration/1000) + " seconds";
+
+					setTimeout(function(){
+						window.location.reload();
+					}, 15000);
+				}
+
+				if (data.error) {
+					console.log(data.error);
+
+					$("#p_error")[0].innerText = data.error;
+				}
+
+			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			// Reload if error (Timeout ?)
+			console.log(textStatus);
+			console.log(jqXHR);
+			window.location.reload();
+		});
+
 });
 </script>
 
