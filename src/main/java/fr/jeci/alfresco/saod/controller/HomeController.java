@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
 
@@ -61,6 +63,9 @@ public class HomeController implements ErrorController {
 
 	@Autowired
 	private ErrorAttributes errorAttributes;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = { "", "/", "/init" })
 	public String home(Model model) {
@@ -96,7 +101,9 @@ public class HomeController implements ErrorController {
 			output.put("duration", System.currentTimeMillis() - start);
 
 		} catch (ConcurrentRunSaodException e) {
-			output.put("since", e.getSince());
+
+			output.put("since",
+					StringUtil.format(this.messageSource, "saod.service.last-run-message.running", e.getSince()));
 		} catch (SaodException e) {
 			output.put("error", e.getLocalizedMessage());
 			LOG.error(e.getMessage(), e);

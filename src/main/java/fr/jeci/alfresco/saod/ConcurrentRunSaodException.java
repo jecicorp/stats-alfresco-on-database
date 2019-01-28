@@ -14,7 +14,7 @@ public class ConcurrentRunSaodException extends SaodException {
 	private Timestamp since;
 
 	public ConcurrentRunSaodException(Timestamp since) {
-		super(String.format("Compute running since %s", since));
+		super(String.format("Compute running since %1$td/%1$tm/%1$tY %1$tT", since));
 
 		this.since = since;
 	}

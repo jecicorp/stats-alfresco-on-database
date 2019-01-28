@@ -21,11 +21,6 @@ services:
     volumes:
      - "./application-mysql.properties:/opt/saod/application.properties"
      - "./sqldb:/opt/saod/sqldb"
-    environment:
-      LANG: fr_FR.UTF-8
-      LANGUAGE: fr_FR:en
-      LC_ALL: fr_FR.UTF-8
-
     command: ["java", "-jar", "jeci-saod-0.6.0.jar"]
     labels:
      - "traefik.frontend.rule=Host:saod.docker.localhost"

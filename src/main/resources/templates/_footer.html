@@ -63,8 +63,7 @@ $(document).on('submit', '#formInit', function(e) {
 				}
 
 				if (data.since) {
-					duration = Date.now() - data.since;
-					$("#p_msg")[0].innerText = "Compute is currently running since " + Math.floor(duration/1000) + " seconds";
+					$("#p_msg")[0].innerText = data.since
 
 					setTimeout(function(){
 						window.location.reload();
