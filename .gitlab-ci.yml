@@ -4,8 +4,7 @@ stages:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
-  - curl -s http://$ALF_USER:$ALF_PWD@$ALF_HOST/alfresco/service/api/path/workspace/SpacesStore/company_home/sites/$ALF_SITE/documentLibrary/SAOD/ojdbc6.jar/content -o libs/ojdbc6.jar
-
+  - curl -sS -u $CLD_USER:$CLD_PWD https://$CLD_HOST/remote.php/webdav/SAOD/ojdbc6.jar -o libs/ojdbc6.jar
 
 cache:
   paths:
@@ -23,10 +22,11 @@ deploy-job:
   stage: deploy
   image: jeci/centos_deployer_gradle
   script:
-    - "[ -z $ALF_HOST ] && exit 0"
+    - "[ -z $CLD_HOST ] && exit 0"
     - gradle clean build
     - export ARTIFACT=`ls -1 build/libs/*.jar`
-    - curl -v -X POST -F filedata=@$ARTIFACT -F siteid=$ALF_SITE -F containerid=documentLibrary -F uploaddirectory=/SAOD http://$ALF_USER:$ALF_PWD@$ALF_HOST/alfresco/service/api/upload
+    - curl -sS -u $CLD_USER:$CLD_PWD -T $ARTIFACT https://$CLD_HOST/remote.php/webdav/SAOD/
+
   tags:
     - docker
   only:
