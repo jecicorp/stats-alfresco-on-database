@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 
 services:
   traefik:
@@ -12,12 +12,21 @@ services:
       - ./traefik.toml:/traefik.toml
 
   saod:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        saod_version: 0.6.0
     image: jeci/saod
     volumes:
      - "./application-mysql.properties:/opt/saod/application.properties"
      - "./sqldb:/opt/saod/sqldb"
-    ports:
-     - "8081:8080"
+    environment:
+      LANG: fr_FR.UTF-8
+      LANGUAGE: fr_FR:en
+      LC_ALL: fr_FR.UTF-8
+
+    command: ["java", "-jar", "jeci-saod-0.6.0.jar"]
     labels:
      - "traefik.frontend.rule=Host:saod.docker.localhost"
 

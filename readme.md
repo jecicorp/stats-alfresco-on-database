@@ -28,6 +28,8 @@ Tried with :
 
 ### Quick start
 
+#### Local Build
+
 ``` bash
 git clone https://github.com/jeci-sarl/stats-alfresco-on-database.git
 cd stats-alfresco-on-database
@@ -38,7 +40,18 @@ vim application.properties
 java -jar jeci-saod-0.?.?.war
 ```
 
-Then go to http://localhost:8080 user `admin` / `admin`
+Then go to http://localhost:8080 user `admin` / `adm1n`
+
+#### With Docker Compose
+
+``` bash
+git clone https://github.com/jeci-sarl/stats-alfresco-on-database.git
+cd stats-alfresco-on-database
+docker-compose -f docker/docker-compose.yml up --build -d
+```
+
+Then go to http://saod.docker.localhost/ user `admin` / `adm1n`
+
 
 ## Alfresco Disk Usage
 
