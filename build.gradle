@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    springBootVersion = '1.5.13.RELEASE'
+    springBootVersion = '1.5.19.RELEASE'
     springLoadedVersion = '1.2.8.RELEASE'
   }
   repositories {
@@ -55,7 +55,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web') {
         exclude module: "spring-boot-starter-tomcat"
     }
-    
+
     compile("org.springframework.boot:spring-boot-starter-freemarker")
     compile("org.springframework.boot:spring-boot-starter-jetty") {
       exclude group: 'org.eclipse.jetty.websocket'
@@ -69,15 +69,15 @@ dependencies {
     compile 'org.springframework:spring-context'
     compile 'org.springframework:spring-tx'
     compile 'ch.qos.logback:logback-classic:1.2.3'
-    
+
     compile "org.flywaydb:flyway-core:4.2.0"
 
     compile 'com.zaxxer:HikariCP:3.2.0'
     runtime 'org.hsqldb:hsqldb:2.4.1'
-    runtime 'mysql:mysql-connector-java:5.1.46'
-    
-	compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:2.9.6'
-	compile 'com.fasterxml.jackson:jackson-base:2.9.6'
+    runtime 'mysql:mysql-connector-java:5.1.47'
+
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:2.9.8'
+    compile 'com.fasterxml.jackson:jackson-base:2.9.8'
 
     // To include private Driver like oracle ojdbc5.jar
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -85,5 +85,3 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
     testCompile ("org.springframework.boot:spring-boot-starter-test")
 }
-
-
