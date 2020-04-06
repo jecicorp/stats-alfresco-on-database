@@ -35,6 +35,9 @@ import fr.jeci.alfresco.saod.sql.SqlQueries;
 		DataSourceTransactionManagerAutoConfiguration.class })
 @ComponentScan
 @EnableGlobalMethodSecurity(securedEnabled = true)
+/**
+ * Class Main of the application
+ */
 public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	MultipartConfigElement multipartConfigElement() {
@@ -44,10 +47,18 @@ public class SaodApplication extends SpringBootServletInitializer {
 		return factory.createMultipartConfig();
 	}
 
+	/**
+	 * Main
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		new SpringApplicationBuilder(SaodApplication.class).run(args);
 	}
 
+	/**
+	 * Configure the application
+	 */
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(SaodApplication.class);
@@ -55,6 +66,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 
 	@Bean
 	@ConfigurationProperties(prefix = "alfresco.datasource")
+	/**
+	 * Create a DataSource from an Alfresco DataSource
+	 * @return the DataSource created
+	 */
 	public DataSource alfrescoDataSource() {
 		return DataSourceBuilder.create().build();
 	}
@@ -62,6 +77,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	@ConfigurationProperties(prefix = "local.datasource")
 	@Primary
+	/**
+	 * Create a DataSource from a local DataSource
+	 * @return the DataSource created
+	 */
 	public DataSource localDataSource() {
 		return DataSourceBuilder.create().build();
 	}
@@ -70,6 +89,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 	private String sqlLocalBasePath = "sql/hsqldb";
 
 	@Bean
+	/**
+	 * Create queries and give it to the local base
+	 * @return a query or queries
+	 */
 	public SqlQueries localSqlQueries() {
 		SqlQueries sqlQueries = new SqlQueries();
 		sqlQueries.setSqlBasePath(sqlLocalBasePath);
@@ -80,6 +103,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 	private String sqlAlfrescoBAsePath = "sql/hsqldb";
 
 	@Bean
+	/**
+	 * Create queries and give it to Alfresco base
+	 * @return a query or queries
+	 */
 	public SqlQueries alfrescoSqlQueries() {
 		SqlQueries sqlQueries = new SqlQueries();
 		sqlQueries.setSqlBasePath(sqlAlfrescoBAsePath);
@@ -87,6 +114,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
+	/**
+	 * Create a new application Security
+	 * @return the application created
+	 */
 	public ApplicationSecurity applicationSecurity() {
 		return new ApplicationSecurity();
 	}

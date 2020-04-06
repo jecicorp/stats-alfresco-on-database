@@ -41,7 +41,9 @@ import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
-
+/**
+ * Class of HomeController
+ */
 @Controller
 public class HomeController implements ErrorController {
 	private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
@@ -68,6 +70,11 @@ public class HomeController implements ErrorController {
 	private MessageSource messageSource;
 
 	@RequestMapping(value = { "", "/", "/init" })
+	/**
+	 * Update a given model
+	 * @param model
+	 * @return "home"
+	 */
 	public String home(Model model) {
 		model.addAttribute("time", new Date());
 		model.addAttribute("duration", this.saodService.lastRunMessage());

@@ -21,7 +21,9 @@ import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
 import fr.jeci.alfresco.saod.sql.LocalDao;
-
+/**
+ * Class of SaodService
+ */
 @Component
 public class SaodServiceImpl implements SaodService {
 	static final Logger LOG = LoggerFactory.getLogger(SaodServiceImpl.class);
@@ -37,6 +39,9 @@ public class SaodServiceImpl implements SaodService {
 
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
+	/**
+	 * Load data form the Alfresco Database
+	 */
 	public void loadDataFromAlfrescoDB() throws SaodException {
 		lockDB();
 		try {
@@ -64,6 +69,10 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+	/**
+	 * Run the local dao
+	 * @throws SaodException
+	 */
 	private void lockDB() throws SaodException {
 		Timestamp run = this.localDao.getRun();
 		if (run == null) {
@@ -75,11 +84,19 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+	/**
+	 * Stop running the local dao
+	 * @throws SaodException
+	 */
 	private void unlockDB() throws SaodException {
 		this.localDao.stopRun();
 	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, readOnly = true)
+	/**
+	 * 
+	 * @throws SaodException
+	 */
 	private void islockDB() throws SaodException {
 		this.localDao.getRun();
 	}
@@ -155,6 +172,12 @@ public class SaodServiceImpl implements SaodService {
 		return loadPrintNode(selectSubFolders);
 	}
 
+	/**
+	 * Permit to obtain a list of node
+	 * @param ids
+	 * @return nodes
+	 * @throws SaodException
+	 */
 	private List<PrintNode> loadPrintNode(final List<Long> ids) throws SaodException {
 		List<PrintNode> nodes = new ArrayList<>(ids.size());
 		for (Long id : ids) {
@@ -171,6 +194,10 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
+	/**
+	 * Permit to obtain the node
+	 * @return node
+	 */
 	public PrintNode loadPrintNode(final String nodeid) throws SaodException {
 		Long id = Long.valueOf(nodeid);
 
@@ -184,6 +211,12 @@ public class SaodServiceImpl implements SaodService {
 		return node;
 	}
 
+	/**
+	 * Permit to obtain the label of a node from the id
+	 * @param id
+	 * @return nodeLabel
+	 * @throws SaodException
+	 */
 	private String loadNodeLabel(Long id) throws SaodException {
 		String nodeLabel = this.alfrescoDao.selectNodeLabel(id);
 		if (nodeLabel == null) {
@@ -193,6 +226,10 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
+	/**
+	 * Compute path of this node
+	 * @return a StringBuilder
+	 */
 	public String computePath(String nodeid) throws SaodException {
 		StringBuilder sb = new StringBuilder();
 		Long id = Long.valueOf(nodeid);
@@ -213,6 +250,9 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
+	/**
+	 * Permit to obtain the date of last run and duration
+	 */
 	public String lastRunMessage() {
 		try {
 			Timestamp run = this.localDao.getRun();
@@ -235,6 +275,10 @@ public class SaodServiceImpl implements SaodService {
 		return "Empty database";
 	}
 
+	/**
+	 * 
+	 * @return false
+	 */
 	@Override
 	public boolean isRunning() {
 		try {

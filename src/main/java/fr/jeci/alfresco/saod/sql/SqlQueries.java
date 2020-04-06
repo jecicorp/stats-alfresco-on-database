@@ -33,15 +33,28 @@ public class SqlQueries {
 
 	private String sqlBasePath = "sql/hsqldb";
 
+	/**
+	 * constructor of SQL Queries
+	 */
 	public SqlQueries() {
 		this.cacheQeries = new HashMap<>();
 		this.resolver = new PathMatchingResourcePatternResolver();
 	}
 
+	/**
+	 * Affect a path to the SQL Base
+	 * @param sqlBasePath
+	 */
 	public void setSqlBasePath(String sqlBasePath) {
 		this.sqlBasePath = sqlBasePath;
 	}
 
+	/**
+	 * Search a query by id
+	 * @param id
+	 * @return
+	 * @throws SaodException
+	 */
 	public String getQuery(String id) throws SaodException {
 		String query = this.cacheQeries.get(id);
 
@@ -52,6 +65,12 @@ public class SqlQueries {
 		return query;
 	}
 
+	/**
+	 * Load a query thanks to the id
+	 * @param id
+	 * @return
+	 * @throws SaodException
+	 */
 	private String loadQuery(final String id) throws SaodException {
 		String ressourcePath = this.sqlBasePath + "/" + id;
 		LOG.info("Loading sql file : {}", ressourcePath);
@@ -75,6 +94,12 @@ public class SqlQueries {
 		}
 	}
 
+	/**
+	 * Load all query with corresponding id in a table
+	 * @param id
+	 * @param reader
+	 * @throws IOException
+	 */
 	private void loadSQL(String id, InputStreamReader reader) throws IOException {
 		LineNumberReader fileReader = new LineNumberReader(new BufferedReader(reader));
 		String query = ScriptUtils.readScript(fileReader, COMMENT_PREFIX, SEPARATOR);
