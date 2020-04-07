@@ -40,7 +40,7 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
 	/**
-	 * Load data form the Alfresco Database
+	 * Load data from the Alfresco Database
 	 */
 	public void loadDataFromAlfrescoDB() throws SaodException {
 		lockDB();
@@ -167,7 +167,6 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	public List<PrintNode> getSubFolders(final String nodeid) throws SaodException {
 		Long id = Long.valueOf(nodeid);
-
 		List<Long> selectSubFolders = this.localDao.selectSubFolders(id);
 		return loadPrintNode(selectSubFolders);
 	}

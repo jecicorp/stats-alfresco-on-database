@@ -146,6 +146,17 @@
 				</div>
 
 			</div>
+			<div class="col-md-9">
+					<div class="col-md-9">
+						<form id="formLoad" action="#" th:action="@{/load(nodeid=${dir.nodeid})" method="post">
+							<acronym title="You would load a list of all directories from the actual one">
+							 	<input type="submit" id="btnLoad" class="btn btn-primary"
+										value="Load.." th:disabled="${running}"/>
+							</acronym>
+						 	<p id="p_error" class="text-danger" th:text="${error}"></p>
+						</form>
+					</div>
+				</div>
 		</div>
 		<div th:include="_footer :: error"></div>
 		<div th:include="_footer :: footer"></div>

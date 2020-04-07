@@ -35,8 +35,8 @@
 					</p>
 					<form id="formInit" action="#" th:action="@{/init}" method="post">
 						<input type="submit" id="btnCumpute" class="btn btn-primary"
-							value="Compute Disk Usage" th:disabled="${running}" /> <input
-							type="hidden" name="mediaType" value="application/json" />
+							value="Compute Disk Usage" th:disabled="${running}" /> 
+						<input type="hidden" name="mediaType" value="application/json" />
 					</form>
 
 					<p id="p_msg" th:text="${duration}">This may take a while.</p>

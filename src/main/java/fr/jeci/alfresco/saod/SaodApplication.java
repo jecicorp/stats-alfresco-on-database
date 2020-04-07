@@ -40,6 +40,10 @@ import fr.jeci.alfresco.saod.sql.SqlQueries;
  */
 public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
+	/**
+	 * 
+	 * @return
+	 */
 	MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
 		factory.setMaxFileSize("51200KB"); // 50MB

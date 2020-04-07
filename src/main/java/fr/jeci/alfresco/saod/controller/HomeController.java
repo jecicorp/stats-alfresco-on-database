@@ -1,6 +1,11 @@
 package fr.jeci.alfresco.saod.controller;
 
+
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.Writer;
 import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
@@ -119,6 +124,34 @@ public class HomeController implements ErrorController {
 		return output;
 	}
 
+	/**
+	 * Function to permit to load informations
+	 * @throws IOException
+	 * @throws SaodException 
+	 */
+	@RequestMapping(value = "/load", method = RequestMethod.POST, produces = { "application/csv"})
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody Writer load(@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid) throws IOException, SaodException {
+		 	//creation of CSV file
+			Writer writer = new FileWriter("file.csv");
+			//opening of file to write all file names
+			//getSubFolders() childrens
+			List<PrintNode> nodes = null;
+			nodes.add(saodService.loadPrintNode(nodeid));
+			//for each file found
+			for(PrintNode pn : nodes) {
+				//write the name of the file
+				writer.write(pn.getLabel());
+				writer.write(",");
+				writer.write("\n");
+			}
+			//close of file
+			writer.close();
+			System.out.println("Done!");
+			return writer;
+	}
+	
+	
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String init(Model model) {
