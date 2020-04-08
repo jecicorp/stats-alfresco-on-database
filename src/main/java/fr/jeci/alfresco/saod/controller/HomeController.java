@@ -4,9 +4,11 @@ package fr.jeci.alfresco.saod.controller;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -124,54 +127,49 @@ public class HomeController implements ErrorController {
 		return output;
 	}
 
-	public List<PrintNode> getAllChildren(String nodeid) throws SaodException{
-		List<PrintNode> nodes=null;
-		String currentNodeId = nodeid;
-		//add first node
-		nodes.add(saodService.loadPrintNode(nodeid));
-		//if children exists
-		if(!saodService.getSubFolders(currentNodeId).isEmpty()) {
-			List<PrintNode> children = saodService.getSubFolders(currentNodeId);
-			//verify he doesn't exist in nodes
-			for(PrintNode p : nodes) {
-				for(PrintNode pn : children) {
-					//if he doesn't exist in nodes
-					if(!p.equals(pn)){
-						getAllChildren(p.getNodeid().toString());
-					}else {
-						nodes.add(p);
-						//currentNodeId =//le parent ici 
-					}	
+	public List<PrintNode> getAllChildren(List<PrintNode> nodes) throws SaodException{
+		List<PrintNode> base=nodes;
+		//for each node in base we'll look for children of the node
+		for(PrintNode pn : base) {
+			//if node has children or child
+			if(!saodService.getSubFolders(pn.getNodeid().toString()).isEmpty()) {
+				//for all child, add it to the base
+				for(PrintNode child : saodService.getSubFolders(pn.getNodeid().toString())) {
+					base.add(child);
 				}
 			}
 		}
-		return nodes;	
+		
+		return base;	
 	}
 	/**
 	 * Function to permit to load informations
 	 * @throws IOException
 	 * @throws SaodException 
 	 */
-	@RequestMapping(value = "/load", method = RequestMethod.POST, produces = { "application/csv"})
+	@RequestMapping(value = "/load", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv"})
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody Writer load(@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid) throws IOException, SaodException {
-		 	//creation of CSV file
-			Writer writer = new FileWriter("file.csv");
-			//opening of file to write all file names
-			List<PrintNode> nodes=null ;//= this.getAllChildren(nodeid);
+	public @ResponseBody void load(HttpServletResponse response,@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid) throws IOException, SaodException {
+		 	
+			//set file name and content type
+	        String filename = "file.csv";
+
+	        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+	                "attachment; filename=\"" + filename + "\"");
+
+			//creation of list of all file since a specific location
+			List<PrintNode> nodes= new ArrayList<>();//saodService.getRoots();//= this.getAllChildren(nodeid);
 			nodes.add(saodService.loadPrintNode(nodeid));
-			//while nodeid has children		
-			//for each file found
+			//nodes = getAllChildren(nodes);
+			PrintWriter writer = response.getWriter();
+			//loading informations
 			for(PrintNode pn : nodes) {
 				//write the name of the file
 				writer.write(pn.getLabel());
 				writer.write(",");
 				writer.write("\n");
 			}
-			//close of file
-			writer.close();
 			System.out.println("Done!");
-			return writer;
 	}
 	
 	

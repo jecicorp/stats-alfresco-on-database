@@ -146,15 +146,13 @@
 				</div>
 
 			</div>
-			<div class="col-md-9">
-					<div class="col-md-9" >
+			<div th:if="${dir}!=null" class="col-md-9">
 							<acronym title="You would load a list of all directories from the actual one">
-								<a id="btnLoad" th:href="@{/load(nodeid=${dir.nodeid})}"
-								class="btn btn-primary" role="button">Load..</a>
+									<a  id="btnLoad" th:href="@{/load(nodeid=${dir.nodeid})}" 
+									class="btn btn-primary" role="button">Load..</a>
 							</acronym>
 						 	<p id="p_error" class="text-danger" th:text="${error}"></p>
-					</div>
-				</div>
+			</div>
 		</div>
 		<div th:include="_footer :: error"></div>
 		<div th:include="_footer :: footer"></div>
