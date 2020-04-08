@@ -147,14 +147,12 @@
 
 			</div>
 			<div class="col-md-9">
-					<div class="col-md-9">
-						<form id="formLoad" action="#" th:action="@{/load(nodeid=${dir.nodeid})" method="post">
+					<div class="col-md-9" >
 							<acronym title="You would load a list of all directories from the actual one">
-							 	<input type="submit" id="btnLoad" class="btn btn-primary"
-										value="Load.." th:disabled="${running}"/>
+								<a id="btnLoad" th:href="@{/load(nodeid=${dir.nodeid})}"
+								class="btn btn-primary" role="button">Load..</a>
 							</acronym>
 						 	<p id="p_error" class="text-danger" th:text="${error}"></p>
-						</form>
 					</div>
 				</div>
 		</div>

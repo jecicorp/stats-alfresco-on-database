@@ -124,6 +124,29 @@ public class HomeController implements ErrorController {
 		return output;
 	}
 
+	public List<PrintNode> getAllChildren(String nodeid) throws SaodException{
+		List<PrintNode> nodes=null;
+		String currentNodeId = nodeid;
+		//add first node
+		nodes.add(saodService.loadPrintNode(nodeid));
+		//if children exists
+		if(!saodService.getSubFolders(currentNodeId).isEmpty()) {
+			List<PrintNode> children = saodService.getSubFolders(currentNodeId);
+			//verify he doesn't exist in nodes
+			for(PrintNode p : nodes) {
+				for(PrintNode pn : children) {
+					//if he doesn't exist in nodes
+					if(!p.equals(pn)){
+						getAllChildren(p.getNodeid().toString());
+					}else {
+						nodes.add(p);
+						//currentNodeId =//le parent ici 
+					}	
+				}
+			}
+		}
+		return nodes;	
+	}
 	/**
 	 * Function to permit to load informations
 	 * @throws IOException
@@ -135,9 +158,9 @@ public class HomeController implements ErrorController {
 		 	//creation of CSV file
 			Writer writer = new FileWriter("file.csv");
 			//opening of file to write all file names
-			//getSubFolders() childrens
-			List<PrintNode> nodes = null;
+			List<PrintNode> nodes=null ;//= this.getAllChildren(nodeid);
 			nodes.add(saodService.loadPrintNode(nodeid));
+			//while nodeid has children		
 			//for each file found
 			for(PrintNode pn : nodes) {
 				//write the name of the file
