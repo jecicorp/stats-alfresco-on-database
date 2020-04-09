@@ -37,6 +37,7 @@ public class SaodServiceImpl implements SaodService {
 	@Autowired
 	private MessageSource messageSource;
 
+
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
 	/**
@@ -295,6 +296,7 @@ public class SaodServiceImpl implements SaodService {
 	 * @return
 	 * @throws SaodException
 	 */
+	@Override
 	public List<PrintNode> getAllChildren(String nodeid) throws SaodException{
 		//add children of root
 		List<PrintNode> children= getSubFolders(nodeid);
@@ -306,6 +308,61 @@ public class SaodServiceImpl implements SaodService {
 			}
 		}
 		return children;	
+	}
+	
+	/**
+	 * Permit to obtain the path of a node from where it has been download
+	 * @param root
+	 * @param nodeid
+	 * @return path
+	 */
+	public String getPath(String root, PrintNode node) {
+		String result = root;
+		List<String> path = new ArrayList<String>();
+		PrintNode currentNode = node;
+		Long currentNodeID = node.getNodeid();
+		
+		//while we didn't find the root
+		while(!currentNodeID.toString().equals(root)) {
+			//add the ID of the node
+			path.add(currentNodeID.toString());
+			currentNodeID=currentNode.getParent();
+		}
+			
+		//add all the path in the result
+		for(int i=path.size();i<0;i--) {
+			result+="/"+path.get(i);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public String getPath(String root,String nodeid) throws SaodException {
+		String completePath = computePath(nodeid);
+		String[] res = completePath.split(" > ");
+		
+		String path = "";
+		int cpt = 0;
+		boolean find = false;
+		//while we haven't find the root
+		while(!find) {
+			//check if it is in the table
+			for(String s : res) {
+				cpt++;
+				if(s.equals(loadPrintNode(root).getLabel())) {
+					System.out.println("String : "+ s);
+					System.out.println("Path : " + path);
+					find=true;
+					path+=s+" / ";
+				}
+			}
+		}
+		
+		for(int i=cpt;i<res.length;i++ ) {
+			path+=res[cpt]+" / ";
+		}
+		return path;
 	}
 
 }

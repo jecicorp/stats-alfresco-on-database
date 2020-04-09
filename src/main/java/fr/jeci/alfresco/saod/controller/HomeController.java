@@ -1,8 +1,5 @@
 package fr.jeci.alfresco.saod.controller;
 
-
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -48,6 +45,7 @@ import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.service.SaodService;
+
 /**
  * Class of HomeController
  */
@@ -79,6 +77,7 @@ public class HomeController implements ErrorController {
 	@RequestMapping(value = { "", "/", "/init" })
 	/**
 	 * Update a given model
+	 * 
 	 * @param model
 	 * @return "home"
 	 */
@@ -128,36 +127,38 @@ public class HomeController implements ErrorController {
 
 	/**
 	 * Function to permit to load informations
+	 * 
 	 * @throws IOException
-	 * @throws SaodException 
+	 * @throws SaodException
 	 */
-	@RequestMapping(value = "/load", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv"})
+	@RequestMapping(value = "/load", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv" })
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody void load(HttpServletResponse response,@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid) throws IOException, SaodException {
-		 	
-			//set file name and content type
-	        String filename = "file.csv";
+	public @ResponseBody void load(HttpServletResponse response,
+			@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid)
+			throws IOException, SaodException {
 
-	        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-	                "attachment; filename=\"" + filename + "\"");
+		// set file name and content type
+		String filename = saodService.loadPrintNode(nodeid) + ".csv";
 
-			//creation of list of all file since a specific location
-			List<PrintNode> nodes= new ArrayList<>();//saodService.getRoots();
-			nodes.add(saodService.loadPrintNode(nodeid));
-			nodes = saodService.getAllChildren(nodeid);
-			PrintWriter writer = response.getWriter();
-				writer.write("File Name ;");
-				writer.println("Full Size");
-			//loading informations
-			for(PrintNode pn : nodes) {
-				//write the name of the file
-				writer.write(pn.getLabel()+";");
-				writer.println(pn.getFullSize());
-			}
-			System.out.println("Done!");
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+
+		// creation of list of all file since a specific location
+		List<PrintNode> nodes = new ArrayList<>();
+		nodes = saodService.getAllChildren(nodeid);
+		PrintWriter writer = response.getWriter();
+		writer.print("File Name ;");
+		writer.print("Full Size ;");
+		writer.println("Chemin");
+		// loading informations
+		for (PrintNode pn : nodes) {
+			// write the name of the file
+			writer.print(pn.getLabel() + ";");
+			writer.print(pn.getFullSizeReal() + ";");
+			writer.println(saodService.computePath(pn.getNodeid().toString()));// saodService.getPath(nodeid,pn.getNodeid().toString()));
+		}
+		LOG.info("Done !");
 	}
-	
-	
+
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@Secured("ROLE_ADMIN")
 	public String init(Model model) {

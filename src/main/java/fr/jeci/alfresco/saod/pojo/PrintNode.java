@@ -82,6 +82,25 @@ public class PrintNode implements Serializable {
 		return Long.sum(localSize, dirSize);
 	}
 	/**
+	 * Permit to get the full size in B, kB or MB
+	 * @return the size
+	 */
+	public String getFullSizeReal() {
+		Double size=(double)this.getFullSize();
+		String result="";
+
+		if(this.getFullSize()<1000.000) {
+			result=size.toString()+ "B";
+		}else if(this.getFullSize()<1000000.000) {
+			size=(size/1000.000);
+			result=size.toString()+ "kB";
+		}else if(this.getFullSize()<1000000000.000){
+			size=(size/1000000.000);
+			result=size.toString()+ "MB";
+		}
+		return result;
+	}
+	/**
 	 * 
 	 * @return
 	 */

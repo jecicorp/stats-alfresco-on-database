@@ -75,6 +75,16 @@ public interface SaodService {
 	 * @return
 	 * @throws SaodException
 	 */
-	public List<PrintNode> getAllChildren(String nodeid) throws SaodException;
+	List<PrintNode> getAllChildren(String nodeid) throws SaodException;
+	
+	/**
+	 * Permit to obtain the path of a node from where it has been download
+	 * @param root
+	 * @param nodeid
+	 * @return path
+	 */
+	String getPath(String root, PrintNode node);
+	
+	String getPath(String root, String nodeid) throws SaodException;
 
 }
