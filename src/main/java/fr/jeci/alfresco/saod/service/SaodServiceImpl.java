@@ -288,5 +288,24 @@ public class SaodServiceImpl implements SaodService {
 		}
 		return false;
 	}
+	
+	/**
+	 * Permit to get all the information from a node to all children
+	 * @param nodes
+	 * @return
+	 * @throws SaodException
+	 */
+	public List<PrintNode> getAllChildren(String nodeid) throws SaodException{
+		//add children of root
+		List<PrintNode> children= getSubFolders(nodeid);
+		//for each children
+		for(int i=0; i<children.size();i++) {
+			List<PrintNode> littleChildren = getAllChildren(children.get(i).getNodeid().toString());
+			for(PrintNode littleChild : littleChildren) {
+				children.add(littleChild);
+			}
+		}
+		return children;	
+	}
 
 }

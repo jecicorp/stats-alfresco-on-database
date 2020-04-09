@@ -151,6 +151,7 @@
 									<a  id="btnLoad" th:href="@{/load(nodeid=${dir.nodeid})}" 
 									class="btn btn-primary" role="button">Load..</a>
 							</acronym>
+							<p id="p_msg" th:text="${duration}">This may take a while.</p>
 						 	<p id="p_error" class="text-danger" th:text="${error}"></p>
 			</div>
 		</div>

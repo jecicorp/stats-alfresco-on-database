@@ -68,5 +68,13 @@ public interface SaodService {
 	 * @return true if compute is running.
 	 */
 	boolean isRunning();
+	
+	/**
+	 * Permit to get all the information from a node to all children
+	 * @param nodes
+	 * @return
+	 * @throws SaodException
+	 */
+	public List<PrintNode> getAllChildren(String nodeid) throws SaodException;
 
 }

@@ -2,11 +2,10 @@ package fr.jeci.alfresco.saod.controller;
 
 
 
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.Writer;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,21 +126,6 @@ public class HomeController implements ErrorController {
 		return output;
 	}
 
-	public List<PrintNode> getAllChildren(List<PrintNode> nodes) throws SaodException{
-		List<PrintNode> base=nodes;
-		//for each node in base we'll look for children of the node
-		for(PrintNode pn : base) {
-			//if node has children or child
-			if(!saodService.getSubFolders(pn.getNodeid().toString()).isEmpty()) {
-				//for all child, add it to the base
-				for(PrintNode child : saodService.getSubFolders(pn.getNodeid().toString())) {
-					base.add(child);
-				}
-			}
-		}
-		
-		return base;	
-	}
 	/**
 	 * Function to permit to load informations
 	 * @throws IOException
@@ -158,16 +142,17 @@ public class HomeController implements ErrorController {
 	                "attachment; filename=\"" + filename + "\"");
 
 			//creation of list of all file since a specific location
-			List<PrintNode> nodes= new ArrayList<>();//saodService.getRoots();//= this.getAllChildren(nodeid);
+			List<PrintNode> nodes= new ArrayList<>();//saodService.getRoots();
 			nodes.add(saodService.loadPrintNode(nodeid));
-			//nodes = getAllChildren(nodes);
+			nodes = saodService.getAllChildren(nodeid);
 			PrintWriter writer = response.getWriter();
+				writer.write("File Name ;");
+				writer.println("Full Size");
 			//loading informations
 			for(PrintNode pn : nodes) {
 				//write the name of the file
-				writer.write(pn.getLabel());
-				writer.write(",");
-				writer.write("\n");
+				writer.write(pn.getLabel()+";");
+				writer.println(pn.getFullSize());
 			}
 			System.out.println("Done!");
 	}
