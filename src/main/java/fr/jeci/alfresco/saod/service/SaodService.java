@@ -47,6 +47,12 @@ public interface SaodService {
 	 * @throws SaodException
 	 */
 	String computePath(String nodeid) throws SaodException;
+	
+	/**
+	 * Compute path of this node
+	 * @return a List of printNode
+	 */
+	List<PrintNode> computePathList(String nodeid) throws SaodException ;
 
 	/**
 	 * Compute full size of all directory starting from leaf to root
@@ -83,8 +89,6 @@ public interface SaodService {
 	 * @param nodeid
 	 * @return path
 	 */
-	String getPath(String root, PrintNode node);
-	
 	String getPath(String root, String nodeid) throws SaodException;
 
 }

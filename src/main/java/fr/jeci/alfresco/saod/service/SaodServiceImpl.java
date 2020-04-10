@@ -3,6 +3,7 @@ package fr.jeci.alfresco.saod.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
 import fr.jeci.alfresco.saod.sql.LocalDao;
+
 /**
  * Class of SaodService
  */
@@ -36,7 +38,6 @@ public class SaodServiceImpl implements SaodService {
 
 	@Autowired
 	private MessageSource messageSource;
-
 
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
@@ -72,6 +73,7 @@ public class SaodServiceImpl implements SaodService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 	/**
 	 * Run the local dao
+	 * 
 	 * @throws SaodException
 	 */
 	private void lockDB() throws SaodException {
@@ -87,6 +89,7 @@ public class SaodServiceImpl implements SaodService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 	/**
 	 * Stop running the local dao
+	 * 
 	 * @throws SaodException
 	 */
 	private void unlockDB() throws SaodException {
@@ -120,9 +123,9 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	/**
-	 * we set parent_node_id, then create parent row if he doesnt existe,
-	 * finally set parent.dir_num_size to 0 because it have child. If
-	 * dir_num_size = null, we think it's a leaf.
+	 * we set parent_node_id, then create parent row if he doesnt existe, finally
+	 * set parent.dir_num_size to 0 because it have child. If dir_num_size = null,
+	 * we think it's a leaf.
 	 * 
 	 * @param selectDirLocalSize
 	 * @throws SaodException
@@ -174,6 +177,7 @@ public class SaodServiceImpl implements SaodService {
 
 	/**
 	 * Permit to obtain a list of node
+	 * 
 	 * @param ids
 	 * @return nodes
 	 * @throws SaodException
@@ -196,6 +200,7 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	/**
 	 * Permit to obtain the node
+	 * 
 	 * @return node
 	 */
 	public PrintNode loadPrintNode(final String nodeid) throws SaodException {
@@ -213,6 +218,7 @@ public class SaodServiceImpl implements SaodService {
 
 	/**
 	 * Permit to obtain the label of a node from the id
+	 * 
 	 * @param id
 	 * @return nodeLabel
 	 * @throws SaodException
@@ -228,6 +234,7 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	/**
 	 * Compute path of this node
+	 * 
 	 * @return a StringBuilder
 	 */
 	public String computePath(String nodeid) throws SaodException {
@@ -247,6 +254,27 @@ public class SaodServiceImpl implements SaodService {
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	/**
+	 * Compute path of this node
+	 * 
+	 * @return a List of printNode
+	 */
+	public List<PrintNode> computePathList(String nodeid) throws SaodException {
+		List<PrintNode> sb = new ArrayList<PrintNode>();
+		Long id = Long.valueOf(nodeid);
+
+		sb.add(loadPrintNode(nodeid));
+		PrintNode node;
+		while ((node = this.localDao.loadRow(id)) != null) {
+			if (node.getParent() != null) {
+				id = node.getParent();
+				sb.add(loadPrintNode(id.toString()));
+			}
+		}
+		return sb;
 	}
 
 	@Override
@@ -289,79 +317,57 @@ public class SaodServiceImpl implements SaodService {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Permit to get all the information from a node to all children
+	 * 
 	 * @param nodes
 	 * @return
 	 * @throws SaodException
 	 */
 	@Override
-	public List<PrintNode> getAllChildren(String nodeid) throws SaodException{
-		//add children of root
-		List<PrintNode> children= getSubFolders(nodeid);
-		//for each children
-		for(int i=0; i<children.size();i++) {
+	public List<PrintNode> getAllChildren(String nodeid) throws SaodException {
+		// add children of root
+		List<PrintNode> children = getSubFolders(nodeid);
+		// for each children
+		for (int i = 0; i < children.size(); i++) {
 			List<PrintNode> littleChildren = getAllChildren(children.get(i).getNodeid().toString());
-			for(PrintNode littleChild : littleChildren) {
+			for (PrintNode littleChild : littleChildren) {
 				children.add(littleChild);
 			}
 		}
-		return children;	
+		return children;
 	}
-	
+
 	/**
 	 * Permit to obtain the path of a node from where it has been download
+	 * 
 	 * @param root
 	 * @param nodeid
 	 * @return path
 	 */
-	public String getPath(String root, PrintNode node) {
-		String result = root;
-		List<String> path = new ArrayList<String>();
-		PrintNode currentNode = node;
-		Long currentNodeID = node.getNodeid();
-		
-		//while we didn't find the root
-		while(!currentNodeID.toString().equals(root)) {
-			//add the ID of the node
-			path.add(currentNodeID.toString());
-			currentNodeID=currentNode.getParent();
-		}
-			
-		//add all the path in the result
-		for(int i=path.size();i<0;i--) {
-			result+="/"+path.get(i);
-		}
-		
-		return result;
-	}
-	
 	@Override
-	public String getPath(String root,String nodeid) throws SaodException {
-		String completePath = computePath(nodeid);
-		String[] res = completePath.split(" > ");
-		
+	public String getPath(String root, String nodeid) throws SaodException {
+		List<PrintNode> pathList = computePathList(nodeid);
+		List<PrintNode> pathNeeded;
+
 		String path = "";
 		int cpt = 0;
-		boolean find = false;
-		//while we haven't find the root
-		while(!find) {
-			//check if it is in the table
-			for(String s : res) {
-				cpt++;
-				if(s.equals(loadPrintNode(root).getLabel())) {
-					System.out.println("String : "+ s);
-					System.out.println("Path : " + path);
-					find=true;
-					path+=s+" / ";
-				}
+		// we get the root
+		for (PrintNode node : pathList) {
+			// if we find root
+			if (node.getNodeid().toString().equals(root)) {
+				break;
 			}
+			cpt++;
 		}
-		
-		for(int i=cpt;i<res.length;i++ ) {
-			path+=res[cpt]+" / ";
+		// get path we need
+		pathNeeded = pathList.subList(0, cpt + 1);
+		Collections.reverse(pathNeeded);
+		for (PrintNode pn : pathNeeded) {
+			path += pn.getLabel() + " / ";
 		}
+		//
 		return path;
 	}
 

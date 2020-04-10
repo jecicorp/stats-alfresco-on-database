@@ -1,7 +1,6 @@
 package fr.jeci.alfresco.saod.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -39,6 +38,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.opencsv.CSVWriter;
 
 import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
@@ -138,24 +139,31 @@ public class HomeController implements ErrorController {
 			throws IOException, SaodException {
 
 		// set file name and content type
-		String filename = saodService.loadPrintNode(nodeid) + ".csv";
-
+		String filename = saodService.loadPrintNode(nodeid).getLabel() + ".csv";
+		// permit to download it
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
 
 		// creation of list of all file since a specific location
 		List<PrintNode> nodes = new ArrayList<>();
 		nodes = saodService.getAllChildren(nodeid);
-		PrintWriter writer = response.getWriter();
-		writer.print("File Name ;");
-		writer.print("Full Size ;");
-		writer.println("Chemin");
-		// loading informations
-		for (PrintNode pn : nodes) {
-			// write the name of the file
-			writer.print(pn.getLabel() + ";");
-			writer.print(pn.getFullSizeReal() + ";");
-			writer.println(saodService.computePath(pn.getNodeid().toString()));// saodService.getPath(nodeid,pn.getNodeid().toString()));
+		char defaultCharacter = ';';
+		//
+		CSVWriter csvWriter = new CSVWriter(response.getWriter(),
+				defaultCharacter,
+                CSVWriter.NO_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                CSVWriter.DEFAULT_LINE_END);
+
+		String[] headerRecord = {"Type","Name", "FullSize", "FullPath"};
+        csvWriter.writeNext(headerRecord);
+        
+        //transform nodes in string content by loading informations
+		for (PrintNode pn : nodes) {	 
+			String[] contentRecord= {pn.getType(),pn.getLabel(), pn.getFullSize().toString(), saodService.getPath(nodeid, pn.getNodeid().toString())};
+			System.out.println(pn.getType());
+			csvWriter.writeNext(contentRecord);
 		}
+		csvWriter.close();
 		LOG.info("Done !");
 	}
 
