@@ -141,16 +141,17 @@ public class PrintNode implements Serializable {
 
 	/**
 	 * Get the type of a node
+	 * 
 	 * @return file or directory
 	 */
 	public String getType() {
-		//non fini
-		//le if ne marche pas
-		String[] extension = this.getLabel().split(".") ;
+		// non fini
+		// le if ne marche pas
+		String[] extension = this.getLabel().split(".");
 		System.out.println(getLabel());
-		String type="Directory";
-		for(int i=0;i<extension.length;i++) {
-			if(extension[i]!=null) {
+		String type = "Directory";
+		for (int i = 0; i < extension.length; i++) {
+			if (extension[i] != null) {
 				type = "File";
 			}
 		}

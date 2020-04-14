@@ -148,18 +148,16 @@ public class HomeController implements ErrorController {
 		nodes = saodService.getAllChildren(nodeid);
 		char defaultCharacter = ';';
 		//
-		CSVWriter csvWriter = new CSVWriter(response.getWriter(),
-				defaultCharacter,
-                CSVWriter.NO_QUOTE_CHARACTER,
-                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                CSVWriter.DEFAULT_LINE_END);
+		CSVWriter csvWriter = new CSVWriter(response.getWriter(), defaultCharacter, CSVWriter.NO_QUOTE_CHARACTER,
+				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-		String[] headerRecord = {"Type","Name", "FullSize", "FullPath"};
-        csvWriter.writeNext(headerRecord);
-        
-        //transform nodes in string content by loading informations
-		for (PrintNode pn : nodes) {	 
-			String[] contentRecord= {pn.getType(),pn.getLabel(), pn.getFullSize().toString(), saodService.getPath(nodeid, pn.getNodeid().toString())};
+		String[] headerRecord = { "Type", "Name", "FullSize", "FullPath" };
+		csvWriter.writeNext(headerRecord);
+
+		// transform nodes in string content by loading informations
+		for (PrintNode pn : nodes) {
+			String[] contentRecord = { pn.getType(), pn.getLabel(), pn.getFullSize().toString(),
+					saodService.getPath(nodeid, pn.getNodeid().toString()) };
 			System.out.println(pn.getType());
 			csvWriter.writeNext(contentRecord);
 		}
