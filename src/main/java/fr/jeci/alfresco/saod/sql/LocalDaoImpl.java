@@ -33,6 +33,7 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String PARENT_NODE_ID = "parent_node_id";
 	private static final String LOCAL_SIZE = "local_size";
 	private static final String NODE_ID = "node_id";
+	private static final String NODE_TYPE = "node_type";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -113,6 +114,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
+			parameters.addValue(NODE_TYPE, e.getValue());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -173,6 +175,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
+			parameters.addValue(NODE_TYPE, false);
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
@@ -211,6 +214,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(SUM_SIZE, 0);
+			parameters.addValue(NODE_TYPE, 0);
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -255,6 +259,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(PARENT_NODE_ID, e.getValue());
+			parameters.addValue(NODE_TYPE, e.getValue());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {

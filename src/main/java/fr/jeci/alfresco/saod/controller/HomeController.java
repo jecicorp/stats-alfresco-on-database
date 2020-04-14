@@ -156,9 +156,10 @@ public class HomeController implements ErrorController {
 
 		// transform nodes in string content by loading informations
 		for (PrintNode pn : nodes) {
-			String[] contentRecord = { pn.getType(), pn.getLabel(), pn.getFullSize().toString(),
-					saodService.getPath(nodeid, pn.getNodeid().toString()) };
-			System.out.println(pn.getType());
+			String[] contentRecord = { pn.getType(), // type : directory or file
+					pn.getLabel(), // label
+					pn.getFullSize().toString(), // size
+					saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
 			csvWriter.writeNext(contentRecord);
 		}
 		csvWriter.close();

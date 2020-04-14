@@ -17,14 +17,27 @@ public class PrintNode implements Serializable {
 	private Long localSize;
 	private Long dirSize;
 	private Long parent;
-
+	private boolean nodetype;
+	
+	
 	/**
-	 * Constructor of a node
+	 * Constructor of a node (file)
 	 * 
 	 * @param id
 	 */
 	public PrintNode(Long id) {
 		this.nodeid = id;
+		this.nodetype=true;//its a file
+	}
+	
+	/**
+	 * Constructor of a node (directory)
+	 * 
+	 * @param id
+	 */
+	public PrintNode(Long id, boolean type) {
+		this.nodeid = id;
+		this.nodetype=type;
 	}
 
 	/**
@@ -139,23 +152,13 @@ public class PrintNode implements Serializable {
 		this.parent = parent;
 	}
 
-	/**
-	 * Get the type of a node
-	 * 
-	 * @return file or directory
-	 */
 	public String getType() {
-		// non fini
-		// le if ne marche pas
-		String[] extension = this.getLabel().split(".");
-		System.out.println(getLabel());
-		String type = "Directory";
-		for (int i = 0; i < extension.length; i++) {
-			if (extension[i] != null) {
-				type = "File";
-			}
+		String res = "Directory";
+		if(this.nodetype) {
+			res = "File";
 		}
-		return type;
+		return res;
 	}
+
 
 }
