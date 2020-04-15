@@ -114,7 +114,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
-			parameters.addValue(NODE_TYPE, e.getValue());
+			parameters.addValue(NODE_TYPE, 1);//its a directory
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -175,7 +175,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
-			parameters.addValue(NODE_TYPE, false);
+			parameters.addValue(NODE_TYPE, 1);//its a directory
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
@@ -214,7 +214,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(SUM_SIZE, 0);
-			parameters.addValue(NODE_TYPE, 0);
+			parameters.addValue(NODE_TYPE, 1);//directory
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -259,7 +259,6 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(PARENT_NODE_ID, e.getValue());
-			parameters.addValue(NODE_TYPE, e.getValue());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -331,10 +330,11 @@ public class LocalDaoImpl implements LocalDao {
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
 
 		while (queryForRowSet.next()) {
-			PrintNode node = new PrintNode(nodeid);
-			node.setParent(queryForRowSet.getLong(2));
-			node.setLocalSize(queryForRowSet.getLong(3));
-			node.setDirSize(queryForRowSet.getLong(4));
+			PrintNode node = new PrintNode(nodeid); //ID
+			node.setParent(queryForRowSet.getLong(2)); //PARENT
+			node.setLocalSize(queryForRowSet.getLong(3));//LOCAL SIZE
+			node.setDirSize(queryForRowSet.getLong(4));//SUM SIZE
+			node.setType(queryForRowSet.getInt(5));//TYPE
 			return node;
 		}
 

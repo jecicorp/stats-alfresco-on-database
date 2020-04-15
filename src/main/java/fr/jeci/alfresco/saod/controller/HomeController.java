@@ -156,7 +156,8 @@ public class HomeController implements ErrorController {
 
 		// transform nodes in string content by loading informations
 		for (PrintNode pn : nodes) {
-			String[] contentRecord = { pn.getType(), // type : directory or file
+			String[] contentRecord = { 
+					pn.getType(), // type : directory or file
 					pn.getLabel(), // label
 					pn.getFullSize().toString(), // size
 					saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path

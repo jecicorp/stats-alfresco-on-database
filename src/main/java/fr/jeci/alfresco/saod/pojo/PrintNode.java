@@ -17,7 +17,7 @@ public class PrintNode implements Serializable {
 	private Long localSize;
 	private Long dirSize;
 	private Long parent;
-	private boolean nodetype;
+	private int nodetype;
 	
 	
 	/**
@@ -27,17 +27,6 @@ public class PrintNode implements Serializable {
 	 */
 	public PrintNode(Long id) {
 		this.nodeid = id;
-		this.nodetype=true;//its a file
-	}
-	
-	/**
-	 * Constructor of a node (directory)
-	 * 
-	 * @param id
-	 */
-	public PrintNode(Long id, boolean type) {
-		this.nodeid = id;
-		this.nodetype=type;
 	}
 
 	/**
@@ -152,11 +141,20 @@ public class PrintNode implements Serializable {
 		this.parent = parent;
 	}
 
+	/**
+	 * If it's a file or a directory
+	 * @param type
+	 */
+	public void setType(int type) {
+		this.nodetype=type;
+	}
+	
 	public String getType() {
 		String res = "Directory";
-		if(this.nodetype) {
+		if(this.nodetype==0) {
 			res = "File";
 		}
+		System.out.println(this.nodetype);
 		return res;
 	}
 
