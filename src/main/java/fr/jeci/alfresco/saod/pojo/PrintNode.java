@@ -150,11 +150,12 @@ public class PrintNode implements Serializable {
 	}
 	
 	public String getType() {
-		String res = "Directory";
+		String res = "";
 		if(this.nodetype==0) {
 			res = "File";
+		}else if(this.nodetype==1){
+			res = "Directory";
 		}
-		System.out.println(this.nodetype);
 		return res;
 	}
 

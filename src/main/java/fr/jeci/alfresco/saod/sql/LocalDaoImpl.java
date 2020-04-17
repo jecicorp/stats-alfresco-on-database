@@ -114,7 +114,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
-			parameters.addValue(NODE_TYPE, 1);//its a directory
+			parameters.addValue(NODE_TYPE, 0);//its a file
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -214,7 +214,6 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(SUM_SIZE, 0);
-			parameters.addValue(NODE_TYPE, 1);//directory
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {

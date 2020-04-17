@@ -352,20 +352,22 @@ public class SaodServiceImpl implements SaodService {
 		List<PrintNode> pathNeeded;
 
 		String path = "";
-		int cpt = 0;
-		// we get the root
-		for (PrintNode node : pathList) {
-			// if we find root
-			if (node.getNodeid().toString().equals(root)) {
-				break;
+		if(loadPrintNode(nodeid).getType()=="File") {
+			int cpt = 0;
+			// we get the root
+			for (PrintNode node : pathList) {
+				// if we find root
+				if (node.getNodeid().toString().equals(root)) {
+					break;
+				}
+				cpt++;
 			}
-			cpt++;
-		}
-		// get path we need
-		pathNeeded = pathList.subList(0, cpt + 1);
-		Collections.reverse(pathNeeded);
-		for (PrintNode pn : pathNeeded) {
-			path += pn.getLabel() + " / ";
+			// get path we need
+			pathNeeded = pathList.subList(0, cpt + 1);
+			Collections.reverse(pathNeeded);
+			for (PrintNode pn : pathNeeded) {
+				path +=  "/"+pn.getLabel();
+			}
 		}
 		//
 		return path;
