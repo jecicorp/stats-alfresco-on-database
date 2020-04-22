@@ -132,10 +132,10 @@ public class HomeController implements ErrorController {
 	 * @throws IOException
 	 * @throws SaodException
 	 */
-	@RequestMapping(value = "/load", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv" })
+	@RequestMapping(value = "/export", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv" })
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody void load(HttpServletResponse response,
-			@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid)
+	public @ResponseBody void export(HttpServletResponse response,
+			@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid, @RequestParam(value = "type", required = true) String type)
 			throws IOException, SaodException {
 
 		// set file name and content type
@@ -144,27 +144,35 @@ public class HomeController implements ErrorController {
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
 
 		// creation of list of all file since a specific location
-		List<PrintNode> nodes = new ArrayList<>();
-		nodes = saodService.getAllChildren(nodeid);
+		List<PrintNode> nodes = saodService.getExport(nodeid,type);
 		char defaultCharacter = ';';
 		//
 		CSVWriter csvWriter = new CSVWriter(response.getWriter(), defaultCharacter, CSVWriter.NO_QUOTE_CHARACTER,
 				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-		String[] headerRecord = { "Type", "Name", "FullSize", "FullPath" };
-		csvWriter.writeNext(headerRecord);
-
+		//--- add header
+		if(type.equals("Both")) {
+			String[] headerRecord = { "Type", "Name", "FullSize", "FullPath" };
+			csvWriter.writeNext(headerRecord);
+		}else {
+			String[] headerRecord = { "Name", "FullSize", "FullPath" };
+			csvWriter.writeNext(headerRecord);
+		}
 		// transform nodes in string content by loading informations
 		for (PrintNode pn : nodes) {
-			String[] contentRecord = { 
-					pn.getType(), // type : directory or file
-					pn.getLabel(), // label
-					pn.getFullSize().toString(), // size
-					saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
-			csvWriter.writeNext(contentRecord);
+				if(type.equals("Both")) {
+				String[] node_type = {"",pn.getType()}; // type : directory or file
+				csvWriter.writeNext(node_type);
+				}
+				String[] contentRecord = { 
+						pn.getLabel(), // label
+						pn.getFullSize().toString(), // size
+						saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
+				csvWriter.writeNext(contentRecord);		
 		}
 		csvWriter.close();
 		LOG.info("Done !");
+		LOG.info(type);
 	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)

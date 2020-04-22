@@ -90,5 +90,15 @@ public interface SaodService {
 	 * @return path
 	 */
 	String getPath(String root, String nodeid) throws SaodException;
+	
+	/**
+	 * Permit to export files, directories or both
+	 * @param nodeid
+	 * @param type
+	 * @return
+	 * @throws SaodException
+	 */
+	List<PrintNode> getExport(final String nodeid,String type) throws SaodException;
+	
 
 }

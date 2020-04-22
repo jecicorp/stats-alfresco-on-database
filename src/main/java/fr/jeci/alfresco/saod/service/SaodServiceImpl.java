@@ -336,6 +336,7 @@ public class SaodServiceImpl implements SaodService {
 				children.add(littleChild);
 			}
 		}
+		//passer par le SQL + rapide
 		return children;
 	}
 
@@ -363,7 +364,7 @@ public class SaodServiceImpl implements SaodService {
 				cpt++;
 			}
 			// get path we need
-			pathNeeded = pathList.subList(0, cpt + 1);
+			pathNeeded = pathList.subList(1, cpt+1);
 			Collections.reverse(pathNeeded);
 			for (PrintNode pn : pathNeeded) {
 				path +=  "/"+pn.getLabel();
@@ -371,6 +372,30 @@ public class SaodServiceImpl implements SaodService {
 		}
 		//
 		return path;
+	}
+	
+	/**
+	 * Permit to export files, directories or both
+	 * @param nodeid
+	 * @param type
+	 * @return
+	 * @throws SaodException
+	 */
+	public List<PrintNode> getExport(final String nodeid,String type) throws SaodException {
+		List<PrintNode> selectDirectories = new ArrayList();
+		List<PrintNode> children = this.getAllChildren(nodeid);
+		//if we want both, no need to modify
+		if(type.contentEquals("Both")){
+				selectDirectories = children;
+		}else {
+			//select only directories or file, depend on type we want
+			for(PrintNode p : children) {
+				if(p.getType().equals(type)) {
+					selectDirectories.add(p);
+				}
+			}
+		}
+		return selectDirectories;
 	}
 
 }

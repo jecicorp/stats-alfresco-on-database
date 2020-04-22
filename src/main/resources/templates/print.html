@@ -34,7 +34,7 @@
 					</tr>
 					<tr>
 						<td><b>NodeRef</b> :</td>
-						<!-- 				<td th:text="${dir.noderef}"></td> -->
+						<!-- 				<td th:if="${dir.noderef}!=null" th:text="${dir.noderef}"></td> -->
 					</tr>
 
 					<tr>
@@ -147,9 +147,16 @@
 
 			</div>
 			<div th:if="${dir}!=null" class="col-md-9">
-							<acronym title="You would load a list of all directories from the actual one">
-									<a  id="btnLoad" th:href="@{/load(nodeid=${dir.nodeid})}" 
-									class="btn btn-primary" role="button">Load..</a>
+							<acronym title="You would export a list of all file/directories from the actual one">
+							
+							  <button type="button" class="btn btn-primary dropdown-toggle" id="btnExport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Export
+							  		<span class="caret"></span>
+  							  </button>
+										  <ul class="dropdown-menu">
+										     <li><a th:href="@{/export(nodeid=${dir.nodeid},type='File')}">Files</a></li>
+										     <li><a th:href="@{/export(nodeid=${dir.nodeid},type='Directory')}">Directories</a></li>
+										     <li><a th:href="@{/export(nodeid=${dir.nodeid},type='Both')}" >Files and Directories</a></li>
+										  </ul>
 							</acronym>
 							<p id="p_msg" th:text="${duration}">This may take a while.</p>
 						 	<p id="p_error" class="text-danger" th:text="${error}"></p>
