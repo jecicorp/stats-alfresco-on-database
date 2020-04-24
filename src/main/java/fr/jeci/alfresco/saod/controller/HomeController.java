@@ -161,14 +161,19 @@ public class HomeController implements ErrorController {
 		// transform nodes in string content by loading informations
 		for (PrintNode pn : nodes) {
 				if(type.equals("Both")) {
-				String[] node_type = {"",pn.getType()}; // type : directory or file
-				csvWriter.writeNext(node_type);
-				}
-				String[] contentRecord = { 
-						pn.getLabel(), // label
-						pn.getFullSize().toString(), // size
-						saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
-				csvWriter.writeNext(contentRecord);		
+					String[] contentRecord = {
+							pn.getType(), //type
+							pn.getLabel(), // label
+							pn.getFullSize().toString(), // size
+							saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
+					csvWriter.writeNext(contentRecord);		
+				}else {
+					String[] contentRecord = { 
+							pn.getLabel(), // label
+							pn.getFullSize().toString(), // size
+							saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
+					csvWriter.writeNext(contentRecord);		
+				}		
 		}
 		csvWriter.close();
 		LOG.info("Done !");
