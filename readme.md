@@ -12,7 +12,13 @@ We directly access sql database for performance reason. In consequence, this too
 can works with offline server or sql backup dump. We don't need to access to disk
 "content store" or Solr indexes.
 
-Currently only one functionality was developed : "Alfresco Disk Usage"
+### Features
+
+These features are described below
+
+* Alfresco Disk Usage
+* Stores 
+* Export 
 
 ### Limitations
 
@@ -20,6 +26,7 @@ Tried with :
 
 *   Alfresco Enterprise 4.1 - MySQL & Oracle
 *   Alfresco Community 5.0 - MariaDB
+*   Alfresco Community 5.0 - PostgreSQL
 
 ### Dependencies
 
@@ -69,6 +76,37 @@ This tool prints size of directories in Alfresco.
 *   This version considers files with thumbnails are folders.
 *   Problem loading sql file inside war application, for the moment we need sql files
 readable on disk
+
+## Stores
+
+This tool permit to see all files and directories in your database.
+
+#### MetaData 
+
+* Node DB Id 
+* NodeRef 
+* Local Size 
+* Aggregate Size 
+* Full Size
+
+## Export
+
+This tool permit to download a CSV File with all files and directories from the page where you are.
+
+#### Download modes
+
+* Files
+* Directories
+* Files & Directories
+
+#### Data
+
+Depend on the download mode you choose.
+
+* Type
+* Name
+* Full Size
+* Full path
 
 ## Configuration
 
@@ -140,11 +178,11 @@ We tried computation script with big Alfresco Database (~500GB of office files) 
 
 ## Future Plans
 
-* Add support to Postgresql
+* Add support to Postgresql (done)
 * UI "Alfresco Disk Usage"
     * Print "association name" instead of NodeRef when available
     * Print date of last update on alfresco
-    * Add row ".." to go on parent folder
+    * Add row ".." to go on parent folder(done)
     * Add number of file in folder and tree
     * Link in "Add count of files"
 * New Component
