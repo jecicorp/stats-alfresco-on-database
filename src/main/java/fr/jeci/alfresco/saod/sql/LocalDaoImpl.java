@@ -34,6 +34,10 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String LOCAL_SIZE = "local_size";
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
+	
+	/* Type of node */ 
+//	private static final Integer TYPE_FILE = 0;
+	private static final Integer TYPE_DIRECTORY = 1;
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -105,7 +109,6 @@ public class LocalDaoImpl implements LocalDao {
 		this.jdbcTemplate.execute("CHECKPOINT DEFRAG");
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
@@ -115,7 +118,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
-			parameters.addValue(NODE_TYPE, 1); // directory by default
+			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -176,7 +179,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
-			parameters.addValue(NODE_TYPE, 1);//its a directory
+			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
