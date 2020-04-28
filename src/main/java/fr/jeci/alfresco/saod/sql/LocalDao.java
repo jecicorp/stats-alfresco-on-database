@@ -1,13 +1,8 @@
 package fr.jeci.alfresco.saod.sql;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.pojo.PrintNode;

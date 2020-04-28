@@ -105,6 +105,7 @@ public class LocalDaoImpl implements LocalDao {
 		this.jdbcTemplate.execute("CHECKPOINT DEFRAG");
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
@@ -114,7 +115,7 @@ public class LocalDaoImpl implements LocalDao {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
-			parameters.addValue(NODE_TYPE, 0);//its a file
+			parameters.addValue(NODE_TYPE, 1); // directory by default
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {

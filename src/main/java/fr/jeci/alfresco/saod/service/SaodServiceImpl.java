@@ -382,7 +382,7 @@ public class SaodServiceImpl implements SaodService {
 	 * @throws SaodException
 	 */
 	public List<PrintNode> getExport(final String nodeid,String type) throws SaodException {
-		List<PrintNode> selectDirectories = new ArrayList();
+		List<PrintNode> selectDirectories = new ArrayList<PrintNode>();
 		List<PrintNode> children = this.getAllChildren(nodeid);
 		//if we want both, no need to modify
 		if(type.contentEquals("Both")){

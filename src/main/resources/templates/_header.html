@@ -32,11 +32,7 @@
 
 			<ul class="nav nav-justified">
 				<li><a th:href="@{/}" href="home.html"> Home </a></li>
-				<li><a th:href="@{/print}" href="home.html"> Browse </a></li>
-				<li th:if="${dir}" class="active"><a
-					th:href="@{print(nodeid=${dir.parent})}" href="home.html"> Go
-						to Parent </a></li>
-
+				<li><a th:href="@{/print}" href="home.html"> Stores </a></li>
 				<li><a th:href="@{/logout}" href="logout.html"> Logout </a></li>
 			</ul>
 		</div>

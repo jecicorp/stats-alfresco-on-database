@@ -3,7 +3,6 @@ package fr.jeci.alfresco.saod.controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.Collator;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -176,8 +175,7 @@ public class HomeController implements ErrorController {
 				}		
 		}
 		csvWriter.close();
-		LOG.info("Done !");
-		LOG.info(type);
+		LOG.info("Export Done !");
 	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
