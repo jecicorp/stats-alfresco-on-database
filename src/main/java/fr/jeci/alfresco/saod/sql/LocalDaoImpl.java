@@ -248,8 +248,12 @@ public class LocalDaoImpl implements LocalDao {
 		for (Long id : nodes) {
 			this.jdbcTemplate.update(query, id);
 		}
+		
+		query = sqlQueries.getQuery("update_file_node_type.sql");
+		this.jdbcTemplate.update(query);
 	}
 
+	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
