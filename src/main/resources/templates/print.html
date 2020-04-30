@@ -4,6 +4,7 @@
 <head>
 <meta th:include="_header :: meta" />
 <link th:include="_header :: stylesheet"></link>
+<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet"></link>
 </head>
 
 <body>
@@ -56,6 +57,9 @@
 					</tr>
 				</table>
 			</div>
+			
+			<!-- Child nodes -->
+			
 			<div class="col-md-9">
 				<h3 class="sub-header">Childs Nodes</h3>
 				<div class="table-responsive">
@@ -68,7 +72,7 @@
 										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='name_r')}">Folder Name</a>
 								  		<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>
 								  	</th:block>
-									<th:block th:case="'name_r'">
+									<th:block th:case="'name_r'" >
 										<a th:href="@{/print(nodeid=${dir.nodeid}, sort='none')}">Folder Name</a>
 								  		<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>
 								  	</th:block>
@@ -122,7 +126,15 @@
 							<td><a th:href="@{print(nodeid=${dir.parent}, sort=${sort})}"><span class="glyphicon glyphicon-level-up"></span> ..</a>
 							</td><td></td><td></td><td></td></tr>
 							<tr th:each="node,iterStat : ${nodes}" th:class="${iterStat.odd}? 'odd'">
-								<td >
+
+								<td th:switch="${node.type}">
+									<td:block th:case="'Directory'">
+										<i class="fas fa-folder"></i>
+									</td:block>
+									<td:block th:case="'File'">
+										<i class="fas fa-file"></i>
+									</td:block>
+								
 								<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
 											th:if="not ${dir}">
 											<th:block
@@ -136,7 +148,10 @@
 										</th:block> <th:block th:if="${dir}">
 											<th:block th:text="${node.label}">Node Label</th:block>
 										</th:block>
-								</a></td>
+								</a>
+								</td>
+								
+								
 								<td th:text="${node.localSizeReadable}" style="text-align: right;">cal Size</td>
 								<td th:text="${node.dirSizeReadable}" style="text-align: right;">Dir Size</td>
 								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Ful Size</td>
