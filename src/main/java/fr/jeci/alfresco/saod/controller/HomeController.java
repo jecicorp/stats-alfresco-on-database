@@ -138,7 +138,7 @@ public class HomeController implements ErrorController {
 		}
 
 		return output;
-	}
+	}	
 
 	/**
 	 * Function to permit to load informations

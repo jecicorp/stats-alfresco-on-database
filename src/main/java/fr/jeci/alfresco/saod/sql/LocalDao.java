@@ -53,6 +53,13 @@ public interface LocalDao {
 	void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException;
 
 	/**
+	 * Update number of children
+	 * @param nodeids
+	 * @throws SaodException
+	 */
+	void updateNumberElements(Map<Long,Long> nodeids) throws SaodException;
+	
+	/**
 	 * Select Folder that have no parent
 	 * 
 	 * @return

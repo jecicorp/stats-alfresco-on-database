@@ -34,8 +34,9 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String LOCAL_SIZE = "local_size";
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
-
-	/* Type of node */
+	private static final String NUMBER_ELEMENTS = "number_elements";
+	
+	/* Type of node */ 
 //	private static final Integer TYPE_FILE = 0;
 	private static final Integer TYPE_DIRECTORY = 1;
 
@@ -119,6 +120,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
+			parameters.addValue(NUMBER_ELEMENTS, 22);
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -180,6 +182,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
+			parameters.addValue(NUMBER_ELEMENTS, 1);
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
@@ -277,6 +280,34 @@ public class LocalDaoImpl implements LocalDao {
 			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 		}
 	}
+	
+	/**
+	 * Permit to update the number of children 
+	 * @param nodeid
+	 * @throws SaodException 
+	 */
+	public void updateNumberElements(Map<Long,Long> nodeids) throws SaodException {
+		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
+		final String query = sqlQueries.getQuery("update_node_number_elements.sql");
+		
+		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
+
+		for (Entry<Long, Long> e : nodeids.entrySet()) {
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			parameters.addValue(NODE_ID, e.getKey());
+			parameters.addValue(NUMBER_ELEMENTS,e.getValue());
+			batchArgs.add(parameters);
+
+			if (batchArgs.size() >= FETCH_SIZE) {
+				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+				batchArgs.clear();
+			}
+		}
+
+		if (batchArgs.size() > 0) {
+			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+		}
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -341,6 +372,7 @@ public class LocalDaoImpl implements LocalDao {
 			node.setLocalSize(queryForRowSet.getLong(3));// LOCAL SIZE
 			node.setDirSize(queryForRowSet.getLong(4));// SUM SIZE
 			node.setNodetype(queryForRowSet.getInt(5));// TYPE
+			node.setNbElements(queryForRowSet.getInt(6));//NUMBER ELEMENTS
 			return node;
 		}
 

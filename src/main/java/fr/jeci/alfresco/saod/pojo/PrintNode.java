@@ -21,6 +21,7 @@ public class PrintNode implements Serializable {
 	private Long dirSize;
 	private Long parent;
 	private Integer nodetype;
+	private int nbElements;
 
 	/**
 	 * Constructor of a node (file)
@@ -159,6 +160,8 @@ public class PrintNode implements Serializable {
 		this.nodetype = nodetype;
 	}
 
+
+
 	public String getType() {
 		switch (this.nodetype) {
 		case 0:
@@ -168,5 +171,13 @@ public class PrintNode implements Serializable {
 		default:
 			return null;
 		}
+	}
+
+	public void setNbElements(int nb) {
+		this.nbElements=nb;
+	}
+	
+	public int getNbElements() {	
+		return nbElements;
 	}
 }
