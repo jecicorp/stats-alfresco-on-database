@@ -25,8 +25,7 @@ These features are described below
 Tried with :
 
 *   Alfresco Enterprise 4.1 - MySQL & Oracle
-*   Alfresco Community 5.0 - MariaDB
-*   Alfresco Community 5.0 - PostgreSQL
+*   Alfresco Community 5.0 - MariaDB/PostgreSQL
 
 ### Dependencies
 
@@ -91,7 +90,7 @@ This tool permit to see all files and directories in your database.
 
 ## Export
 
-This tool permit to download a CSV File with all files and directories from the page where you are.
+This tool permit to download a CSV File with informations about all files and directories from the page where you are.
 
 #### Download modes
 
