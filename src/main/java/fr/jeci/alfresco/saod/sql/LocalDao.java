@@ -142,7 +142,6 @@ public interface LocalDao {
 	 * @throws SaodException
 	 */
 	Timestamp getRun() throws SaodException;
-	
 
 	/**
 	 * Return start_ts timestamp of last row with status=1
@@ -152,5 +151,4 @@ public interface LocalDao {
 	 */
 	Timestamp getLastSuccess() throws SaodException;
 
-		
 }

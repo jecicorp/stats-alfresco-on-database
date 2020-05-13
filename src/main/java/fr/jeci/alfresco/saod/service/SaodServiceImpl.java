@@ -3,7 +3,6 @@ package fr.jeci.alfresco.saod.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +40,6 @@ public class SaodServiceImpl implements SaodService {
 
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
-	/**
-	 * Load data from the Alfresco Database
-	 */
 	public void loadDataFromAlfrescoDB() throws SaodException {
 		lockDB();
 		try {
@@ -97,10 +93,6 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, readOnly = true)
-	/**
-	 * 
-	 * @throws SaodException
-	 */
 	private void islockDB() throws SaodException {
 		this.localDao.getRun();
 	}
@@ -198,11 +190,6 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
-	/**
-	 * Permit to obtain the node
-	 * 
-	 * @return node
-	 */
 	public PrintNode loadPrintNode(final String nodeid) throws SaodException {
 		Long id = Long.valueOf(nodeid);
 
@@ -232,55 +219,40 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
-	/**
-	 * Compute path of this node
-	 * 
-	 * @return a StringBuilder
-	 */
 	public String computePath(String nodeid) throws SaodException {
-		StringBuilder sb = new StringBuilder();
-		Long id = Long.valueOf(nodeid);
+		return computePath(null, nodeid, " > ");
+	}
 
-		sb.append(loadNodeLabel(id));
+	@Override
+	public String computePath(String parent, String nodeid, String separator) throws SaodException {
+		Long startComputePath = System.currentTimeMillis();
+		StringBuilder path = new StringBuilder();
+
+		Long id = Long.valueOf(nodeid);
+		Long parentId = parent != null ? Long.valueOf(parent) : null;
+
+		path.append(loadNodeLabel(id));
 		PrintNode node;
 		while ((node = this.localDao.loadRow(id)) != null) {
-			if (node.getParent() == null) {
-				sb.insert(0, "|");
+			if ((parentId != null && parentId.equals(node.getParent())) || parentId == node.getParent()) {
+				if (parentId == null) {
+					// absolute path
+					path.insert(0, "|");
+				} else {
+					// relative path
+					path.insert(0, "./");
+				}
 				break;
 			} else {
 				id = node.getParent();
-				sb.insert(0, loadNodeLabel(id) + " > ");
+				path.insert(0, loadNodeLabel(id) + separator);
 			}
 		}
-
-		return sb.toString();
+		LOG.info("compute Path of a node, time executed : " + (System.currentTimeMillis() - startComputePath) + " ms");
+		return path.toString();
 	}
 
 	@Override
-	/**
-	 * Compute path of this node
-	 * 
-	 * @return a List of printNode
-	 */
-	public List<PrintNode> computePathList(String nodeid) throws SaodException {
-		List<PrintNode> sb = new ArrayList<PrintNode>();
-		Long id = Long.valueOf(nodeid);
-
-		sb.add(loadPrintNode(nodeid));
-		PrintNode node;
-		while ((node = this.localDao.loadRow(id)) != null) {
-			if (node.getParent() != null) {
-				id = node.getParent();
-				sb.add(loadPrintNode(id.toString()));
-			}
-		}
-		return sb;
-	}
-
-	@Override
-	/**
-	 * Permit to obtain the date of last run and duration
-	 */
 	public String lastRunMessage() {
 		try {
 			Timestamp run = this.localDao.getRun();
@@ -318,84 +290,48 @@ public class SaodServiceImpl implements SaodService {
 		return false;
 	}
 
-	/**
-	 * Permit to get all the information from a node to all children
-	 * 
-	 * @param nodes
-	 * @return
-	 * @throws SaodException
-	 */
 	@Override
-	public List<PrintNode> getAllChildren(String nodeid) throws SaodException {
+	public List<PrintNode> getAllChildren(PrintNode parent) throws SaodException {
+		List<PrintNode> subFolders = getSubFolders(parent.getNodeid().toString());
+		List<PrintNode> children = new ArrayList<PrintNode>();
+
 		// add children of root
-		List<PrintNode> children = getSubFolders(nodeid);
-		// for each children
-		for (int i = 0; i < children.size(); i++) {
-			List<PrintNode> littleChildren = getAllChildren(children.get(i).getNodeid().toString());
-			for (PrintNode littleChild : littleChildren) {
-				children.add(littleChild);
-			}
+		for (PrintNode node : subFolders) {
+			children.add(node);
+			children.addAll(getAllChildren(node));
 		}
-		//passer par le SQL + rapide
 		return children;
 	}
 
-	/**
-	 * Permit to obtain the path of a node from where it has been download
-	 * 
-	 * @param root
-	 * @param nodeid
-	 * @return path
-	 */
 	@Override
-	public String getPath(String root, String nodeid) throws SaodException {
-		List<PrintNode> pathList = computePathList(nodeid);
-		List<PrintNode> pathNeeded;
-
-		String path = "";
-		if(loadPrintNode(nodeid).getType()=="File") {
-			int cpt = 0;
-			// we get the root
-			for (PrintNode node : pathList) {
-				// if we find root
-				if (node.getNodeid().toString().equals(root)) {
-					break;
-				}
-				cpt++;
-			}
-			// get path we need
-			pathNeeded = pathList.subList(1, cpt+1);
-			Collections.reverse(pathNeeded);
-			for (PrintNode pn : pathNeeded) {
-				path +=  "/"+pn.getLabel();
-			}
-		}
-		//
-		return path;
+	public String getPath(String root, String node) throws SaodException {
+		return null;
 	}
-	
+
 	/**
 	 * Permit to export files, directories or both
+	 * 
 	 * @param nodeid
-	 * @param type
+	 * @param typeExport
 	 * @return
 	 * @throws SaodException
 	 */
-	public List<PrintNode> getExport(final String nodeid,String type) throws SaodException {
-		List<PrintNode> selectDirectories = new ArrayList<PrintNode>();
-		List<PrintNode> children = this.getAllChildren(nodeid);
-		//if we want both, no need to modify
-		if(type.contentEquals("Both")){
-				selectDirectories = children;
-		}else {
-			//select only directories or file, depend on type we want
-			for(PrintNode p : children) {
-				if(p.getType().equals(type)) {
-					selectDirectories.add(p);
+	public List<PrintNode> getExport(final String root, String typeExport) throws SaodException {
+		Long startExport = System.currentTimeMillis();
+		List<PrintNode> children = this.getAllChildren(loadPrintNode(root));
+		List<PrintNode> nodeToExport = new ArrayList<PrintNode>();
+		// if we want only one type of export
+		if (!"Both".equals(typeExport)) {
+			for (PrintNode node : children) {
+				if (typeExport.equals(node.getType())) {
+					nodeToExport.add(node);
 				}
 			}
+		} else {
+			nodeToExport = children;
 		}
-		return selectDirectories;
+		LOG.info("List of exported node, time executed : " + (System.currentTimeMillis() - startExport) + " ms");
+		return nodeToExport;
 	}
 
 }

@@ -14,7 +14,7 @@
 
 		<div class="header">
 			<h2 class="sub-header" th:if="${dir}"
-				th:text="|Directory :	${dir.label}|">Dir Name</h2>
+				th:text="|${dir.type} :	${dir.label}|">Dir Name</h2>
 			<h2 class="sub-header" th:if="not ${dir}" th:text="${title}">Titre
 				Standard</h2>
 			<p th:unless="${dir == null}">
@@ -30,26 +30,8 @@
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
-						<td><b>Node DB Id</b> :</td>
-						<td th:text="${dir.nodeid}"></td>
-					</tr>
-					<tr>
-						<td><b>NodeRef</b> :</td>
-						<!-- 				<td th:if="${dir.noderef}!=null" th:text="${dir.noderef}"></td> -->
-					</tr>
-
-					<tr>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td><b>Local Size</b> :</td>
-						<td th:if="${dir.localSizeReadable}"
-							th:text="${dir.localSizeReadable}"></td>
-					</tr>
-					<tr>
-						<td><b>Aggregate Size</b> :</td>
-						<td th:text="${dir.dirSizeReadable}"></td>
+						<td><b>NodeRef  (NodeID)</b> :</td>
+						<td th:text="${dir.label}+' ('+${dir.nodeid}+')'"></td>
 					</tr>
 					<tr>
 						<td><b>Full Size</b> :</td>
@@ -81,32 +63,6 @@
 								  	</th:block>
 								</th>
 								<th th:switch="${sort}">
-									<th:block th:case="'local'">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='local_r')}">Local Size</a>
-								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
-								  	</th:block>
-									<th:block th:case="'local_r'">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='none')}">Local Size</a>
-								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
-								  	</th:block>
-									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='local')}">Local Size</a>
-								  	</th:block>
-								</th>
-								<th th:switch="${sort}">
-									<th:block th:case="'aggregate'">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='aggregate_r')}">Aggregate Size</a>
-								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
-								  	</th:block>
-									<th:block th:case="'aggregate_r'">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='none')}">Aggregate Size</a>
-								  		<span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
-								  	</th:block>
-									<th:block th:case="*">
-										<a th:href="@{/print(nodeid=${nodeid}, sort='aggregate')}">Aggregate Size</a>
-								  	</th:block>
-								</th>
-								<th th:switch="${sort}">
 									<th:block th:case="'full'">
 										<a th:href="@{/print(nodeid=${nodeid}, sort='full_r')}">Full Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
@@ -124,7 +80,7 @@
 						<tbody>
 							<tr th:class="'odd'" th:unless="${dir == null}">
 							<td><a th:href="@{print(nodeid=${dir.parent}, sort=${sort})}"><span class="glyphicon glyphicon-level-up"></span> ..</a>
-							</td><td></td><td></td><td></td></tr>
+							</td></tr>
 							<tr th:each="node,iterStat : ${nodes}" th:class="${iterStat.odd}? 'odd'">
 
 								<td th:switch="${node.type}">
@@ -150,11 +106,7 @@
 										</th:block>
 								</a>
 								</td>
-								
-								
-								<td th:text="${node.localSizeReadable}" style="text-align: right;">cal Size</td>
-								<td th:text="${node.dirSizeReadable}" style="text-align: right;">Dir Size</td>
-								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Ful Size</td>
+								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Full Size</td>
 							</tr>
 						</tbody>
 					</table>

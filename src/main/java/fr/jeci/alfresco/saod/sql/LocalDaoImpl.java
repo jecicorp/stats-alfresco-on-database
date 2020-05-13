@@ -34,8 +34,8 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String LOCAL_SIZE = "local_size";
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
-	
-	/* Type of node */ 
+
+	/* Type of node */
 //	private static final Integer TYPE_FILE = 0;
 	private static final Integer TYPE_DIRECTORY = 1;
 
@@ -80,7 +80,7 @@ public class LocalDaoImpl implements LocalDao {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Timestamp getLastSuccess() throws SaodException {
 		String query = sqlQueries.getQuery("last_success.sql");
@@ -248,12 +248,11 @@ public class LocalDaoImpl implements LocalDao {
 		for (Long id : nodes) {
 			this.jdbcTemplate.update(query, id);
 		}
-		
+
 		query = sqlQueries.getQuery("update_file_node_type.sql");
 		this.jdbcTemplate.update(query);
 	}
 
-	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
@@ -337,15 +336,15 @@ public class LocalDaoImpl implements LocalDao {
 		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
 
 		while (queryForRowSet.next()) {
-			PrintNode node = new PrintNode(nodeid); //ID
-			node.setParent(queryForRowSet.getLong(2)); //PARENT
-			node.setLocalSize(queryForRowSet.getLong(3));//LOCAL SIZE
-			node.setDirSize(queryForRowSet.getLong(4));//SUM SIZE
-			node.setType(queryForRowSet.getInt(5));//TYPE
+			PrintNode node = new PrintNode(nodeid); // ID
+			node.setParent(queryForRowSet.getLong(2)); // PARENT
+			node.setLocalSize(queryForRowSet.getLong(3));// LOCAL SIZE
+			node.setDirSize(queryForRowSet.getLong(4));// SUM SIZE
+			node.setNodetype(queryForRowSet.getInt(5));// TYPE
 			return node;
 		}
 
 		return null;
 	}
-	
+
 }

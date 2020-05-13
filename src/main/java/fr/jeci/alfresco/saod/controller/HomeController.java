@@ -74,6 +74,14 @@ public class HomeController implements ErrorController {
 	@Autowired
 	private MessageSource messageSource;
 
+	// extension du fichier à exporter
+	private final String EXTENSION = ".csv";
+	private final char DEFAULT_CHARACTER = ';';
+	// type
+	private final String DIRECTORY = "Directory";
+	private final String FILE = "File";
+	// private final String BOTH = "Both";
+
 	@RequestMapping(value = { "", "/", "/init" })
 	/**
 	 * Update a given model
@@ -134,48 +142,46 @@ public class HomeController implements ErrorController {
 	@RequestMapping(value = "/export", method = { RequestMethod.GET, RequestMethod.POST }, produces = { "text/csv" })
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody void export(HttpServletResponse response,
-			@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid, @RequestParam(value = "type", required = true) String type)
-			throws IOException, SaodException {
-
-		// set file name and content type
-		String filename = saodService.loadPrintNode(nodeid).getLabel() + ".csv";
-		// permit to download it
+			@RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid,
+			@RequestParam(value = "type", required = true) String type) throws IOException, SaodException {
+		Long start = System.currentTimeMillis();
+		// set file name and content type and permit to download it
+		String typeFichier = type;
+		String filename = saodService.loadPrintNode(nodeid).getLabel() + EXTENSION;
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
 
 		// creation of list of all file since a specific location
-		List<PrintNode> nodes = saodService.getExport(nodeid,type);
-		char defaultCharacter = ';';
-		//
-		CSVWriter csvWriter = new CSVWriter(response.getWriter(), defaultCharacter, CSVWriter.NO_QUOTE_CHARACTER,
+		List<PrintNode> nodes = saodService.getExport(nodeid, typeFichier);
+
+		// create CSV
+		CSVWriter csvWriter = new CSVWriter(response.getWriter(), DEFAULT_CHARACTER, CSVWriter.NO_QUOTE_CHARACTER,
 				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-		//--- add header
-		if(type.equals("Both")) {
-			String[] headerRecord = { "Type", "Name", "FullSize", "FullPath" };
-			csvWriter.writeNext(headerRecord);
-		}else {
-			String[] headerRecord = { "Name", "FullSize", "FullPath" };
-			csvWriter.writeNext(headerRecord);
+		// --- add header for CSV
+		String headerRecord = "";
+		if (FILE.equals(type)) {
+			headerRecord = "Name"+DEFAULT_CHARACTER+"FullSize"+DEFAULT_CHARACTER+"FullPath";
+		} else if (DIRECTORY.equals(type)) {
+			headerRecord = "Name"+DEFAULT_CHARACTER+"FullSize";
+		} else {
+			headerRecord = "Type"+DEFAULT_CHARACTER+"Name"+DEFAULT_CHARACTER+"FullSize"+DEFAULT_CHARACTER+"FullPath";
 		}
-		// transform nodes in string content by loading informations
+		csvWriter.writeNext(headerRecord.split(";"));
+		// --- transform nodes in string content by loading informations
 		for (PrintNode pn : nodes) {
-				if(type.equals("Both")) {
-					String[] contentRecord = {
-							pn.getType(), //type
-							pn.getLabel(), // label
-							pn.getFullSize().toString(), // size
-							saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
-					csvWriter.writeNext(contentRecord);		
-				}else {
-					String[] contentRecord = { 
-							pn.getLabel(), // label
-							pn.getFullSize().toString(), // size
-							saodService.getPath(nodeid, pn.getNodeid().toString()) }; // path
-					csvWriter.writeNext(contentRecord);		
-				}		
+			String contentRecord = "";
+			// mettre un switch
+			if (FILE.equals(type)) {
+				contentRecord=pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString()+DEFAULT_CHARACTER+saodService.computePath(nodeid, pn.getNodeid().toString(), "/");
+			} else if (DIRECTORY.equals(type)) {
+				contentRecord=pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString();
+			} else {
+				contentRecord=pn.getType()+DEFAULT_CHARACTER+pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString()+DEFAULT_CHARACTER+saodService.computePath(nodeid, pn.getNodeid().toString(), "/");
+			}
+			csvWriter.writeNext(contentRecord.split(";"));
 		}
 		csvWriter.close();
-		LOG.info("Export Done !");
+		LOG.info("Export Done ! Time : "+(System.currentTimeMillis()-start)+"ms");
 	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)

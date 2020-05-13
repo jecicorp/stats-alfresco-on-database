@@ -11,15 +11,16 @@ import fr.jeci.alfresco.saod.StringUtil;
  */
 public class PrintNode implements Serializable {
 	private static final long serialVersionUID = -6436273787435371994L;
+	private static final String TYPE_DIRECTORY = "Directory";
+	private static final String TYPE_FILE = "File";
 
 	private Long nodeid;
 	private String label;
 	private Long localSize;
 	private Long dirSize;
 	private Long parent;
-	private int nodetype;
-	
-	
+	private Integer nodetype;
+
 	/**
 	 * Constructor of a node (file)
 	 * 
@@ -141,23 +142,20 @@ public class PrintNode implements Serializable {
 		this.parent = parent;
 	}
 
-	/**
-	 * If it's a file or a directory
-	 * @param type
-	 */
-	public void setType(int type) {
-		this.nodetype=type;
+	public Integer getNodetype() {
+		return nodetype;
 	}
-	
+
+	public void setNodetype(Integer nodetype) {
+		this.nodetype = nodetype;
+	}
+
 	public String getType() {
-		String res = "";
-		if(this.nodetype==0) {
-			res = "File";
-		}else if(this.nodetype==1){
-			res = "Directory";
+		if (this.nodetype == 0) {
+			return TYPE_FILE;
+		} else if (this.nodetype == 1) {
+			return TYPE_DIRECTORY;
 		}
-		return res;
+		return null;
 	}
-
-
 }

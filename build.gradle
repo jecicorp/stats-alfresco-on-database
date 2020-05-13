@@ -77,7 +77,7 @@ dependencies {
     compile 'com.zaxxer:HikariCP:3.2.0'
     runtime 'org.hsqldb:hsqldb:2.4.1'
     runtime 'mysql:mysql-connector-java:5.1.47'
-    //postgre : moteur de recherche maven >> maven search
+    //postgres : moteur de recherche maven >> maven search
     runtime 'org.postgresql:postgresql:42.2.12'
 
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:2.9.8'

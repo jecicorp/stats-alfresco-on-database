@@ -47,13 +47,16 @@ public interface SaodService {
 	 * @throws SaodException
 	 */
 	String computePath(String nodeid) throws SaodException;
-	
+
 	/**
 	 * Compute path of this node
-	 * @return a List of printNode
+	 * @param parent
+	 * @param nodeid
+	 * @param separator
+	 * @return
+	 * @throws SaodException
 	 */
-	List<PrintNode> computePathList(String nodeid) throws SaodException ;
-
+	String computePath(String parent,String nodeid,String separator) throws SaodException;
 	/**
 	 * Compute full size of all directory starting from leaf to root
 	 * 
@@ -74,31 +77,33 @@ public interface SaodService {
 	 * @return true if compute is running.
 	 */
 	boolean isRunning();
-	
+
 	/**
 	 * Permit to get all the information from a node to all children
+	 * 
 	 * @param nodes
 	 * @return
 	 * @throws SaodException
 	 */
-	List<PrintNode> getAllChildren(String nodeid) throws SaodException;
-	
+	List<PrintNode>  getAllChildren(PrintNode parent) throws SaodException;
+
 	/**
 	 * Permit to obtain the path of a node from where it has been download
+	 * 
 	 * @param root
 	 * @param nodeid
 	 * @return path
 	 */
 	String getPath(String root, String nodeid) throws SaodException;
-	
+
 	/**
 	 * Permit to export files, directories or both
+	 * 
 	 * @param nodeid
 	 * @param type
 	 * @return
 	 * @throws SaodException
 	 */
-	List<PrintNode> getExport(final String nodeid,String type) throws SaodException;
-	
+	List<PrintNode> getExport(final String nodeid, String type) throws SaodException;
 
 }
