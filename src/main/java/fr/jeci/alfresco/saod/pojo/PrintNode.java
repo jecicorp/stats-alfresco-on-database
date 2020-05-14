@@ -151,11 +151,13 @@ public class PrintNode implements Serializable {
 	}
 
 	public String getType() {
-		if (this.nodetype == 0) {
+		switch(this.nodetype) {
+		case 0:
 			return TYPE_FILE;
-		} else if (this.nodetype == 1) {
+		case 1:
 			return TYPE_DIRECTORY;
+		default:
+				return null;
 		}
-		return null;
 	}
 }
