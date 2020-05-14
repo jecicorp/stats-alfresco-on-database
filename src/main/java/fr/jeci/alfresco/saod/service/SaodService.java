@@ -88,15 +88,6 @@ public interface SaodService {
 	List<PrintNode>  getAllChildren(PrintNode parent) throws SaodException;
 
 	/**
-	 * Permit to obtain the path of a node from where it has been download
-	 * 
-	 * @param root
-	 * @param nodeid
-	 * @return path
-	 */
-	String getPath(String root, String nodeid) throws SaodException;
-
-	/**
 	 * Permit to export files, directories or both
 	 * 
 	 * @param nodeid

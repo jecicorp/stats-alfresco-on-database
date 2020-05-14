@@ -3,6 +3,8 @@ package fr.jeci.alfresco.saod.controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -75,12 +77,17 @@ public class HomeController implements ErrorController {
 	private MessageSource messageSource;
 
 	// extension du fichier à exporter
-	private final String EXTENSION = ".csv";
-	private final char DEFAULT_CHARACTER = ';';
+	private final String EXTENSION_CSV = ".csv";
+	private final char CHARACTER_SEPARATOR = ';';
 	// type
-	private final String DIRECTORY = "Directory";
-	private final String FILE = "File";
-	// private final String BOTH = "Both";
+	public final static String EXPORT_DIRECTORIES = "Directory";
+	public final static String EXPORT_FILES = "File";
+	public final static String EXPORT_ALL = "Both";
+
+	// Headers CSV
+	private final List<String> HEADERS_EXPORT_FILES = Arrays.asList("Name", "FullSize", "FullPath");
+	private final List<String> HEADERS_EXPORT_DIRECTORIES = Arrays.asList("Name", "FullSize");
+	private final List<String> HEADERS_EXPORT_ALL = Arrays.asList("Type", "Name", "FullSize", "FullPath");
 
 	@RequestMapping(value = { "", "/", "/init" })
 	/**
@@ -146,42 +153,52 @@ public class HomeController implements ErrorController {
 			@RequestParam(value = "type", required = true) String type) throws IOException, SaodException {
 		Long start = System.currentTimeMillis();
 		// set file name and content type and permit to download it
-		String typeFichier = type;
-		String filename = saodService.loadPrintNode(nodeid).getLabel() + EXTENSION;
+		String filename = saodService.loadPrintNode(nodeid).getLabel() + EXTENSION_CSV;
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
 
 		// creation of list of all file since a specific location
-		List<PrintNode> nodes = saodService.getExport(nodeid, typeFichier);
-
+		List<PrintNode> nodes = saodService.getExport(nodeid, type);
+		
 		// create CSV
-		CSVWriter csvWriter = new CSVWriter(response.getWriter(), DEFAULT_CHARACTER, CSVWriter.NO_QUOTE_CHARACTER,
+		CSVWriter csvWriter = new CSVWriter(response.getWriter(), CHARACTER_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER,
 				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-		// --- add header for CSV
-		String headerRecord = "";
-		if (FILE.equals(type)) {
-			headerRecord = "Name"+DEFAULT_CHARACTER+"FullSize"+DEFAULT_CHARACTER+"FullPath";
-		} else if (DIRECTORY.equals(type)) {
-			headerRecord = "Name"+DEFAULT_CHARACTER+"FullSize";
-		} else {
-			headerRecord = "Type"+DEFAULT_CHARACTER+"Name"+DEFAULT_CHARACTER+"FullSize"+DEFAULT_CHARACTER+"FullPath";
-		}
-		csvWriter.writeNext(headerRecord.split(";"));
-		// --- transform nodes in string content by loading informations
-		for (PrintNode pn : nodes) {
-			String contentRecord = "";
-			// mettre un switch
-			if (FILE.equals(type)) {
-				contentRecord=pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString()+DEFAULT_CHARACTER+saodService.computePath(nodeid, pn.getNodeid().toString(), "/");
-			} else if (DIRECTORY.equals(type)) {
-				contentRecord=pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString();
-			} else {
-				contentRecord=pn.getType()+DEFAULT_CHARACTER+pn.getLabel()+DEFAULT_CHARACTER+pn.getFullSize().toString()+DEFAULT_CHARACTER+saodService.computePath(nodeid, pn.getNodeid().toString(), "/");
+		switch(type) {
+		case EXPORT_FILES:
+			csvWriter.writeNext(HEADERS_EXPORT_FILES.toArray(new String[HEADERS_EXPORT_FILES.size()]));
+			for (PrintNode node : nodes) {
+				List<String> contentRecord = new ArrayList<String>();
+				contentRecord.add(node.getLabel());
+				contentRecord.add(node.getFullSize().toString());
+				contentRecord.add(saodService.computePath(nodeid, node.getNodeid().toString(), "/"));
+				csvWriter.writeNext(contentRecord.toArray(new String[contentRecord.size()]));
 			}
-			csvWriter.writeNext(contentRecord.split(";"));
+			break;
+		case EXPORT_DIRECTORIES:
+			csvWriter.writeNext(HEADERS_EXPORT_DIRECTORIES.toArray(new String[HEADERS_EXPORT_DIRECTORIES.size()]));
+			for (PrintNode node : nodes) {
+				List<String> contentRecord = new ArrayList<String>();
+				contentRecord.add(node.getLabel());
+				contentRecord.add(node.getFullSize().toString());
+				csvWriter.writeNext(contentRecord.toArray(new String[contentRecord.size()]));
+			}
+			break;
+		case EXPORT_ALL:
+			csvWriter.writeNext(HEADERS_EXPORT_ALL.toArray(new String[HEADERS_EXPORT_ALL.size()]));
+			for (PrintNode node : nodes) {
+				List<String> contentRecord = new ArrayList<String>();
+				contentRecord.add(node.getType());
+				contentRecord.add(node.getLabel());
+				contentRecord.add(node.getFullSize().toString());
+				contentRecord.add(saodService.computePath(nodeid, node.getNodeid().toString(), "/"));
+				csvWriter.writeNext(contentRecord.toArray(new String[contentRecord.size()]));
+			}
+			break;
+		default:
+			throw new SaodException("Export type not supported : " + type);
 		}
 		csvWriter.close();
-		LOG.info("Export Done ! Time : "+(System.currentTimeMillis()-start)+"ms");
+		LOG.info("Export Done ! Time : " + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)

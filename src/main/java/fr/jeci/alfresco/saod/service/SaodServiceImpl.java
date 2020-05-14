@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.StringUtil;
+import fr.jeci.alfresco.saod.controller.HomeController;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
 import fr.jeci.alfresco.saod.sql.LocalDao;
@@ -303,11 +304,6 @@ public class SaodServiceImpl implements SaodService {
 		return children;
 	}
 
-	@Override
-	public String getPath(String root, String node) throws SaodException {
-		return null;
-	}
-
 	/**
 	 * Permit to export files, directories or both
 	 * 
@@ -321,7 +317,7 @@ public class SaodServiceImpl implements SaodService {
 		List<PrintNode> children = this.getAllChildren(loadPrintNode(root));
 		List<PrintNode> nodeToExport = new ArrayList<PrintNode>();
 		// if we want only one type of export
-		if (!"Both".equals(typeExport)) {
+		if (!HomeController.EXPORT_ALL.equals(typeExport)) {
 			for (PrintNode node : children) {
 				if (typeExport.equals(node.getType())) {
 					nodeToExport.add(node);
