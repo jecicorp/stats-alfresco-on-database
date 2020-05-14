@@ -116,9 +116,8 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	/**
-	 * we set parent_node_id, then create parent row if he doesnt existe, finally
-	 * set parent.dir_num_size to 0 because it have child. If dir_num_size = null,
-	 * we think it's a leaf.
+	 * we set parent_node_id, then create parent row if he doesnt existe, finally set parent.dir_num_size to 0 because it
+	 * have child. If dir_num_size = null, we think it's a leaf.
 	 * 
 	 * @param selectDirLocalSize
 	 * @throws SaodException
@@ -141,8 +140,7 @@ public class SaodServiceImpl implements SaodService {
 			parentsid.addAll(parents);
 			start = System.currentTimeMillis();
 			this.localDao.insertStatsDirNoSize(parentsid);
-			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(),
-					(System.currentTimeMillis() - start));
+			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(), (System.currentTimeMillis() - start));
 
 			this.localDao.updateParentNodeId(selectParentNodeId);
 			this.localDao.upadteDirSumSizeZero(parentsid);
@@ -154,8 +152,7 @@ public class SaodServiceImpl implements SaodService {
 	public List<PrintNode> getRoots() throws SaodException {
 		long start = System.currentTimeMillis();
 		List<Long> selectRootFolders = this.localDao.selectRootFolders();
-		LOG.info("selectRootFolders : {} nodes - {} ms ", selectRootFolders.size(),
-				(System.currentTimeMillis() - start));
+		LOG.info("selectRootFolders : {} nodes - {} ms ", selectRootFolders.size(), (System.currentTimeMillis() - start));
 		List<PrintNode> loadPrintNode = loadPrintNode(selectRootFolders);
 		LOG.info("loadPrintNode : {} nodes - {} ms ", loadPrintNode.size(), (System.currentTimeMillis() - start));
 		return loadPrintNode;

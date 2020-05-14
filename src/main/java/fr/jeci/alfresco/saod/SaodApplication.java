@@ -53,6 +53,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 
 	/**
 	 * Main
+	 * 
 	 * @param args
 	 * @throws Exception
 	 */
@@ -72,6 +73,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@ConfigurationProperties(prefix = "alfresco.datasource")
 	/**
 	 * Create a DataSource from an Alfresco DataSource
+	 * 
 	 * @return the DataSource created
 	 */
 	public DataSource alfrescoDataSource() {
@@ -83,6 +85,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Primary
 	/**
 	 * Create a DataSource from a local DataSource
+	 * 
 	 * @return the DataSource created
 	 */
 	public DataSource localDataSource() {
@@ -95,6 +98,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	/**
 	 * Create queries and give it to the local base
+	 * 
 	 * @return a query or queries
 	 */
 	public SqlQueries localSqlQueries() {
@@ -109,6 +113,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	/**
 	 * Create queries and give it to Alfresco base
+	 * 
 	 * @return a query or queries
 	 */
 	public SqlQueries alfrescoSqlQueries() {
@@ -120,6 +125,7 @@ public class SaodApplication extends SpringBootServletInitializer {
 	@Bean
 	/**
 	 * Create a new application Security
+	 * 
 	 * @return the application created
 	 */
 	public ApplicationSecurity applicationSecurity() {
@@ -147,16 +153,10 @@ public class SaodApplication extends SpringBootServletInitializer {
 		// @formatter:off
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests()
-					.antMatchers("/login").permitAll()
-					.anyRequest().fullyAuthenticated()
-				.and()
-					.formLogin().loginPage("/login")
-					.failureUrl("/login?error")
-				.and()
-					.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.and()
-					.exceptionHandling().accessDeniedPage("/access?error");
+			http.authorizeRequests().antMatchers("/login").permitAll().anyRequest().fullyAuthenticated().and().formLogin()
+					.loginPage("/login").failureUrl("/login?error").and().logout()
+					.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).and().exceptionHandling()
+					.accessDeniedPage("/access?error");
 		}
 		// @formatter:on
 

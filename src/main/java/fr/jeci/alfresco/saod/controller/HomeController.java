@@ -158,12 +158,12 @@ public class HomeController implements ErrorController {
 
 		// creation of list of all file since a specific location
 		List<PrintNode> nodes = saodService.getExport(nodeid, type);
-		
+
 		// create CSV
 		CSVWriter csvWriter = new CSVWriter(response.getWriter(), CHARACTER_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER,
 				CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
-		switch(type) {
+		switch (type) {
 		case EXPORT_FILES:
 			csvWriter.writeNext(HEADERS_EXPORT_FILES.toArray(new String[HEADERS_EXPORT_FILES.size()]));
 			for (PrintNode node : nodes) {
@@ -212,8 +212,7 @@ public class HomeController implements ErrorController {
 		try {
 			saodService.loadDataFromAlfrescoDB();
 			LOG.info("END - Load Data From Alfresco DB _ Duration : {} ms", (System.currentTimeMillis() - start));
-			model.addAttribute("duration",
-					String.format("Compute done in %s ms", (System.currentTimeMillis() - start)));
+			model.addAttribute("duration", String.format("Compute done in %s ms", (System.currentTimeMillis() - start)));
 
 		} catch (ConcurrentRunSaodException e) {
 			model.addAttribute("duration", e.getMessage());

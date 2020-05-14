@@ -11,6 +11,7 @@ public class SaodException extends Exception {
 
 	/**
 	 * Constructor of a specific SaodException
+	 * 
 	 * @param string name of the exception
 	 */
 	public SaodException(String string) {
@@ -19,8 +20,9 @@ public class SaodException extends Exception {
 
 	/**
 	 * Constructor of a specific SaodException
+	 * 
 	 * @param string name of the exception
-	 * @param e the exception
+	 * @param e      the exception
 	 */
 	public SaodException(String string, Exception e) {
 		super(string, e);

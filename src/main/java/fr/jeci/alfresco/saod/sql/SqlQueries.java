@@ -43,6 +43,7 @@ public class SqlQueries {
 
 	/**
 	 * Affect a path to the SQL Base
+	 * 
 	 * @param sqlBasePath
 	 */
 	public void setSqlBasePath(String sqlBasePath) {
@@ -51,6 +52,7 @@ public class SqlQueries {
 
 	/**
 	 * Search a query by id
+	 * 
 	 * @param id
 	 * @return
 	 * @throws SaodException
@@ -67,6 +69,7 @@ public class SqlQueries {
 
 	/**
 	 * Load a query thanks to the id
+	 * 
 	 * @param id
 	 * @return
 	 * @throws SaodException
@@ -96,6 +99,7 @@ public class SqlQueries {
 
 	/**
 	 * Load all query with corresponding id in a table
+	 * 
 	 * @param id
 	 * @param reader
 	 * @throws IOException

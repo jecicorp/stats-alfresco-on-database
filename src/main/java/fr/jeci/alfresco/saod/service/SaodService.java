@@ -50,13 +50,15 @@ public interface SaodService {
 
 	/**
 	 * Compute path of this node
+	 * 
 	 * @param parent
 	 * @param nodeid
 	 * @param separator
 	 * @return
 	 * @throws SaodException
 	 */
-	String computePath(String parent,String nodeid,String separator) throws SaodException;
+	String computePath(String parent, String nodeid, String separator) throws SaodException;
+
 	/**
 	 * Compute full size of all directory starting from leaf to root
 	 * 
@@ -85,7 +87,7 @@ public interface SaodService {
 	 * @return
 	 * @throws SaodException
 	 */
-	List<PrintNode>  getAllChildren(PrintNode parent) throws SaodException;
+	List<PrintNode> getAllChildren(PrintNode parent) throws SaodException;
 
 	/**
 	 * Permit to export files, directories or both

@@ -15,6 +15,7 @@ public class ConcurrentRunSaodException extends SaodException {
 
 	/**
 	 * Constructor of a ConcurrentRunSoad exception
+	 * 
 	 * @param since : time since the concurrentRunSoadEception is running
 	 */
 	public ConcurrentRunSaodException(Timestamp since) {
@@ -25,6 +26,7 @@ public class ConcurrentRunSaodException extends SaodException {
 
 	/**
 	 * Return the time since the application is running
+	 * 
 	 * @return since : time
 	 */
 	public Timestamp getSince() {
