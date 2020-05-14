@@ -60,6 +60,14 @@ public interface LocalDao {
 	void updateNumberElements(Map<Long,Long> nodeids) throws SaodException;
 	
 	/**
+	 * Select children of a node
+	 * @param id
+	 * @return
+	 * @throws SaodException
+	 */
+	Integer selectNumberElements(Long id) throws SaodException;
+	
+	/**
 	 * Select Folder that have no parent
 	 * 
 	 * @return

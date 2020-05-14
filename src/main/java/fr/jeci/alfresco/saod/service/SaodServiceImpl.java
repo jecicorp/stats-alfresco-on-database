@@ -155,21 +155,7 @@ public class SaodServiceImpl implements SaodService {
 	 * @throws SaodException
 	 */
 	public void loadNumberElements(Map<Long, Long> selectDirLocalSize) throws SaodException {
-		
-		//creer une liste de <id,nb>
-		Map<Long, Long> numbers=new HashMap<>();
-		List<Long> ids = new ArrayList<>();
-		ids.addAll(selectDirLocalSize.keySet());
-		//int numberElements = getAllChildren(ids.get(0).toString()).size()+1;//enregistre la plus grosse taille
-		int numberElements=0;
-		//pour chaque éléments dans le tableau faire un update de son id avec le nb calculé
-		while (ids.size()>0) {
-			for(Long id : ids) {
-				numbers.put(id, Long.valueOf(numberElements));
-				numberElements++;
-			}
-		}
-		this.localDao.updateNumberElements(numbers);
+		this.localDao.updateNumberElements(selectDirLocalSize);
 	}
 
 

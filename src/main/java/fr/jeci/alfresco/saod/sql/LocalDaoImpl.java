@@ -39,6 +39,8 @@ public class LocalDaoImpl implements LocalDao {
 	/* Type of node */ 
 //	private static final Integer TYPE_FILE = 0;
 	private static final Integer TYPE_DIRECTORY = 1;
+    /* Number of children */	
+	private Integer NODE_ELEMENT = 0;
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -120,7 +122,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-			parameters.addValue(NUMBER_ELEMENTS, 22);
+			parameters.addValue(NUMBER_ELEMENTS, NODE_ELEMENT);
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -182,7 +184,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-			parameters.addValue(NUMBER_ELEMENTS, 1);
+			parameters.addValue(NUMBER_ELEMENTS, NODE_ELEMENT);
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
@@ -293,11 +295,12 @@ public class LocalDaoImpl implements LocalDao {
 		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
 
 		for (Entry<Long, Long> e : nodeids.entrySet()) {
+			NODE_ELEMENT=selectNumberElements(e.getKey());
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
-			parameters.addValue(NUMBER_ELEMENTS,e.getValue());
+			parameters.addValue(NUMBER_ELEMENTS,NODE_ELEMENT);
 			batchArgs.add(parameters);
-
+			
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 				batchArgs.clear();
@@ -309,6 +312,21 @@ public class LocalDaoImpl implements LocalDao {
 		}
 	}
 
+	/**
+	 * Permit to get the number of element of a node
+	 */
+	@Override
+	public Integer selectNumberElements(Long id) throws SaodException{
+		String query = sqlQueries.getQuery("select_number_elements.sql");
+		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, id);
+		Integer numberElements=0;
+		
+		while (queryForRowSet.next()) {
+			numberElements=queryForRowSet.getInt(1);
+		}
+		return numberElements;
+	}
+	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectRootFolders() throws SaodException {
