@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<div class="container">
+	<div class="container" style="width:60%;">
 
 		<div th:include="_header :: menu"></div>
 
@@ -26,7 +26,7 @@
 
 
 		<div class="row">
-			<div class="col-md-3" th:if="${dir}">
+			<div class="col-md-3" style="width:40%;" th:if="${dir}">
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
@@ -46,7 +46,7 @@
 			
 			<!-- Child nodes -->
 			
-			<div class="col-md-9">
+			<div class="col-md-9" style="width:60%;">
 				<h3 class="sub-header">Childs Nodes</h3>
 				<div class="table-responsive">
 					<table class="table table-striped" style="table-layout: fixed; word-wrap: break-word;"
