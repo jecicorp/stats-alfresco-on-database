@@ -19,8 +19,7 @@
 					This software is made to perform some statistics on <a
 						href="http://alfresco.com">Alfresco</a> Database.
 				</p>
-				<p class="text-danger">Tried with Alfresco Enterprise 4.1, 4.2
-					and 5.0 - Might works with community version</p>
+				<p class="text-danger">Tried with Alfresco Enterprise or Community 4.x and 5.x.</p>
 
 				<p>Support needs? contact-us.</p>
 			</div>
@@ -35,7 +34,7 @@
 					</p>
 					<form id="formInit" action="#" th:action="@{/init}" method="post">
 						<input type="submit" id="btnCumpute" class="btn btn-primary"
-							value="Compute Disk Usage" th:disabled="${running}" /> 
+							value="Compute Disk Usage" th:disabled="${running}" />
 						<input type="hidden" name="mediaType" value="application/json" />
 					</form>
 

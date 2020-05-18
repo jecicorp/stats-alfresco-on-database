@@ -17,15 +17,15 @@ can works with offline server or sql backup dump. We don't need to access to dis
 These features are described below
 
 * Alfresco Disk Usage
-* Stores 
-* Export 
+* Stores
+* Export
 
 ### Limitations
 
 Tried with :
 
-*   Alfresco Enterprise 4.1 - MySQL & Oracle
-*   Alfresco Community 5.0 - MariaDB/PostgreSQL
+*   Alfresco Enterprise and Community 4.x - MySQL / Oracle (only enterprise)
+*   Alfresco Enterprise and Community 5.x - MariaDB / PostgreSQL
 
 ### Dependencies
 
@@ -80,12 +80,12 @@ readable on disk
 
 This tool permit to see all files and directories in your database.
 
-#### MetaData 
+#### MetaData
 
-* Node DB Id 
-* NodeRef 
-* Local Size 
-* Aggregate Size 
+* Node DB Id
+* NodeRef
+* Local Size
+* Aggregate Size
 * Full Size
 
 ## Export
