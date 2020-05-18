@@ -66,7 +66,7 @@
 										<a th:href="@{/print(nodeid=${nodeid}, sort='name')}">Folder Name</a>
 								  	</th:block>
 								</th>
-								<th th:switch="${sort}">
+								<th th:switch="${sort}" style="text-align:right;">
 									<th:block th:case="'full'">
 										<a th:href="@{/print(nodeid=${nodeid}, sort='full_r')}">Full Size</a>
 								  		<span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span>
@@ -90,25 +90,25 @@
 								<td th:switch="${node.type}">
 									<td:block th:case="'Directory'">
 										<i class="fas fa-folder"></i>
+										<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
+												th:if="not ${dir}">
+												<th:block
+													th:if="${#strings.startsWith(node.nodeRef,'system://system')}">System Store</th:block>
+												<th:block
+													th:if="${#strings.startsWith(node.nodeRef,'workspace://version2Store')}">Version Store</th:block>
+												<th:block
+													th:if="${#strings.startsWith(node.nodeRef,'archive://SpacesStore')}">Archive Store</th:block>
+												<th:block
+													th:if="${#strings.startsWith(node.nodeRef,'workspace://SpacesStore')}">WorkSpace Store</th:block>
+											</th:block> <th:block th:if="${dir}">
+												<th:block th:text="${node.label}">Node Label</th:block>
+											</th:block>
+										</a>
 									</td:block>
 									<td:block th:case="'File'">
 										<i class="fas fa-file"></i>
+										<th:block th:text="${node.label}">Node Label</th:block>
 									</td:block>
-								
-								<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
-											th:if="not ${dir}">
-											<th:block
-												th:if="${#strings.startsWith(node.nodeRef,'system://system')}">System Store</th:block>
-											<th:block
-												th:if="${#strings.startsWith(node.nodeRef,'workspace://version2Store')}">Version Store</th:block>
-											<th:block
-												th:if="${#strings.startsWith(node.nodeRef,'archive://SpacesStore')}">Archive Store</th:block>
-											<th:block
-												th:if="${#strings.startsWith(node.nodeRef,'workspace://SpacesStore')}">WorkSpace Store</th:block>
-										</th:block> <th:block th:if="${dir}">
-											<th:block th:text="${node.label}">Node Label</th:block>
-										</th:block>
-								</a>
 								</td>
 								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Full Size</td>
 							</tr>
