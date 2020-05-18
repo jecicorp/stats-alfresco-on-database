@@ -181,6 +181,7 @@ public class SaodServiceImpl implements SaodService {
 				continue;
 			}
 			node.setLabel(loadNodeLabel(id));
+			node.setNodeRef(loadNodeRef(id));
 			nodes.add(node);
 		}
 
@@ -194,6 +195,7 @@ public class SaodServiceImpl implements SaodService {
 		PrintNode node = this.localDao.loadRow(id);
 		if (node != null) {
 			node.setLabel(loadNodeLabel(id));
+			node.setNodeRef(loadNodeRef(id));
 		} else {
 			node = new PrintNode(id);
 			node.setLabel("Node Not Fount, Need Refresh");
@@ -211,9 +213,17 @@ public class SaodServiceImpl implements SaodService {
 	private String loadNodeLabel(Long id) throws SaodException {
 		String nodeLabel = this.alfrescoDao.selectNodeLabel(id);
 		if (nodeLabel == null) {
-			nodeLabel = this.alfrescoDao.selectNodeRef(id);
+			nodeLabel = "No Name";
 		}
 		return nodeLabel;
+	}
+	
+	private String loadNodeRef(Long id) throws SaodException {
+		String nodeRef = this.alfrescoDao.selectNodeRef(id);
+		if(nodeRef==null) {
+			nodeRef="NNF";
+		}
+		return nodeRef;
 	}
 
 	@Override

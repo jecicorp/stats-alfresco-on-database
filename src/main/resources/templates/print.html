@@ -14,7 +14,7 @@
 
 		<div class="header">
 			<h2 class="sub-header" th:if="${dir}"
-				th:text="|${dir.type} :	${dir.label}|">Dir Name</h2>
+				th:text="|Directory : ${dir.label}|">Dir Name</h2>
 			<h2 class="sub-header" th:if="not ${dir}" th:text="${title}">Titre
 				Standard</h2>
 			<p th:unless="${dir == null}">
@@ -30,8 +30,12 @@
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
-						<td><b>NodeRef  (NodeID)</b> :</td>
-						<td th:text="${dir.label}+' ('+${dir.nodeid}+')'"></td>
+						<td><b>NodeRef </b> :</td>
+						<td th:text="${dir.noderef}"></td>
+					</tr>
+					<tr>
+						<td><b>NodeName </b> :</td>
+						<td th:text="${dir.label}"></td>
 					</tr>
 					<tr>
 						<td><b>Full Size</b> :</td>

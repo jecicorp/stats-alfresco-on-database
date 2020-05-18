@@ -15,6 +15,7 @@ public class PrintNode implements Serializable {
 	private static final String TYPE_FILE = "File";
 
 	private Long nodeid;
+	private String nodeRef;
 	private String label;
 	private Long localSize;
 	private Long dirSize;
@@ -39,6 +40,14 @@ public class PrintNode implements Serializable {
 		return nodeid;
 	}
 
+	public String getNodeRef() {
+		return nodeRef;
+	}
+
+	public void setNodeRef(String nodeRef) {
+		this.nodeRef = nodeRef;
+	}
+	
 	/**
 	 * Permit to obtain the label of a specific node
 	 * 
