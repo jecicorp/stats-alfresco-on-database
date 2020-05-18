@@ -212,18 +212,18 @@ public class SaodServiceImpl implements SaodService {
 	 */
 	private String loadNodeLabel(Long id) throws SaodException {
 		String nodeLabel = this.alfrescoDao.selectNodeLabel(id);
+		String nodeRef = this.alfrescoDao.selectNodeRef(id);
 		if (nodeLabel == null) {
-			nodeLabel = "No Name";
+			nodeLabel = nodeRef;
+		}
+		if (nodeRef!="NNF" && nodeLabel.equals(nodeRef)) {
+			nodeLabel = "(No Name)";
 		}
 		return nodeLabel;
 	}
 	
 	private String loadNodeRef(Long id) throws SaodException {
-		String nodeRef = this.alfrescoDao.selectNodeRef(id);
-		if(nodeRef==null) {
-			nodeRef="NNF";
-		}
-		return nodeRef;
+		return this.alfrescoDao.selectNodeRef(id);
 	}
 
 	@Override

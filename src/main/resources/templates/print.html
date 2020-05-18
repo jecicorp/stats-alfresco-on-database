@@ -30,11 +30,11 @@
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
-						<td><b>NodeRef </b> :</td>
-						<td th:text="${dir.noderef}"></td>
+						<td><b>Noderef </b> :</td>
+						<td th:text="${dir.nodeRef}"></td>
 					</tr>
 					<tr>
-						<td><b>NodeName </b> :</td>
+						<td><b>Name </b> :</td>
 						<td th:text="${dir.label}"></td>
 					</tr>
 					<tr>
@@ -98,13 +98,13 @@
 								<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
 											th:if="not ${dir}">
 											<th:block
-												th:if="${#strings.startsWith(node.label,'system://system')}">System Store</th:block>
+												th:if="${#strings.startsWith(node.nodeRef,'system://system')}">System Store</th:block>
 											<th:block
-												th:if="${#strings.startsWith(node.label,'workspace://version2Store')}">Version Store</th:block>
+												th:if="${#strings.startsWith(node.nodeRef,'workspace://version2Store')}">Version Store</th:block>
 											<th:block
-												th:if="${#strings.startsWith(node.label,'archive://SpacesStore')}">Archive Store</th:block>
+												th:if="${#strings.startsWith(node.nodeRef,'archive://SpacesStore')}">Archive Store</th:block>
 											<th:block
-												th:if="${#strings.startsWith(node.label,'workspace://SpacesStore')}">WorkSpace Store</th:block>
+												th:if="${#strings.startsWith(node.nodeRef,'workspace://SpacesStore')}">WorkSpace Store</th:block>
 										</th:block> <th:block th:if="${dir}">
 											<th:block th:text="${node.label}">Node Label</th:block>
 										</th:block>
