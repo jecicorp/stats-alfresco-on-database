@@ -35,15 +35,10 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
 	private static final String NUMBER_ELEMENTS = "number_elements";
-<<<<<<< HEAD
 
-	/* Type of node */
-	// private static final Integer TYPE_FILE = 0;
-=======
-	
 	/* Type of node */ 
-//	private static final Integer TYPE_FILE = 0;
->>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
+	//	private static final Integer TYPE_FILE = 0;
+
 	private static final Integer TYPE_DIRECTORY = 1;
 	/* Number of children */
 	private static final Integer DIRECTORY_ELEMENT = 0; 
@@ -130,11 +125,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, e.getValue());
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-<<<<<<< HEAD
 			parameters.addValue(NUMBER_ELEMENTS, FILE_ELEMENT);
-=======
-			parameters.addValue(NUMBER_ELEMENTS, 22);
->>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -196,11 +187,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-<<<<<<< HEAD
 			parameters.addValue(NUMBER_ELEMENTS, DIRECTORY_ELEMENT);
-=======
-			parameters.addValue(NUMBER_ELEMENTS, 1);
->>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
@@ -416,11 +403,7 @@ public class LocalDaoImpl implements LocalDao {
 			node.setLocalSize(queryForRowSet.getLong(3));// LOCAL SIZE
 			node.setDirSize(queryForRowSet.getLong(4));// SUM SIZE
 			node.setNodetype(queryForRowSet.getInt(5));// TYPE
-<<<<<<< HEAD
-			node.setNbElements(queryForRowSet.getInt(6));// NUMBER ELEMENTS
-=======
 			node.setNbElements(queryForRowSet.getInt(6));//NUMBER ELEMENTS
->>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
 			return node;
 		}
 
