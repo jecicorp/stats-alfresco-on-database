@@ -3,6 +3,7 @@ package fr.jeci.alfresco.saod.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,11 @@ public class SaodServiceImpl implements SaodService {
 			LOG.info("insertStatsDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
 			loadParentId(selectDirLocalSize);
+<<<<<<< HEAD
+=======
+			loadNumberElements(selectDirLocalSize);
+
+>>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
 			// Aggregate size from leaf to root
 			resetFullSumSize();
 
@@ -146,6 +152,29 @@ public class SaodServiceImpl implements SaodService {
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
 		}
 	}
+	
+	/**
+	 * Permit to know how many elements contains a directory
+	 * @throws SaodException
+	 */
+	public void loadNumberElements(Map<Long, Long> selectDirLocalSize) throws SaodException {
+		
+		//creer une liste de <id,nb>
+		Map<Long, Long> numbers=new HashMap<>();
+		List<Long> ids = new ArrayList<>();
+		ids.addAll(selectDirLocalSize.keySet());
+		//int numberElements = getAllChildren(ids.get(0).toString()).size()+1;//enregistre la plus grosse taille
+		int numberElements=0;
+		//pour chaque éléments dans le tableau faire un update de son id avec le nb calculé
+		while (ids.size()>0) {
+			for(Long id : ids) {
+				numbers.put(id, Long.valueOf(numberElements));
+				numberElements++;
+			}
+		}
+		this.localDao.updateNumberElements(numbers);
+	}
+
 
 
 	@Override

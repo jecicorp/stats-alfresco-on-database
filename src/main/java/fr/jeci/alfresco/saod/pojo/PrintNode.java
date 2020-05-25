@@ -21,7 +21,11 @@ public class PrintNode implements Serializable {
 	private Long dirSize;
 	private Long parent;
 	private Integer nodetype;
+<<<<<<< HEAD
 	private Integer nbElements;
+=======
+	private int nbElements;
+>>>>>>> 27c1d0dd062e3b7eb8899d61d876e97e8ab0d735
 
 	/**
 	 * Constructor of a node (file)
@@ -174,6 +178,14 @@ public class PrintNode implements Serializable {
 	}
 
 	public void setNbElements(Integer nb) {
+		this.nbElements=nb;
+	}
+	
+	public int getNbElements() {	
+		return nbElements;
+	}
+
+	public void setNbElements(int nb) {
 		this.nbElements=nb;
 	}
 	
