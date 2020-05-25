@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.pojo.NodeStat;
 
 public interface AlfrescoDao {
 	static final int FETCH_SIZE = 256;
@@ -22,6 +23,13 @@ public interface AlfrescoDao {
 	 * @throws SaodException
 	 */
 	Map<Long, Long> selectDirLocalSize() throws SaodException;
+	
+	/**
+	 * Map of stats inside a node (size and numberElements) // TODO
+	 * @return
+	 * @throws SaodException
+	 */
+	Map<Long, NodeStat> selectNodeStat() throws SaodException;
 
 	/**
 	 * return parent node id of selected node

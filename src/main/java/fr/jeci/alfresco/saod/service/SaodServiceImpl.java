@@ -19,6 +19,7 @@ import fr.jeci.alfresco.saod.ConcurrentRunSaodException;
 import fr.jeci.alfresco.saod.SaodException;
 import fr.jeci.alfresco.saod.StringUtil;
 import fr.jeci.alfresco.saod.controller.HomeController;
+import fr.jeci.alfresco.saod.pojo.NodeStat;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 import fr.jeci.alfresco.saod.sql.AlfrescoDao;
 import fr.jeci.alfresco.saod.sql.LocalDao;
@@ -48,7 +49,7 @@ public class SaodServiceImpl implements SaodService {
 
 			// node_id, size
 			long start = System.currentTimeMillis();
-			Map<Long, Long> selectDirLocalSize = this.alfrescoDao.selectDirLocalSize();
+			Map<Long, NodeStat> selectDirLocalSize = this.alfrescoDao.selectNodeStat();
 			int nbNodes = selectDirLocalSize.size();
 			LOG.info("selectDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
@@ -65,6 +66,7 @@ public class SaodServiceImpl implements SaodService {
 		}
 	}
 
+	
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 	/**
 	 * Run the local dao
@@ -120,7 +122,7 @@ public class SaodServiceImpl implements SaodService {
 	 * @param selectDirLocalSize
 	 * @throws SaodException
 	 */
-	private void loadParentId(Map<Long, Long> selectDirLocalSize) throws SaodException {
+	private void loadParentId(Map<Long, NodeStat> selectDirLocalSize) throws SaodException {
 		List<Long> list = new ArrayList<>();
 		list.addAll(selectDirLocalSize.keySet());
 
@@ -131,7 +133,6 @@ public class SaodServiceImpl implements SaodService {
 				(System.currentTimeMillis() - start));
 
 		while (selectParentNodeId.size() > 0) {
-
 			// Create parent into locale if need
 			Collection<Long> parents = selectParentNodeId.values();
 			List<Long> parentsid = new ArrayList<>(parents.size());

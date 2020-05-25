@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.pojo.NodeStat;
 
 @Component
 public class AlfrescoDaoImpl implements AlfrescoDao {
@@ -53,6 +54,21 @@ public class AlfrescoDaoImpl implements AlfrescoDao {
 		final Map<Long, Long> libelle = new HashMap<>();
 		while (queryForRowSet.next()) {
 			libelle.put(queryForRowSet.getLong(1), queryForRowSet.getLong(2));
+		}
+
+		return libelle;
+	}
+
+	@Override
+	@Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+	public Map<Long, NodeStat> selectNodeStat() throws SaodException {
+		String query = sqlQueries.getQuery("select_node_stat.sql");
+		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
+
+		final Map<Long, NodeStat> libelle = new HashMap<>();
+		while (queryForRowSet.next()) {
+			NodeStat stat = new NodeStat(queryForRowSet.getLong(2), queryForRowSet.getInt(3));// 3 : nb elements
+			libelle.put(queryForRowSet.getLong(1), stat);
 		}
 
 		return libelle;

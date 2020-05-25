@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.pojo.NodeStat;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 
 /**
@@ -33,7 +34,7 @@ public interface LocalDao {
 	 * 
 	 * @param dirLocalSize
 	 */
-	void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException;
+	void insertStatsDirLocalSize(Map<Long, NodeStat> dirLocalSize) throws SaodException;
 
 	/**
 	 * Insert dir with no locale size (dir without file but with subdirectory)

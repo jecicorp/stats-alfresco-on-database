@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.jeci.alfresco.saod.SaodException;
+import fr.jeci.alfresco.saod.pojo.NodeStat;
 import fr.jeci.alfresco.saod.pojo.PrintNode;
 
 @Component
@@ -30,8 +31,10 @@ public class LocalDaoImpl implements LocalDao {
 
 	/* SQL parameters */
 	private static final String SUM_SIZE = "sum_size";
+	private static final String SUM_ELEMENTS = "sum_elements";
 	private static final String PARENT_NODE_ID = "parent_node_id";
 	private static final String LOCAL_SIZE = "local_size";
+	private static final String LOCAL_ELEMENTS = "local_elements";
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
 	private static final String NUMBER_ELEMENTS = "number_elements";
@@ -117,15 +120,16 @@ public class LocalDaoImpl implements LocalDao {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void insertStatsDirLocalSize(Map<Long, Long> dirLocalSize) throws SaodException {
-
+	public void insertStatsDirLocalSize(Map<Long, NodeStat> dirLocalSize) throws SaodException {
+		
 		List<MapSqlParameterSource> batchArgs = new ArrayList<>(FETCH_SIZE);
-		for (Entry<Long, Long> e : dirLocalSize.entrySet()) {
+		for (Entry<Long, NodeStat> e : dirLocalSize.entrySet()) {
+			NodeStat stat= e.getValue(); 
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
-			parameters.addValue(LOCAL_SIZE, e.getValue());
+			parameters.addValue(LOCAL_SIZE, stat.getSize());
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-			parameters.addValue(NUMBER_ELEMENTS, FILE_ELEMENT);
+			parameters.addValue(LOCAL_ELEMENTS, stat.getNumber_elements());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -187,7 +191,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(LOCAL_SIZE, 0);
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-			parameters.addValue(NUMBER_ELEMENTS, DIRECTORY_ELEMENT);
+			parameters.addValue(LOCAL_ELEMENTS, 0);
 			batchArgs.add(parameters);
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
