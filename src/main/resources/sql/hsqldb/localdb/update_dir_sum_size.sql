@@ -5,4 +5,4 @@ set a.DIR_SUM_SIZE = (
 	from STATS_DIR_LOCAL_SIZE b
 	where b.PARENT_NODE_ID = a.NODE_ID
 )
-where a.NODE_ID = :ids
+where a.NODE_ID = :ids 

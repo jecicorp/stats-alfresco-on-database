@@ -57,8 +57,6 @@ public class SaodServiceImpl implements SaodService {
 			LOG.info("insertStatsDirLocalSize : {} nodes - {} ms ", nbNodes, (System.currentTimeMillis() - start));
 
 			loadParentId(selectDirLocalSize);
-			loadNumberElements(selectDirLocalSize);
-
 			// Aggregate size from leaf to root
 			resetFullSumSize();
 
@@ -109,10 +107,10 @@ public class SaodServiceImpl implements SaodService {
 		int size = nodes.size();
 		while (!nodes.isEmpty()) {
 			this.localDao.upadteDirSumSize(nodes);
+			this.localDao.updateNumberElements(nodes);
 			nodes = this.localDao.selectparentFolders(nodes);
 			size += nodes.size();
 		}
-
 		LOG.info("resetFullSumSize : {} nodes - {} ms ", size, (System.currentTimeMillis() - start));
 	}
 
@@ -147,14 +145,6 @@ public class SaodServiceImpl implements SaodService {
 			this.localDao.upadteDirSumSizeZero(parentsid);
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
 		}
-	}
-	
-	/**
-	 * Permit to know how many elements contains a directory
-	 * @throws SaodException
-	 */
-	public void loadNumberElements(Map<Long, Long> selectDirLocalSize) throws SaodException {
-		this.localDao.updateNumberElements(selectDirLocalSize);
 	}
 
 

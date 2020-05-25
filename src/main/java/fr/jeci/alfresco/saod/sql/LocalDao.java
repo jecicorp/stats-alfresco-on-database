@@ -57,7 +57,7 @@ public interface LocalDao {
 	 * @param nodeids
 	 * @throws SaodException
 	 */
-	void updateNumberElements(Map<Long,Long> nodeids) throws SaodException;
+	void updateNumberElements(List<Long> nodes) throws SaodException;
 	
 	/**
 	 * Select children of a node
