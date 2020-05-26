@@ -79,6 +79,10 @@ public class SqlQueries {
 		LOG.info("Loading sql file : {}", ressourcePath);
 		try {
 			Resource[] ressources = resolver.getResources("classpath*:" + ressourcePath);
+			if (ressources == null || ressources.length < 1) {
+				throw new SaodException(
+						"Erreur lors du chargement du fichier sql : " + ressourcePath + ". Fichier introuvable");
+			}
 			InputStream resourceAsStream = ressources[0].getInputStream();
 			if (resourceAsStream == null) {
 				File file = new File(ressourcePath);
