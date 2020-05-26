@@ -37,7 +37,6 @@ public class LocalDaoImpl implements LocalDao {
 	private static final String LOCAL_ELEMENTS = "local_elements";
 	private static final String NODE_ID = "node_id";
 	private static final String NODE_TYPE = "node_type";
-	private static final String NUMBER_ELEMENTS = "number_elements";
 
 	/* Type of node */ 
 	//	private static final Integer TYPE_FILE = 0;
@@ -129,7 +128,7 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, e.getKey());
 			parameters.addValue(LOCAL_SIZE, stat.getSize());
 			parameters.addValue(NODE_TYPE, TYPE_DIRECTORY);
-			parameters.addValue(LOCAL_ELEMENTS, stat.getNumber_elements());
+			parameters.addValue(LOCAL_ELEMENTS, stat.getNumberElements());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -270,6 +269,8 @@ public class LocalDaoImpl implements LocalDao {
 	 * @param nodeid
 	 * @throws SaodException
 	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateNumberElements(List<Long> nodes) throws SaodException {
 		String query = sqlQueries.getQuery("update_node_number_element.sql");
 		for (Long id : nodes) {
@@ -306,7 +307,7 @@ public class LocalDaoImpl implements LocalDao {
 	 * @param nodeid
 	 * @throws SaodException 
 	 */
-	public void updateNumberElements(Map<Long,Long> nodeids) throws SaodException {
+	/*public void updateNumberElements(Map<Long,Long> nodeids) throws SaodException {
 		final NamedParameterJdbcTemplate jdbcNamesTpl = new NamedParameterJdbcTemplate(this.jdbcTemplate);
 		final String query = sqlQueries.getQuery("update_node_number_elements.sql");
 		
@@ -315,7 +316,6 @@ public class LocalDaoImpl implements LocalDao {
 		for (Entry<Long, Long> e : nodeids.entrySet()) {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			parameters.addValue(NODE_ID, e.getKey());
-			parameters.addValue(NUMBER_ELEMENTS,e.getValue());
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
@@ -327,7 +327,7 @@ public class LocalDaoImpl implements LocalDao {
 		if (batchArgs.size() > 0) {
 			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 		}
-	}
+	}*/
 
 	/**
 	 * Permit to get the number of element of a node
