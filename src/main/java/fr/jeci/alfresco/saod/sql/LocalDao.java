@@ -111,6 +111,13 @@ public interface LocalDao {
 	void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException;
 
 	/**
+	 * Set number_sum_elements to zero
+	 * @param parentsid
+	 * @throws SaodException
+	 */
+	void upadteNumberSumElementsZero(List<Long> parentsid) throws SaodException;
+	
+	/**
 	 * Set All non-null sum_size to zero
 	 * 
 	 * @throws SaodException

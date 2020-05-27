@@ -143,6 +143,7 @@ public class SaodServiceImpl implements SaodService {
 
 			this.localDao.updateParentNodeId(selectParentNodeId);
 			this.localDao.upadteDirSumSizeZero(parentsid);
+			this.localDao.upadteNumberSumElementsZero(parentsid);
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
 		}
 	}

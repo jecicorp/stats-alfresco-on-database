@@ -1,3 +1,3 @@
 update STATS_DIR_LOCAL_SIZE
-set NUMBER_SUM_ELEMENTS = :sum_elements
+set DIR_SUM_SIZE = :sum_size
 where NODE_ID = :node_id
