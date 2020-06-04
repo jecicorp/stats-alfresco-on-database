@@ -66,7 +66,6 @@ public class SaodServiceImpl implements SaodService {
 		}
 	}
 
-	
 	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 	/**
 	 * Run the local dao
@@ -103,6 +102,7 @@ public class SaodServiceImpl implements SaodService {
 		long start = System.currentTimeMillis();
 
 		this.localDao.resetDirSumSize();
+		this.localDao.resetNumberElements();
 
 		List<Long> nodes = this.localDao.selectparentFolders(this.localDao.selectLeafNode());
 		int size = nodes.size();

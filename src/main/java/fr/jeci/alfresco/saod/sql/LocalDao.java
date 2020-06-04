@@ -61,15 +61,6 @@ public interface LocalDao {
 	void updateNumberElements(List<Long> nodes) throws SaodException;
 	
 	/**
-	 * Select children of a node
-	 * @param id
-	 * @return
-	 * @throws SaodException
-	 */
-	Integer selectNumberElements(Long id) throws SaodException;
-
-	
-	/**
 	 * Select Folder that have no parent
 	 * 
 	 * @return
@@ -123,6 +114,13 @@ public interface LocalDao {
 	 * @throws SaodException
 	 */
 	void resetDirSumSize() throws SaodException;
+	
+	/**
+	 * Set all non-null number_sum_elements to zero
+	 * 
+	 * @throws SaodException
+	 */
+	void resetNumberElements() throws SaodException;
 
 	/**
 	 * Select all node with sum_size to NULL
