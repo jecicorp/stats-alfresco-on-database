@@ -250,6 +250,7 @@ public class SaodServiceImpl implements SaodService {
 		StringBuilder path = new StringBuilder();
 
 		Long id = Long.valueOf(nodeid);
+		// TODO here we know parentId is null, why check it 7 lines later ?
 		Long parentId = parent != null ? Long.valueOf(parent) : null;
 
 		path.append(loadNodeLabel(id));
@@ -258,6 +259,7 @@ public class SaodServiceImpl implements SaodService {
 			if ((parentId != null && parentId.equals(node.getParent())) || parentId == node.getParent()) {
 				if (parentId == null) {
 					// absolute path
+					// TODO string must be const for performance
 					path.insert(0, "|");
 				} else {
 					// relative path
@@ -266,9 +268,12 @@ public class SaodServiceImpl implements SaodService {
 				break;
 			} else {
 				id = node.getParent();
+				// TODO you have StringBuilder, don't use "+" concat
 				path.insert(0, loadNodeLabel(id) + separator);
 			}
 		}
+		
+		// TODO Concat '+' is time consuming, use format style like on other lines (see l.163)
 		LOG.info("compute Path of a node, time executed : " + (System.currentTimeMillis() - startComputePath) + " ms");
 		return path.toString();
 	}
@@ -334,10 +339,16 @@ public class SaodServiceImpl implements SaodService {
 	 */
 	public List<PrintNode> getExport(final String root, String typeExport) throws SaodException {
 		Long startExport = System.currentTimeMillis();
+		
+		// TODO With this algo, loadPrintNode is done twice par node !
 		PrintNode loadPrintNode = loadPrintNode(root);
 		List<PrintNode> children = this.getAllChildren(loadPrintNode.getNodeid());
 		List<PrintNode> nodeToExport = null;
 		// if we want only one type of export
+		/*
+		 * TODO you first load all node, then filter. Must be filter first than
+		 * loading data.
+		 */
 		if (!HomeController.EXPORT_ALL.equals(typeExport)) {
 			nodeToExport = new ArrayList<>();
 			for (PrintNode node : children) {

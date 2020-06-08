@@ -42,9 +42,6 @@ public class LocalDaoImpl implements LocalDao {
 	// private static final Integer TYPE_FILE = 0;
 
 	private static final Integer TYPE_DIRECTORY = 1;
-	/* Number of children */
-	private static final Integer DIRECTORY_ELEMENT = 0;
-	private static final Integer FILE_ELEMENT = 1;
 
 	private JdbcTemplate jdbcTemplate;
 
