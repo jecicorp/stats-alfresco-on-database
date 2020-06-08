@@ -260,7 +260,8 @@ public class HomeController implements ErrorController {
 	private void printFolder(String nodeid, Model model, Comparator<PrintNode> pnComparator) throws SaodException {
 		model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
 		model.addAttribute("title", "Node (without name)");
-		List<PrintNode> subFolders = this.saodService.getSubFolders(nodeid);
+
+		List<PrintNode> subFolders = this.saodService.getAllChildren(Long.decode(nodeid), false);
 		if (pnComparator != null) {
 			Collections.sort(subFolders, pnComparator);
 		}

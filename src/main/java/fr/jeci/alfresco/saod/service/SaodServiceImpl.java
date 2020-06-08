@@ -164,20 +164,44 @@ public class SaodServiceImpl implements SaodService {
 		return loadPrintNode;
 	}
 
-	@Override
-	public List<PrintNode> getSubFolders(final String nodeid) throws SaodException {
-		Long id = Long.valueOf(nodeid);
-		return this.getSubFolders(id);
+	private List<Long> getSubFolders(final Long nodeid) throws SaodException {
+		LOG.info("getSubFolders {} " , nodeid);
+		return this.localDao.selectSubFolders(nodeid);
+	}
+	
+
+	private List<Long> getAllSubFolders(final Long nodeid) throws SaodException {
+		long start = System.currentTimeMillis();
+		LOG.info("getAllSubFolders {} " , nodeid);
+
+		List<Long> subFolders = getSubFolders(nodeid);
+
+		List<Long> children = new ArrayList<>(subFolders.size());
+		for (Long nid : subFolders) {
+			children.add(nid);
+			children.addAll(getAllSubFolders(nid));
+		}
+		LOG.info("getAllSubFolders : {} nodes - {} ms ", children.size(), (System.currentTimeMillis() - start));
+
+		return children;
 	}
 
 	@Override
-	public List<PrintNode> getSubFolders(final Long nodeid) throws SaodException {
-		List<Long> selectSubFolders = this.localDao.selectSubFolders(nodeid);
-		LOG.info("getSubFolders : {} nodes ", selectSubFolders.size());
-
-		return loadPrintNode(selectSubFolders);
+	public List<PrintNode> getAllChildren(Long nodeid, boolean recursive) throws SaodException {
+		List<Long> allFolders;
+		if (recursive) {
+			allFolders = getAllSubFolders(nodeid);
+		} else {
+			allFolders = getSubFolders(nodeid);
+		}
+		return loadPrintNode(allFolders);
 	}
 
+	@Override
+	public List<PrintNode> getAllChildren(Long nodeid) throws SaodException {
+		return this.getAllChildren(nodeid, true);
+	}
+	
 	/**
 	 * Permit to obtain a list of node
 	 * 
@@ -314,19 +338,6 @@ public class SaodServiceImpl implements SaodService {
 			LOG.error(e.getMessage(), e);
 		}
 		return false;
-	}
-
-	@Override
-	public List<PrintNode> getAllChildren(Long nodeid) throws SaodException {
-		List<PrintNode> subFolders = getSubFolders(nodeid);
-		List<PrintNode> children = new ArrayList<>(subFolders.size());
-
-		// add children of root
-		for (PrintNode node : subFolders) {
-			children.add(node);
-			children.addAll(getAllChildren(node.getNodeid()));
-		}
-		return children;
 	}
 
 	/**

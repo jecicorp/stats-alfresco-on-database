@@ -21,16 +21,6 @@ public interface SaodService {
 	 */
 	List<PrintNode> getRoots() throws SaodException;
 
-	/**
-	 * List sub-folders
-	 * 
-	 * @param nodeid
-	 * @return
-	 * @throws SaodException
-	 */
-	List<PrintNode> getSubFolders(String nodeid) throws SaodException;
-
-	List<PrintNode> getSubFolders(Long nodeid) throws SaodException;
 
 	/**
 	 * Load printable node
@@ -83,13 +73,16 @@ public interface SaodService {
 	boolean isRunning();
 
 	/**
-	 * Permit to get all the information from a node to all children
+	 * Get printable node to all children
 	 * 
 	 * @param nodeid
+	 * @param recursive (default true)
 	 * @return
 	 * @throws SaodException
 	 */
 	List<PrintNode> getAllChildren(Long nodeid) throws SaodException;
+	
+	List<PrintNode> getAllChildren(Long nodeid, boolean recursive) throws SaodException;
 
 	/**
 	 * Permit to export files, directories or both
@@ -100,6 +93,7 @@ public interface SaodService {
 	 * @throws SaodException
 	 */
 	List<PrintNode> getExport(final String nodeid, String type) throws SaodException;
+
 
 
 }
