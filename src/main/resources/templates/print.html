@@ -30,8 +30,8 @@
 				<h3 class="sub-header">Metadata</h3>
 				<table>
 					<tr>
-						<td><b>Noderef </b> :</td>
-						<td th:text="${dir.nodeRef}"></td>
+						<td><b>NodeRef</b> :</td>
+						<td th:text="${dir.uuid}"></td>
 					</tr>
 					<tr>
 						<td><b>Name </b> :</td>
@@ -42,8 +42,8 @@
 						<td th:text="${dir.fullSizeReadable}"></td>
 					</tr>
 					<tr>
-						<td><b>Nb Elements</b> :</td>
-						<td th:text="${dir.NbElements}"></td>
+						<td><b>Node ID</b> :</td>
+						<td th:text="${dir.nodeid}"></td>
 					</tr>
 				</table>
 				<h3 class="sub-header">Files</h3>
@@ -120,8 +120,6 @@
 										<a th:href="@{/print(nodeid=${node.nodeid}, sort=${sort})}"> <th:block
 												th:if="not ${dir}">
 												<th:block
-													th:if="${#strings.startsWith(node.nodeRef,'system://system')}">System Store</th:block>
-												<th:block
 													th:if="${#strings.startsWith(node.nodeRef,'workspace://version2Store')}">Version Store</th:block>
 												<th:block
 													th:if="${#strings.startsWith(node.nodeRef,'archive://SpacesStore')}">Archive Store</th:block>
@@ -134,8 +132,10 @@
 									</td:block>
 									<td:block th:case="'File'">
 										<i class="fas fa-file"></i>
-										<th:block th:text="${node.label}">Node Label</th:block>
+										<th:block th:if="${#strings.startsWith(node.nodeRef,'system://system')}">System Store</th:block>
+										<th:block th:if="not ${#strings.startsWith(node.nodeRef,'system://system')}" th:text="${node.label}">Node Label</th:block>
 									</td:block>
+
 								</td>
 								<td th:text="${node.fullSizeReadable}" style="text-align: right;">Full Size</td>
 							</tr>
