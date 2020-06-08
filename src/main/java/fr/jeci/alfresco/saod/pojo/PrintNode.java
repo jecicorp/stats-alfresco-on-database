@@ -42,6 +42,7 @@ public class PrintNode implements Serializable {
 	
 	// TODO rename into subdirContentSize
 	// Sum file space usage (alf_content_url) recursively for sub-directories.
+	private Long dirSize = -1L;
 	
 	// TODO rename into countLocalFiles
 	// Number of files (alf_content_data) in this directory
