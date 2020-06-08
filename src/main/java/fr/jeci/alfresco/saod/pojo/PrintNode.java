@@ -14,15 +14,14 @@ public class PrintNode implements Serializable {
 	private static final String TYPE_DIRECTORY = "Directory";
 	private static final String TYPE_FILE = "File";
 
-	private Long nodeid;
-	private String nodeRef;
-	private String label;
-	private Long localSize;
-	private Long dirSize;
-	private Long parent;
-	private Integer nodetype;
-	private Integer nbElements;
+	private Long nodeid = -1L;
+	private String nodeRef = null;
 
+	private String label = null;
+	private Long parent = -1L;
+	private Integer nodetype = -1;
+	private Long localSize = -1L;
+	private Integer nbElements = -1;
 	/**
 	 * Constructor of a node (file)
 	 * 
