@@ -206,14 +206,7 @@ public class LocalDaoImpl implements LocalDao {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectLeafNode() throws SaodException {
 		String query = sqlQueries.getQuery("select_leaf_node.sql");
-		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query);
-
-		final List<Long> ids = new ArrayList<>();
-		while (queryForRowSet.next()) {
-			ids.add(queryForRowSet.getLong(1));
-		}
-
-		return ids;
+		return this.jdbcTemplate.queryForList(query, Long.class);
 	}
 
 	@Override
@@ -352,14 +345,7 @@ public class LocalDaoImpl implements LocalDao {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectSubFolders(Long nodeid) throws SaodException {
 		String query = sqlQueries.getQuery("select_sub_folders.sql");
-		final SqlRowSet queryForRowSet = this.jdbcTemplate.queryForRowSet(query, nodeid);
-
-		final List<Long> ids = new ArrayList<>();
-		while (queryForRowSet.next()) {
-			ids.add(queryForRowSet.getLong(1));
-		}
-
-		return ids;
+		return this.jdbcTemplate.queryForList(query, Long.class, nodeid);
 	}
 
 	@Override
@@ -375,14 +361,7 @@ public class LocalDaoImpl implements LocalDao {
 		parameters.addValue("ids", nodesid);
 
 		String query = sqlQueries.getQuery("select_parents_folders.sql");
-		final SqlRowSet queryForRowSet = jdbcNamesTpl.queryForRowSet(query, parameters);
-
-		final List<Long> ids = new ArrayList<>();
-		while (queryForRowSet.next()) {
-			ids.add(queryForRowSet.getLong(1));
-		}
-
-		return ids;
+		return jdbcNamesTpl.queryForList(query, parameters, Long.class);
 	}
 
 	@Override
