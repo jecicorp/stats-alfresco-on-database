@@ -259,7 +259,7 @@ public class HomeController implements ErrorController {
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW, readOnly = true, timeout = 10)
 	private void printFolder(String nodeid, Model model, Comparator<PrintNode> pnComparator) throws SaodException {
 		model.addAttribute("dir", this.saodService.loadPrintNode(nodeid));
-		model.addAttribute("title", String.format("%s", nodeid));
+		model.addAttribute("title", "Node (without name)");
 		List<PrintNode> subFolders = this.saodService.getSubFolders(nodeid);
 		if (pnComparator != null) {
 			Collections.sort(subFolders, pnComparator);
