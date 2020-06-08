@@ -30,6 +30,8 @@ public interface SaodService {
 	 */
 	List<PrintNode> getSubFolders(String nodeid) throws SaodException;
 
+	List<PrintNode> getSubFolders(Long nodeid) throws SaodException;
+
 	/**
 	 * Load printable node
 	 * 

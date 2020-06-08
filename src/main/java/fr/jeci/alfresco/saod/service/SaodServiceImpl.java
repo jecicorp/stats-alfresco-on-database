@@ -161,7 +161,14 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	public List<PrintNode> getSubFolders(final String nodeid) throws SaodException {
 		Long id = Long.valueOf(nodeid);
-		List<Long> selectSubFolders = this.localDao.selectSubFolders(id);
+		return this.getSubFolders(id);
+	}
+
+	@Override
+	public List<PrintNode> getSubFolders(final Long nodeid) throws SaodException {
+		List<Long> selectSubFolders = this.localDao.selectSubFolders(nodeid);
+		LOG.info("getSubFolders : {} nodes ", selectSubFolders.size());
+
 		return loadPrintNode(selectSubFolders);
 	}
 
@@ -300,7 +307,7 @@ public class SaodServiceImpl implements SaodService {
 
 	@Override
 	public List<PrintNode> getAllChildren(PrintNode parent) throws SaodException {
-		List<PrintNode> subFolders = getSubFolders(parent.getNodeid().toString());
+		List<PrintNode> subFolders = getSubFolders(parent.getNodeid());
 		List<PrintNode> children = new ArrayList<PrintNode>();
 
 		// add children of root
