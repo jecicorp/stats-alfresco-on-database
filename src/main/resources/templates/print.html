@@ -46,6 +46,29 @@
 						<td th:text="${dir.NbElements}"></td>
 					</tr>
 				</table>
+				<h3 class="sub-header">Files</h3>
+				<table>
+					<tr>
+						<td><b>In this directory</b></td>
+					</tr>
+					<tr>
+						<td>
+							<span th:text="${dir.nbElements}"></span>
+							File(s) / 
+							<span th:text="${dir.localSizeReadable}"></span>
+						</td>
+					</tr>
+					<tr>
+						<td><b>In all sub-directories</b></td>
+					</tr>
+					<tr>
+						<td>
+							<span th:text="${dir.countSubdirFiles}"></span>
+							 File(s) / 
+							<span th:text="${dir.dirSizeReadable}"></span>
+						</td>
+					</tr>
+				</table>
 			</div>
 			
 			<!-- Child nodes -->
