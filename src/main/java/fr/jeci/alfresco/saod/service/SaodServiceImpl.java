@@ -306,14 +306,14 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	@Override
-	public List<PrintNode> getAllChildren(PrintNode parent) throws SaodException {
-		List<PrintNode> subFolders = getSubFolders(parent.getNodeid());
+	public List<PrintNode> getAllChildren(Long nodeid) throws SaodException {
+		List<PrintNode> subFolders = getSubFolders(nodeid);
 		List<PrintNode> children = new ArrayList<PrintNode>();
 
 		// add children of root
 		for (PrintNode node : subFolders) {
 			children.add(node);
-			children.addAll(getAllChildren(node));
+			children.addAll(getAllChildren(node.getNodeid()));
 		}
 		return children;
 	}
@@ -328,8 +328,9 @@ public class SaodServiceImpl implements SaodService {
 	 */
 	public List<PrintNode> getExport(final String root, String typeExport) throws SaodException {
 		Long startExport = System.currentTimeMillis();
-		List<PrintNode> children = this.getAllChildren(loadPrintNode(root));
 		List<PrintNode> nodeToExport = new ArrayList<PrintNode>();
+		PrintNode loadPrintNode = loadPrintNode(root);
+		List<PrintNode> children = this.getAllChildren(loadPrintNode.getNodeid());
 		// if we want only one type of export
 		if (!HomeController.EXPORT_ALL.equals(typeExport)) {
 			for (PrintNode node : children) {

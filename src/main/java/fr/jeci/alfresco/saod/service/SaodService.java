@@ -85,11 +85,11 @@ public interface SaodService {
 	/**
 	 * Permit to get all the information from a node to all children
 	 * 
-	 * @param nodes
+	 * @param nodeid
 	 * @return
 	 * @throws SaodException
 	 */
-	List<PrintNode> getAllChildren(PrintNode parent) throws SaodException;
+	List<PrintNode> getAllChildren(Long nodeid) throws SaodException;
 
 	/**
 	 * Permit to export files, directories or both
@@ -100,5 +100,6 @@ public interface SaodService {
 	 * @throws SaodException
 	 */
 	List<PrintNode> getExport(final String nodeid, String type) throws SaodException;
+
 
 }
