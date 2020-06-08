@@ -14,14 +14,42 @@ public class PrintNode implements Serializable {
 	private static final String TYPE_DIRECTORY = "Directory";
 	private static final String TYPE_FILE = "File";
 
+	// Node DB id (alf_node.id)
 	private Long nodeid = -1L;
 	private String nodeRef = null;
 
+	// Node DB Store id (alf_node.store_id)
+	private Long storeId = -1L;
+	
+	// Node DB Store id (alf_node.uuid)
+	private String uuid = null;
+	
+	// cm:name or other printable string
 	private String label = null;
+
+	// Store content url (alf_content_url.content_url)
+	private String contentUrl= null;
+
+	// Parent Node DB id (alf_child_assoc.parent_node_id)
 	private Long parent = -1L;
+
+	// Currently File or Directory
 	private Integer nodetype = -1;
+	
+	// TODO rename into localContentSize
+	// Sum file space usage (alf_content_url) in this directory
 	private Long localSize = -1L;
+	
+	// TODO rename into subdirContentSize
+	// Sum file space usage (alf_content_url) recursively for sub-directories.
+	
+	// TODO rename into countLocalFiles
+	// Number of files (alf_content_data) in this directory
 	private Integer nbElements = -1;
+	
+	// Number of files (alf_content_data) recursively for sub-directories.
+	private Integer countSubdirFiles = -1;
+
 	/**
 	 * Constructor of a node (file)
 	 * 
@@ -176,5 +204,41 @@ public class PrintNode implements Serializable {
 
 	public void setNbElements(Integer nb) {
 		this.nbElements = nb;
+	}
+
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public Integer getCountSubdirFiles() {
+		return countSubdirFiles;
+	}
+
+	public void setCountSubdirFiles(Integer countSubdirFiles) {
+		this.countSubdirFiles = countSubdirFiles;
+	}
+
+	public void setNodeid(Long nodeid) {
+		this.nodeid = nodeid;
+	}
+
+	public String getContentUrl() {
+		return contentUrl;
+	}
+
+	public void setContentUrl(String contentUrl) {
+		this.contentUrl = contentUrl;
 	}
 }
