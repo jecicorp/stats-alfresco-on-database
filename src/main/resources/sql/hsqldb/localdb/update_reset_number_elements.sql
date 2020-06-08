@@ -1,5 +1,5 @@
 -- setting all non-null DIR_SUM_SIZE to ZERO
 -- DIR_SUM_SIZE NULL are LEAF
 update STATS_DIR_LOCAL_SIZE
-set DIR_SUM_SIZE = 0
+set NUMBER_SUM_ELEMENTS = 0
 where DIR_SUM_SIZE IS NOT NULL

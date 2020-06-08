@@ -398,6 +398,7 @@ public class LocalDaoImpl implements LocalDao {
 			node.setDirSize(queryForRowSet.getLong(4));// SUM SIZE
 			node.setNodetype(queryForRowSet.getInt(5));// TYPE
 			node.setNbElements(queryForRowSet.getInt(6));// NUMBER LOCAL ELEMENTS
+			node.setCountSubdirFiles(queryForRowSet.getInt(7));// NUMBER_SUM_ELEMENTS
 			return node;
 		}
 
