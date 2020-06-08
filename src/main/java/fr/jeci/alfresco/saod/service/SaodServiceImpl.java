@@ -101,15 +101,19 @@ public class SaodServiceImpl implements SaodService {
 	public void resetFullSumSize() throws SaodException {
 		long start = System.currentTimeMillis();
 
+		// TODO merge resetDirSumSize & resetNumberElements into one query
 		this.localDao.resetDirSumSize();
 		this.localDao.resetNumberElements();
 
-		List<Long> nodes = this.localDao.selectparentFolders(this.localDao.selectLeafNode());
+		// TODO merge selectparentFolders & selectLeafNode
+		List<Long> nodes = this.localDao.selectLeafNode();
 		int size = nodes.size();
 		while (!nodes.isEmpty()) {
+			nodes = this.localDao.selectparentFolders(nodes);
+			
+			// TODO merge
 			this.localDao.upadteDirSumSize(nodes);
 			this.localDao.updateNumberElements(nodes);
-			nodes = this.localDao.selectparentFolders(nodes);
 			size += nodes.size();
 		}
 		LOG.info("resetFullSumSize : {} nodes - {} ms ", size, (System.currentTimeMillis() - start));
@@ -142,6 +146,8 @@ public class SaodServiceImpl implements SaodService {
 			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(), (System.currentTimeMillis() - start));
 
 			this.localDao.updateParentNodeId(selectParentNodeId);
+			
+			// TODO merge upadteDirSumSizeZero & upadteNumberSumElementsZero into one query 
 			this.localDao.upadteDirSumSizeZero(parentsid);
 			this.localDao.upadteNumberSumElementsZero(parentsid);
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
@@ -308,7 +314,7 @@ public class SaodServiceImpl implements SaodService {
 	@Override
 	public List<PrintNode> getAllChildren(Long nodeid) throws SaodException {
 		List<PrintNode> subFolders = getSubFolders(nodeid);
-		List<PrintNode> children = new ArrayList<PrintNode>();
+		List<PrintNode> children = new ArrayList<>(subFolders.size());
 
 		// add children of root
 		for (PrintNode node : subFolders) {
@@ -328,11 +334,12 @@ public class SaodServiceImpl implements SaodService {
 	 */
 	public List<PrintNode> getExport(final String root, String typeExport) throws SaodException {
 		Long startExport = System.currentTimeMillis();
-		List<PrintNode> nodeToExport = new ArrayList<PrintNode>();
 		PrintNode loadPrintNode = loadPrintNode(root);
 		List<PrintNode> children = this.getAllChildren(loadPrintNode.getNodeid());
+		List<PrintNode> nodeToExport = null;
 		// if we want only one type of export
 		if (!HomeController.EXPORT_ALL.equals(typeExport)) {
+			nodeToExport = new ArrayList<>();
 			for (PrintNode node : children) {
 				if (typeExport.equals(node.getType())) {
 					nodeToExport.add(node);
