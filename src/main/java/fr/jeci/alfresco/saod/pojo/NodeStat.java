@@ -7,11 +7,11 @@ package fr.jeci.alfresco.saod.pojo;
 public class NodeStat {
 
 	private Long size;
-	private Integer numberElements;
+	private Integer countLocalFiles;
 
 	public NodeStat(Long size, Integer number) {
 		this.size=size;
-		this.numberElements=number;
+		this.countLocalFiles=number;
 	}
 	public Long getSize() {
 		return size;
@@ -22,10 +22,10 @@ public class NodeStat {
 	}
 
 	public Integer getNumberElements() {
-		return numberElements;
+		return countLocalFiles;
 	}
 
-	public void setNumberElements(Integer number_elements) {
-		this.numberElements = number_elements;
+	public void setNumberElements(Integer countLocalFiles) {
+		this.countLocalFiles = countLocalFiles;
 	}
 }

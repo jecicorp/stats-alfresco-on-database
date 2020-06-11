@@ -54,11 +54,11 @@ public interface LocalDao {
 	void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException;
 
 	/**
-	 * Update number of children
-	 * @param nodeids
+	 * Update numberElements and dirsumSize
+	 * @param nodes
 	 * @throws SaodException
 	 */
-	void updateNumberElements(List<Long> nodes) throws SaodException;
+	void upadteStatsDatabase(List<Long> nodes) throws SaodException;
 	
 	/**
 	 * Select Folder that have no parent
@@ -92,35 +92,19 @@ public interface LocalDao {
 	 * @throws SaodException
 	 */
 	PrintNode loadRow(Long id) throws SaodException;
-
+	
 	/**
-	 * Set dir_num_size to zero (means no has child)
-	 * 
+	 * Permit to update all values of numberElements and dirsumSize
 	 * @param parentsid
 	 * @throws SaodException
 	 */
-	void upadteDirSumSizeZero(List<Long> parentsid) throws SaodException;
-
-	/**
-	 * Set number_sum_elements to zero
-	 * @param parentsid
-	 * @throws SaodException
-	 */
-	void upadteNumberSumElementsZero(List<Long> parentsid) throws SaodException;
+	void upadteStatsDatabaseZero(List<Long> parentsid) throws SaodException;
 	
 	/**
-	 * Set All non-null sum_size to zero
-	 * 
+	 * Set all non-null numberElements and dirsumSize to zero
 	 * @throws SaodException
 	 */
-	void resetDirSumSize() throws SaodException;
-	
-	/**
-	 * Set all non-null number_sum_elements to zero
-	 * 
-	 * @throws SaodException
-	 */
-	void resetNumberElements() throws SaodException;
+	void resetStatsDatabase() throws SaodException;
 
 	/**
 	 * Select all node with sum_size to NULL
@@ -129,14 +113,6 @@ public interface LocalDao {
 	 * @throws SaodException
 	 */
 	List<Long> selectLeafNode() throws SaodException;
-
-	/**
-	 * Append to parent.sum_size the local_size his child
-	 * 
-	 * @param nodes
-	 * @throws SaodException
-	 */
-	void upadteDirSumSize(List<Long> nodes) throws SaodException;
 
 	/**
 	 * Performing a checkpoint to the hsqldb

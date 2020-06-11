@@ -36,18 +36,15 @@ public class PrintNode implements Serializable {
 	// Currently File or Directory
 	private Integer nodetype = -1;
 	
-	// TODO rename into localContentSize
 	// Sum file space usage (alf_content_url) in this directory
-	private Long localSize = -1L;
-	
-	// TODO rename into subdirContentSize
+	private Long localContentSize = -1L;
+
 	// Sum file space usage (alf_content_url) recursively for sub-directories.
-	private Long dirSize = -1L;
+	private Long subdirContentSize = -1L;
 	
-	// TODO rename into countLocalFiles
 	// Number of files (alf_content_data) in this directory
-	private Integer nbElements = -1;
-	
+	private Integer countLocalFiles = -1;
+
 	// Number of files (alf_content_data) recursively for sub-directories.
 	private Integer countSubdirFiles = -1;
 
@@ -68,13 +65,40 @@ public class PrintNode implements Serializable {
 	public Long getNodeid() {
 		return nodeid;
 	}
+	
+	public void setNodeid(Long nodeid) {
+		this.nodeid = nodeid;
+	}
 
+	
 	public String getNodeRef() {
 		return nodeRef;
 	}
 
 	public void setNodeRef(String nodeRef) {
 		this.nodeRef = nodeRef;
+	}
+
+
+
+	
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
+
+	
+	public String getUuid() {
+		return uuid;
+	}
+
+	
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	
 	/**
@@ -95,71 +119,12 @@ public class PrintNode implements Serializable {
 		this.label = label;
 	}
 
-	/**
-	 * Permit to obtain the size of a specific node
-	 * 
-	 * @return localSize
-	 */
-	public Long getLocalSize() {
-		return localSize;
+	public String getContentUrl() {
+		return contentUrl;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getLocalSizeReadable() {
-		return StringUtil.readableFileSize(getLocalSize());
-	}
-
-	/**
-	 * Give a localSize to a node
-	 * 
-	 * @param localSize
-	 */
-	public void setLocalSize(Long localSize) {
-		this.localSize = localSize;
-	}
-
-	/**
-	 * Permit to obtain the full size of a node
-	 * 
-	 * @return
-	 */
-	public Long getFullSize() {
-		return Long.sum(localSize, dirSize);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getFullSizeReadable() {
-		return StringUtil.readableFileSize(getFullSize());
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Long getDirSize() {
-		return dirSize;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDirSizeReadable() {
-		return StringUtil.readableFileSize(getDirSize());
-	}
-
-	/**
-	 * 
-	 * @param fullSize
-	 */
-	public void setDirSize(Long fullSize) {
-		this.dirSize = fullSize;
+	public void setContentUrl(String contentUrl) {
+		this.contentUrl = contentUrl;
 	}
 
 	/**
@@ -187,7 +152,11 @@ public class PrintNode implements Serializable {
 	public void setNodetype(Integer nodetype) {
 		this.nodetype = nodetype;
 	}
-
+	
+	/**
+	 * Return a string corresponding to the type
+	 * @return
+	 */
 	public String getType() {
 		switch (this.nodetype) {
 		case 0:
@@ -199,28 +168,63 @@ public class PrintNode implements Serializable {
 		}
 	}
 
-	public Integer getNbElements() {
-		return nbElements;
+	/**
+	 * Permit to obtain the size of a specific node
+	 * 
+	 * @return localSize
+	 */
+	public Long getLocalContentSize() {
+		return localContentSize;
 	}
 
-	public void setNbElements(Integer nb) {
-		this.nbElements = nb;
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLocalContentSizeReadable() {
+		return StringUtil.readableFileSize(getLocalContentSize());
 	}
 
-	public Long getStoreId() {
-		return storeId;
+	/**
+	 * Give a localSize to a node
+	 * 
+	 * @param localSize
+	 */
+	public void setLocalContentSize(Long localSize) {
+		this.localContentSize = localSize;
 	}
 
-	public void setStoreId(Long storeId) {
-		this.storeId = storeId;
+	/**
+	 * Obtain DirSize
+	 * @return
+	 */
+	public Long getSubdirContentSize() {
+		return subdirContentSize;
 	}
 
-	public String getUuid() {
-		return uuid;
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSubdirContentSizeReadable() {
+		return StringUtil.readableFileSize(getSubdirContentSize());
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	/**
+	 * 
+	 * @param fullSize
+	 */
+	public void setSubdirContentSize(Long fullSize) {
+		this.subdirContentSize = fullSize;
+	}
+
+
+	public Integer getCountLocalFiles() {
+		return countLocalFiles;
+	}
+
+	public void setCountLocalFiles(Integer countLocalFiles) {
+		this.countLocalFiles = countLocalFiles;
 	}
 
 	public Integer getCountSubdirFiles() {
@@ -230,16 +234,22 @@ public class PrintNode implements Serializable {
 	public void setCountSubdirFiles(Integer countSubdirFiles) {
 		this.countSubdirFiles = countSubdirFiles;
 	}
-
-	public void setNodeid(Long nodeid) {
-		this.nodeid = nodeid;
+	
+	/**
+	 * Permit to obtain the full size of a node
+	 * 
+	 * @return
+	 */
+	public Long getFullSize() {
+		return Long.sum(localContentSize, subdirContentSize);
 	}
 
-	public String getContentUrl() {
-		return contentUrl;
+	/**
+	 * 
+	 * @return
+	 */
+	public String getFullSizeReadable() {
+		return StringUtil.readableFileSize(getFullSize());
 	}
 
-	public void setContentUrl(String contentUrl) {
-		this.contentUrl = contentUrl;
-	}
 }

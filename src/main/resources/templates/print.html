@@ -53,9 +53,9 @@
 					</tr>
 					<tr>
 						<td>
-							<span th:text="${dir.nbElements}"></span>
+							<span th:text="${dir.countLocalFiles}"></span>
 							File(s) / 
-							<span th:text="${dir.localSizeReadable}"></span>
+							<span th:text="${dir.localContentSizeReadable}"></span>
 						</td>
 					</tr>
 					<tr>
@@ -65,7 +65,7 @@
 						<td>
 							<span th:text="${dir.countSubdirFiles}"></span>
 							 File(s) / 
-							<span th:text="${dir.dirSizeReadable}"></span>
+							<span th:text="${dir.subdirContentSizeReadable}"></span>
 						</td>
 					</tr>
 				</table>

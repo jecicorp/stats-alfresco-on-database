@@ -314,14 +314,14 @@ public class HomeController implements ErrorController {
 			break;
 
 		case "local":
-			pnComparator = (o1, o2) -> o1.getLocalSize().compareTo(o2.getLocalSize()) * -1;
+			pnComparator = (o1, o2) -> o1.getLocalContentSize().compareTo(o2.getLocalContentSize()) * -1;
 			if (reverse) {
 				pnComparator = pnComparator.reversed();
 			}
 			break;
 
 		case "aggregate":
-			pnComparator = (o1, o2) -> o1.getDirSize().compareTo(o2.getDirSize()) * -1;
+			pnComparator = (o1, o2) -> o1.getSubdirContentSize().compareTo(o2.getSubdirContentSize()) * -1;
 			if (reverse) {
 				pnComparator = pnComparator.reversed();
 			}

@@ -101,19 +101,14 @@ public class SaodServiceImpl implements SaodService {
 	public void resetFullSumSize() throws SaodException {
 		long start = System.currentTimeMillis();
 
-		// TODO merge resetDirSumSize & resetNumberElements into one query
-		this.localDao.resetDirSumSize();
-		this.localDao.resetNumberElements();
-
+		this.localDao.resetStatsDatabase();
+			
 		// TODO merge selectparentFolders & selectLeafNode
 		List<Long> nodes = this.localDao.selectLeafNode();
 		int size = nodes.size();
 		while (!nodes.isEmpty()) {
 			nodes = this.localDao.selectparentFolders(nodes);
-			
-			// TODO merge
-			this.localDao.upadteDirSumSize(nodes);
-			this.localDao.updateNumberElements(nodes);
+			this.localDao.upadteStatsDatabase(nodes);
 			size += nodes.size();
 		}
 		LOG.info("resetFullSumSize : {} nodes - {} ms ", size, (System.currentTimeMillis() - start));
@@ -146,10 +141,7 @@ public class SaodServiceImpl implements SaodService {
 			LOG.info("insertStatsDirNoSize : {} nodes - {} ms ", parentsid.size(), (System.currentTimeMillis() - start));
 
 			this.localDao.updateParentNodeId(selectParentNodeId);
-			
-			// TODO merge upadteDirSumSizeZero & upadteNumberSumElementsZero into one query 
-			this.localDao.upadteDirSumSizeZero(parentsid);
-			this.localDao.upadteNumberSumElementsZero(parentsid);
+			this.localDao.upadteStatsDatabaseZero(parentsid);
 			selectParentNodeId = this.alfrescoDao.selectParentNodeId(parentsid);
 		}
 	}
@@ -293,12 +285,11 @@ public class SaodServiceImpl implements SaodService {
 			} else {
 				id = node.getParent();
 				// TODO you have StringBuilder, don't use "+" concat
-				path.insert(0, loadNodeLabel(id) + separator);
+				path.insert(0, loadNodeLabel(id) + separator);//append ne marche pas bien
 			}
 		}
 		
-		// TODO Concat '+' is time consuming, use format style like on other lines (see l.163)
-		LOG.info("compute Path of a node, time executed : " + (System.currentTimeMillis() - startComputePath) + " ms");
+		LOG.info("compute Path of a node, time executed : {} ms", System.currentTimeMillis() - startComputePath);
 		return path.toString();
 	}
 
