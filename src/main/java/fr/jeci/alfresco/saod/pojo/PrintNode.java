@@ -35,7 +35,7 @@ public class PrintNode implements Serializable {
 
 	// Currently File or Directory
 	private Integer nodetype = -1;
-	
+
 	// Sum file space usage (alf_content_url) in this directory
 	private Long localContentSize = -1L;
 

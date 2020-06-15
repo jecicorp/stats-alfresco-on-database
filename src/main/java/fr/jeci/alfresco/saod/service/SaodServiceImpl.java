@@ -39,6 +39,9 @@ public class SaodServiceImpl implements SaodService {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	private static final String RELATIVE_PATH = "./";
+	private static final String ABSOLUTE_PATH = "|";
 
 	@Override
 	@Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
@@ -103,7 +106,6 @@ public class SaodServiceImpl implements SaodService {
 
 		this.localDao.resetStatsDatabase();
 			
-		// TODO merge selectparentFolders & selectLeafNode
 		List<Long> nodes = this.localDao.selectLeafNode();
 		int size = nodes.size();
 		while (!nodes.isEmpty()) {
@@ -204,6 +206,7 @@ public class SaodServiceImpl implements SaodService {
 	private List<PrintNode> loadPrintNode(final List<Long> ids) throws SaodException {
 		List<PrintNode> nodes = new ArrayList<>(ids.size());
 		for (Long id : ids) {
+			//appel type dossier/fichier "continue" pour passer a la boucle suivante
 			PrintNode node = this.localDao.loadRow(id);
 			if (node == null) {
 				LOG.warn("node is null for id {}", id);
@@ -212,6 +215,8 @@ public class SaodServiceImpl implements SaodService {
 			node.setLabel(loadNodeLabel(id));
 			node.setNodeRef(loadNodeRef(id));
 			nodes.add(node);
+			//si node ajouté a des fichiers non existants dans la liste
+			//requete alfreco (demander liste fichier)
 		}
 
 		return nodes;
@@ -264,28 +269,25 @@ public class SaodServiceImpl implements SaodService {
 	public String computePath(String parent, String nodeid, String separator) throws SaodException {
 		Long startComputePath = System.currentTimeMillis();
 		StringBuilder path = new StringBuilder();
-
+		String pathType = null;
 		Long id = Long.valueOf(nodeid);
-		// TODO here we know parentId is null, why check it 7 lines later ?
 		Long parentId = parent != null ? Long.valueOf(parent) : null;
-
+		if(parentId == null) {
+			pathType = ABSOLUTE_PATH;
+		}else {
+			pathType = RELATIVE_PATH;
+		}
 		path.append(loadNodeLabel(id));
 		PrintNode node;
 		while ((node = this.localDao.loadRow(id)) != null) {
 			if ((parentId != null && parentId.equals(node.getParent())) || parentId == node.getParent()) {
-				if (parentId == null) {
-					// absolute path
-					// TODO string must be const for performance
-					path.insert(0, "|");
-				} else {
-					// relative path
-					path.insert(0, "./");
-				}
+				path.insert(0, pathType);
 				break;
 			} else {
 				id = node.getParent();
-				// TODO you have StringBuilder, don't use "+" concat
-				path.insert(0, loadNodeLabel(id) + separator);//append ne marche pas bien
+				path.insert(0,separator);
+				path.insert(0,loadNodeLabel(id));	
+				LOG.info("Path : {}",path.toString());
 			}
 		}
 		
