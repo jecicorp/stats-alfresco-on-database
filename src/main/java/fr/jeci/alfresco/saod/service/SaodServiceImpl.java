@@ -39,7 +39,7 @@ public class SaodServiceImpl implements SaodService {
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	private static final String RELATIVE_PATH = "./";
 	private static final String ABSOLUTE_PATH = "|";
 
@@ -105,7 +105,7 @@ public class SaodServiceImpl implements SaodService {
 		long start = System.currentTimeMillis();
 
 		this.localDao.resetStatsDatabase();
-			
+
 		List<Long> nodes = this.localDao.selectLeafNode();
 		int size = nodes.size();
 		while (!nodes.isEmpty()) {
@@ -159,14 +159,13 @@ public class SaodServiceImpl implements SaodService {
 	}
 
 	private List<Long> getSubFolders(final Long nodeid) throws SaodException {
-		LOG.info("getSubFolders {} " , nodeid);
+		LOG.info("getSubFolders {} ", nodeid);
 		return this.localDao.selectSubFolders(nodeid);
 	}
-	
 
 	private List<Long> getAllSubFolders(final Long nodeid) throws SaodException {
 		long start = System.currentTimeMillis();
-		LOG.info("getAllSubFolders {} " , nodeid);
+		LOG.info("getAllSubFolders {} ", nodeid);
 
 		List<Long> subFolders = getSubFolders(nodeid);
 
@@ -195,7 +194,7 @@ public class SaodServiceImpl implements SaodService {
 	public List<PrintNode> getAllChildren(Long nodeid) throws SaodException {
 		return this.getAllChildren(nodeid, true);
 	}
-	
+
 	/**
 	 * Permit to obtain a list of node
 	 * 
@@ -206,7 +205,7 @@ public class SaodServiceImpl implements SaodService {
 	private List<PrintNode> loadPrintNode(final List<Long> ids) throws SaodException {
 		List<PrintNode> nodes = new ArrayList<>(ids.size());
 		for (Long id : ids) {
-			//appel type dossier/fichier "continue" pour passer a la boucle suivante
+			// appel type dossier/fichier "continue" pour passer a la boucle suivante
 			PrintNode node = this.localDao.loadRow(id);
 			if (node == null) {
 				LOG.warn("node is null for id {}", id);
@@ -215,8 +214,6 @@ public class SaodServiceImpl implements SaodService {
 			node.setLabel(loadNodeLabel(id));
 			node.setNodeRef(loadNodeRef(id));
 			nodes.add(node);
-			//si node ajouté a des fichiers non existants dans la liste
-			//requete alfreco (demander liste fichier)
 		}
 
 		return nodes;
@@ -250,12 +247,12 @@ public class SaodServiceImpl implements SaodService {
 		if (nodeLabel == null) {
 			nodeLabel = nodeRef;
 		}
-		if (nodeRef!="NNF" && nodeLabel.equals(nodeRef)) {
+		if (nodeRef != "NNF" && nodeLabel.equals(nodeRef)) {
 			nodeLabel = "(No Name)";
 		}
 		return nodeLabel;
 	}
-	
+
 	private String loadNodeRef(Long id) throws SaodException {
 		return this.alfrescoDao.selectNodeRef(id);
 	}
@@ -272,9 +269,9 @@ public class SaodServiceImpl implements SaodService {
 		String pathType = null;
 		Long id = Long.valueOf(nodeid);
 		Long parentId = parent != null ? Long.valueOf(parent) : null;
-		if(parentId == null) {
+		if (parentId == null) {
 			pathType = ABSOLUTE_PATH;
-		}else {
+		} else {
 			pathType = RELATIVE_PATH;
 		}
 		path.append(loadNodeLabel(id));
@@ -285,12 +282,12 @@ public class SaodServiceImpl implements SaodService {
 				break;
 			} else {
 				id = node.getParent();
-				path.insert(0,separator);
-				path.insert(0,loadNodeLabel(id));	
-				LOG.info("Path : {}",path.toString());
+				path.insert(0, separator);
+				path.insert(0, loadNodeLabel(id));
+				LOG.info("Path : {}", path.toString());
 			}
 		}
-		
+
 		LOG.info("compute Path of a node, time executed : {} ms", System.currentTimeMillis() - startComputePath);
 		return path.toString();
 	}
@@ -343,15 +340,14 @@ public class SaodServiceImpl implements SaodService {
 	 */
 	public List<PrintNode> getExport(final String root, String typeExport) throws SaodException {
 		Long startExport = System.currentTimeMillis();
-		
+
 		// TODO With this algo, loadPrintNode is done twice par node !
 		PrintNode loadPrintNode = loadPrintNode(root);
 		List<PrintNode> children = this.getAllChildren(loadPrintNode.getNodeid());
 		List<PrintNode> nodeToExport = null;
 		// if we want only one type of export
 		/*
-		 * TODO you first load all node, then filter. Must be filter first than
-		 * loading data.
+		 * TODO you first load all node, then filter. Must be filter first than loading data.
 		 */
 		if (!HomeController.EXPORT_ALL.equals(typeExport)) {
 			nodeToExport = new ArrayList<>();

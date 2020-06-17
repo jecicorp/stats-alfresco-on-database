@@ -198,7 +198,7 @@ public class LocalDaoImpl implements LocalDao {
 			jdbcNamesTpl.batchUpdate(query, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 		}
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<Long> selectLeafNode() throws SaodException {
@@ -220,21 +220,23 @@ public class LocalDaoImpl implements LocalDao {
 			parameters.addValue(NODE_ID, id);
 			parameters.addValue(SUM_SIZE, 0);
 			parameters.addValue(SUM_ELEMENTS, 0);
-			
+
 			batchArgs.add(parameters);
 
 			if (batchArgs.size() >= FETCH_SIZE) {
 				jdbcNamesTpl.batchUpdate(dirsumSizeQuery, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
-				jdbcNamesTpl.batchUpdate(numbersumElementsQuery, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+				jdbcNamesTpl.batchUpdate(numbersumElementsQuery,
+						batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 				batchArgs.clear();
 			}
 		}
 		if (batchArgs.size() > 0) {
 			jdbcNamesTpl.batchUpdate(dirsumSizeQuery, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
-			jdbcNamesTpl.batchUpdate(numbersumElementsQuery, batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
+			jdbcNamesTpl.batchUpdate(numbersumElementsQuery,
+					batchArgs.toArray(new MapSqlParameterSource[batchArgs.size()]));
 		}
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void resetStatsDatabase() throws SaodException {
@@ -243,7 +245,7 @@ public class LocalDaoImpl implements LocalDao {
 		String numberElementsQuery = sqlQueries.getQuery("update_reset_number_elements.sql");
 		this.jdbcTemplate.update(numberElementsQuery);
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void upadteStatsDatabase(List<Long> nodes) throws SaodException {
@@ -259,7 +261,7 @@ public class LocalDaoImpl implements LocalDao {
 		}
 		this.jdbcTemplate.update(nodeTypeQuery);
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateParentNodeId(Map<Long, Long> nodeids) throws SaodException {
