@@ -15,12 +15,12 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
       args:
-        saod_version: 0.6.1
+        saod_version: 0.7.0
     image: jeci/saod
     volumes:
      - "./application-mysql.properties:/opt/saod/application.properties"
      - "./sqldb:/opt/saod/sqldb"
-    command: ["java", "-jar", "jeci-saod-0.6.1.jar"]
+    command: ["java", "-jar", "jeci-saod-0.7.0.jar"]
     labels:
      - "traefik.frontend.rule=Host:saod.docker.localhost"
 
